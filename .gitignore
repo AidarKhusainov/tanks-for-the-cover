@@ -1,0 +1,17 @@
+# Local tools and dependencies
+node_modules/
+coverage/
+.cache/
+.tmp/
+*.log
+
+# Local secrets
+.env
+.env.*
+!.env.example
+
+# Editors and OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
