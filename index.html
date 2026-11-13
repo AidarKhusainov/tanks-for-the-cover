@@ -26,6 +26,7 @@
 .route-options :focus-visible,.salvage-card button:focus-visible{outline:2px solid var(--lime);outline-offset:3px}
 .action-preview{position:absolute;top:42px;left:50%;transform:translateX(-50%);width:max-content;max-width:68%;margin:0;padding:6px 10px;border:1px solid #819485;border-radius:6px;background:#203237;color:#eff3e3;font-size:12px;line-height:1.4;text-align:center;pointer-events:none}
 .action-preview:empty{padding:0;border:0}
+.wreck-lesson{margin:8px 0 12px;padding:8px 10px;border-left:2px solid var(--lime);background:#182a2e;color:#e8efda;font-size:12px;line-height:1.45}
 #campaign-dialog{width:calc(100% - 32px);max-height:calc(100dvh - 32px);overflow:hidden}
 #campaign-dialog[open]{display:flex;flex-direction:column}
 #campaign-dialog::backdrop{background:#102024c9;backdrop-filter:blur(5px)}
@@ -95,7 +96,8 @@
         <section class="wave-card"><div class="section-label"><span id="wave-card-title">СЛЕДУЮЩАЯ АТАКА</span><span id="enemy-total"></span></div><div id="wave-plan"></div><p id="wave-note" class="fineprint">Сначала займи удобную позицию, затем начни волну.</p></section>
         <button id="start" class="primary">Начать волну 1 <span>↵</span></button>
         <div id="combat-status" class="combat-status" hidden><span class="pulse-dot"></span><span id="combat-copy"></span></div>
-        <section class="salvage-card" id="salvage-card"><div class="section-label"><span>КОРПУСА НА ПОЛЕ</span><span id="wreck-count">0</span></div><div id="salvage-content"></div><div id="salvage-actions" hidden>
+        <p id="wreck-discovery" class="wreck-lesson" role="status" hidden></p>
+        <section class="salvage-card" id="salvage-card"><div class="section-label"><span>КОРПУСА НА ПОЛЕ</span><span id="wreck-count">0</span></div><p id="wreck-prep-lesson" class="wreck-lesson" role="status" hidden>Нажми на корпус: его можно оставить, разобрать на ремонт базы или взять модуль. Метка «до N» показывает последнюю волну службы.</p><div id="salvage-content"></div><div id="salvage-actions" hidden>
           <button id="repair" class="secondary" aria-describedby="repair-reason"></button><p id="repair-reason" class="fineprint action-detail" hidden></p>
           <button id="install-module" class="secondary" aria-describedby="module-effect module-reason"></button>
           <p id="module-effect" class="fineprint action-detail"></p><p id="module-reason" class="fineprint action-detail" hidden></p>
@@ -103,8 +105,9 @@
           <p id="choose-reinforcement-reason" class="fineprint action-detail" hidden></p>
           <button id="leave" class="text-button">Оставить на месте</button>
         </div><div id="reinforcement-actions" hidden>
+          <p id="reinforcement-rule" class="wreck-life">Донор будет разобран. Каждую цель можно укрепить только один раз.</p>
           <div aria-live="polite"><p id="reinforcement-result" class="wreck-life"></p><p id="reinforcement-note" class="fineprint action-detail" hidden></p></div>
-          <button id="confirm-reinforcement" class="secondary" aria-describedby="reinforcement-result reinforcement-note" hidden>Укрепить · потратить донора</button>
+          <button id="confirm-reinforcement" class="secondary" aria-describedby="reinforcement-rule reinforcement-result reinforcement-note" hidden>Укрепить · потратить донора</button>
           <button id="cancel-reinforcement" class="text-button">Отменить выбор</button>
         </div><button id="undo" class="undo-button" aria-describedby="undo-reason" disabled>↶ Отменить действие <kbd>Ctrl Z</kbd></button><p id="undo-reason" class="fineprint action-detail"></p></section>
         <div class="tactical-note"><span class="note-icon">↳</span><p id="tip">Маршрут ведёт к базе или до первого корпуса для пролома, отмеченного кругом. Лёгкий может свернуть к тебе.</p></div>
@@ -240,6 +243,10 @@
   function pointRectDistanceSq(x, y, rect) {
     return square(x - clamp(x, rect.x, rect.x + rect.w)) +
       square(y - clamp(y, rect.y, rect.y + rect.h));
+  }
+
+  function isInSpawnZone(config, x, y) {
+    return Object.values(config.SPAWNS).some(spawn => pointRectDistanceSq(x, y, centerRect(spawn)) === 0);
   }
 
   function pointSegmentDistanceSq(x, y, ax, ay, bx, by) {
@@ -420,6 +427,7 @@
       };
       this._restorePlayerHp();
       this.base = { x: 14, y: 13.5, w: 1.8, h: 1.8, hp: 240, maxHp: 240 };
+      this.baseLoss = null;
       this.enemies = [];
       this.wrecks = [];
       this.bullets = [];
@@ -1355,7 +1363,11 @@
       const target = hit.object;
       if (hit.kind === 'wall') return;
       if (hit.kind === 'base') {
-        if (bullet.team === 'enemy') this.base.hp = Math.max(0, this.base.hp - bullet.damage);
+        if (bullet.team === 'enemy' && this.base.hp > 0) {
+          const hpBefore = this.base.hp;
+          this.base.hp = Math.max(0, hpBefore - bullet.damage);
+          if (this.base.hp === 0) this.baseLoss = { wave: this.waveNumber, hpBefore, damage: bullet.damage };
+        }
         return;
       }
       if (hit.kind === 'player') {
@@ -1376,7 +1388,7 @@
         if (!target.hp) {
           this.wrecks = this.wrecks.filter(wreck => wreck !== target);
           this._invalidateNavigation();
-          this._emit('wreck', { x: target.x, y: target.y, removed: true });
+          this._emit('wreck', { x: target.x, y: target.y, id: target.id, removed: true });
           this._recordWreckRemoval(target, bullet.team === 'player' ? 'destroyed_by_player' : 'destroyed_by_enemy');
         }
         return;
@@ -1394,7 +1406,7 @@
       this._emit('kill', { x: enemy.x, y: enemy.y, enemyType: enemy.type });
       const spec = this.config.ENEMY_TYPES[enemy.type]?.wreck;
       if (!spec) return;
-      if (Object.values(this.config.SPAWNS).some(spawn => pointRectDistanceSq(enemy.x, enemy.y, centerRect(spawn)) === 0)) return;
+      if (isInSpawnZone(this.config, enemy.x, enemy.y)) return;
       const wreck = {
         id: `w${++this._serial}`, type: enemy.type, x: enemy.x, y: enemy.y, r: enemy.r ?? TANK_RADIUS,
         hp: spec.hp, maxHp: spec.hp, expiresAfterWave: this.waveNumber + spec.waves, reinforced: false
@@ -1732,7 +1744,7 @@
 
   }
 
-  const api = { Game, CONFIG, CLASSIC_CONFIG, PLAYER_WEAPON, PLAYER_MODULES, TANK_RADIUS };
+  const api = { Game, CONFIG, CLASSIC_CONFIG, PLAYER_WEAPON, PLAYER_MODULES, TANK_RADIUS, isInSpawnZone };
   root.TankCore = api;
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
 })(typeof globalThis !== 'undefined' ? globalThis : this);
@@ -1741,16 +1753,18 @@
   <script>
 (() => {
   'use strict';
-  const { Game, CONFIG, PLAYER_WEAPON, TANK_RADIUS } = globalThis.TankCore;
+  const { Game, CONFIG, PLAYER_WEAPON, TANK_RADIUS, isInSpawnZone } = globalThis.TankCore;
   const game = new Game();
   const el = (id) => document.getElementById(id);
   const canvas = el('board'), ctx = canvas.getContext('2d');
-  const keys = new Set(), particles = [], unitLabels = [];
+  const keys = new Set(), effects = [], unitLabels = [];
   const pointer = { x: 14, y: 7, down: false, inside: false };
   let selected = null, lastFrame = 0, visualTime = 0, lastUiKey = '', endShown = false;
   let reinforcement = null;
   let previewAction = null, preparationPreview = null;
   let hoveredAction = null, focusedAction = null;
+  let firstWreck = null, prepLesson = null;
+  const discoverySeconds = 4;
   let modalKind = null, pauseBeforeHelp = false, toastUntil = 0, routePreview = [];
   const campaignDialog = el('campaign-dialog');
   let routeKey = null, soundOn = false, audio = null, shake = 0;
@@ -1852,10 +1866,14 @@
   function help(){
     if(modalKind==='help'){closeHelp();return;}
     pauseBeforeHelp=game.paused;game.paused=true;
-    openModal('help','ТРИ НАПРАВЛЕНИЯ · ОДНА БАЗА','Как играть',`<ol class="modal-list"><li><b>Защищай базу.</b> WASD — движение, мышь — прицел, удержание ЛКМ — огонь. До старта проверь входы и время атаки в плане волны. Кнопка «Кампания» показывает расписание всех волн (${waveCount}).</li><li><b>Лёгкий (Л) охотится за тобой.</b> Знак «!» означает преследование. Уходи за укрытие и меняй позицию.</li><li><b>Средний (С) и тяжёлый (Т) атакуют базу.</b> Рядом с танком указаны HP и число попаданий до уничтожения (×). Оставленные корпуса меняют маршрут и задерживают снаряды обеих сторон.</li><li><b>Враг стреляет без предупреждения.</b> При открытой цели и готовом орудии он сразу выпускает снаряд. Меняй позицию и используй твёрдые укрытия. Воронки и следы на земле проходимы.</li><li><b>Между волнами</b> нажми на корпус: оставь его баррикадой или разбери на ремонт базы до +${CONFIG.ENEMY_TYPES.medium.wreck.repairHp} HP за средний или +${CONFIG.ENEMY_TYPES.heavy.wreck.repairHp} HP за тяжёлый. Средний корпус также даёт двигатель, тяжёлый — броню. В слоте помещается один модуль. Последнее действие можно отменить через Ctrl+Z. Подпись «до N» показывает последнюю волну службы.</li><li>Твой танк восстанавливается между волнами и возвращается через 4 секунды после гибели. Пока ты возвращаешься, бой продолжается.</li></ol>`,[['Понятно',closeHelp,true]]);
+    openModal('help','ТРИ НАПРАВЛЕНИЯ · ОДНА БАЗА','Как играть',`<ol class="modal-list"><li><b>Защищай базу.</b> WASD — движение, мышь — прицел, удержание ЛКМ — огонь. До старта проверь входы и время атаки в плане волны. Кнопка «Кампания» показывает расписание всех волн (${waveCount}).</li><li><b>Лёгкий (Л) охотится за тобой.</b> Знак «!» означает преследование. Уходи за укрытие и меняй позицию.</li><li><b>Средний (С) и тяжёлый (Т) атакуют базу.</b> Рядом с танком указаны HP и число попаданий до уничтожения (×). Оставленные корпуса меняют маршрут и задерживают снаряды обеих сторон. Перечёркнутый корпус рядом с танком означает, что в зоне появления он не оставит баррикаду.</li><li><b>Враг стреляет без предупреждения.</b> При открытой цели и готовом орудии он сразу выпускает снаряд. Меняй позицию и используй твёрдые укрытия. Воронки и следы на земле проходимы.</li><li><b>Между волнами</b> нажми на корпус: оставь его баррикадой или разбери на ремонт базы до +${CONFIG.ENEMY_TYPES.medium.wreck.repairHp} HP за средний или +${CONFIG.ENEMY_TYPES.heavy.wreck.repairHp} HP за тяжёлый. Средний корпус также даёт двигатель, тяжёлый — броню. В слоте помещается один модуль. Последнее действие можно отменить через Ctrl+Z. Подпись «до N» показывает последнюю волну службы.</li><li>Твой танк восстанавливается между волнами и возвращается через 4 секунды после гибели. Пока ты возвращаешься, бой продолжается.</li></ol>`,[['Понятно',closeHelp,true]]);
   }
   function closeHelp(){game.paused=pauseBeforeHelp;closeModal();if(game.paused){game.paused=false;pause();}else lastFrame=performance.now();}
-  function reset(){game.reset();selected=null;reinforcement=null;setActionPreview(null);routeKey=null;routePreview=[];particles.length=0;endShown=false;lastUiKey='';closeModal();game.paused=false;toast('Новая попытка. Перед боем можно занять позицию.');}
+  function reset(){
+    game.reset();selected=null;reinforcement=null;setActionPreview(null);routeKey=null;routePreview=[];effects.length=0;shake=0;
+    firstWreck=null;prepLesson=null;endShown=false;lastUiKey='';
+    closeModal();game.paused=false;toast('Новая попытка. Перед боем можно занять позицию.');
+  }
   function start(){if(['won','lost'].includes(game.phase)){reset();return;}if(game.phase!=='prep'||game.paused||reinforcement)return;if(game.startWave()){selected=null;setActionPreview(null);routeKey=null;toast(`Волна ${game.waveNumber}. Защищай базу.`,2);focusBoard();}}
   function repair(){
     const result=game.repairFromWreck(selected);
@@ -1900,11 +1918,35 @@
   el('export-attempt').onclick=exportAttempt;
   el('cancel-reinforcement').onclick=cancelReinforcement;
   el('sound').onclick=()=>{soundOn=!soundOn;el('sound').textContent=soundOn?'Звук вкл':'Звук выкл';el('sound').setAttribute('aria-pressed',String(soundOn));el('sound').title=soundOn?'Выключить звук':'Включить звук';if(soundOn){try{audio ||= new (window.AudioContext||window.webkitAudioContext)();audio.resume();beep('wave');}catch{soundOn=false;el('sound').textContent='Звук недоступен';el('sound').setAttribute('aria-pressed','false');el('sound').title='Попробовать включить звук';}}};
-  function beep(type, side){
-    if(!soundOn||!audio)return;
-    const settings={shot:[side==='player'?140:80,.045,.025],hit:[230,.035,.025],kill:[65,.15,.045],wreck:[95,.12,.025],repair:[560,.11,.04],wave:[440,.11,.035],death:[45,.25,.045],win:[750,.3,.035],lose:[65,.4,.045]};
-    const [freq,duration,volume]=settings[type]||[190,.05,.02];
-    const o=audio.createOscillator(),g=audio.createGain();o.type=type==='repair'||type==='win'?'sine':'triangle';o.frequency.setValueAtTime(freq,audio.currentTime);o.frequency.exponentialRampToValueAtTime(Math.max(20,freq*.45),audio.currentTime+duration);g.gain.setValueAtTime(volume,audio.currentTime);g.gain.exponentialRampToValueAtTime(.0001,audio.currentTime+duration);o.connect(g);g.connect(audio.destination);o.start();o.stop(audio.currentTime+duration);
+  const soundCues = {
+    playerShot: [140,63,.045,.025,'triangle'],
+    enemyShot: [80,36,.045,.025,'triangle'],
+    hit: [720,370,.045,.025,'triangle'],
+    kill: [155,42,.18,.045,'triangle'],
+    // Separate the wreck cue from the simultaneous impact and tank destruction.
+    wreckAppears: [480,960,.14,.034,'sine',.085],
+    wreckBreaks: [320,105,.12,.030,'square',.05],
+    repair: [560,252,.11,.04,'sine'],
+    wave: [440,198,.11,.035,'triangle'],
+    death: [45,20,.25,.045,'triangle'],
+    win: [750,337.5,.3,.035,'sine'],
+    lose: [65,29.25,.4,.045,'triangle']
+  };
+  function beep(type) {
+    const cue = soundCues[type];
+    if (!soundOn || !audio || !cue) return;
+    const [from,to,duration,volume,waveform,delay=0] = cue;
+    const start = audio.currentTime + delay, end = start + duration;
+    const oscillator = audio.createOscillator(), gain = audio.createGain();
+    oscillator.type = waveform;
+    oscillator.frequency.setValueAtTime(from, start);
+    oscillator.frequency.exponentialRampToValueAtTime(to, end);
+    gain.gain.setValueAtTime(volume, start);
+    gain.gain.exponentialRampToValueAtTime(.0001, end);
+    oscillator.connect(gain);
+    gain.connect(audio.destination);
+    oscillator.start(start);
+    oscillator.stop(end);
   }
   document.addEventListener('keydown',(e)=>{
     if(campaignDialog.open)return;
@@ -1926,6 +1968,7 @@
     if(game.phase==='prep'){
       setActionPreview(null);
       const id=game.wrecks.find(w=>Math.hypot(w.x-pointer.x,w.y-pointer.y)<=w.r)?.id??null;
+      if (id && firstWreck?.inPrep) firstWreck.until=visualTime;
       if(reinforcement)reinforcement.targetId=id;
       else selected=id;
       updateUi();
@@ -1939,6 +1982,38 @@
     note.textContent=message??'';
     note.hidden=!message;
   }
+  function showFirstWreck() {
+    if (!firstWreck || firstWreck.wave !== game.waveNumber || visualTime >= firstWreck.until) return false;
+    return firstWreck.inPrep ? game.phase === 'prep' : game.phase === 'battle' || game.phase === 'settling';
+  }
+
+  function updateWreckLessons(prep) {
+    const discovery = el('wreck-discovery');
+    discovery.hidden = !showFirstWreck();
+    if (!discovery.hidden) {
+      const message = firstWreck.destroyed
+        ? 'Первый корпус появился, но уже успел разрушиться. Снаряды повреждают и корпуса.'
+        : firstWreck.inPrep
+          ? 'Первый корпус отмечен на поле.'
+          : 'Корпус появился и отмечен на поле. Береги его: снаряды повреждают и корпуса.';
+      if (discovery.textContent !== message) discovery.textContent = message;
+    } else if (discovery.textContent) discovery.textContent = '';
+
+    if (prep && !game.paused && firstWreck &&
+        (!prepLesson || (prepLesson.wave === game.waveNumber && !prepLesson.dismissed))) {
+      const usable = game.wrecks.some(wreck => game.getWreckActions(wreck.id).repairReason === null);
+      if (!prepLesson && usable) prepLesson = { wave:game.waveNumber, dismissed:false };
+      else if (prepLesson && !usable) prepLesson.dismissed = true;
+    }
+    el('wreck-prep-lesson').hidden = !prep || prepLesson?.wave !== game.waveNumber || prepLesson.dismissed;
+  }
+
+  function baseDefeatText() {
+    const loss = game.baseLoss;
+    if (!loss) return `База потеряла всю прочность в волне ${game.waveNumber}.`;
+    return `В волне ${loss.wave} базу уничтожил вражеский снаряд с уроном ${loss.damage} HP. До попадания у базы оставалось ${loss.hpBefore} HP.`;
+  }
+
   function moduleEffect({ module, replacedModule, moduleStats }){
     const replacement=replacedModule?` взамен «${moduleNames[replacedModule]}»`:'';
     return `«${moduleNames[module]}»${replacement}. Танк получит ${moduleStats.speed} ед/с и ${moduleStats.maxHp} HP.`;
@@ -2012,6 +2087,7 @@
     const prep=game.phase==='prep',fighting=['battle','settling'].includes(game.phase),finished=['won','lost'].includes(game.phase);
     el('route-controls').hidden=!prep;
     el('route-lane').disabled=el('route-type').disabled=!el('routes').checked;
+    updateWreckLessons(prep);
     const baseHp=Math.max(0,Math.ceil(game.base.hp)),playerHp=Math.max(0,Math.ceil(game.player.hp));
     el('base-value').innerHTML=`${baseHp} <small>/ ${game.base.maxHp}</small>`;el('base-value').classList.toggle('low-hp',baseHp<=60);el('base-fill').style.width=clamp(baseHp/game.base.maxHp*100,0,100)+'%';
     el('player-value').innerHTML=game.player.alive?`${playerHp} <small>/ ${game.player.maxHp}</small>`:`<small>Возврат</small> ${Math.ceil(game.player.respawn)}с`;
@@ -2068,7 +2144,7 @@
       if(!prep||game.paused)setActionPreview(null);
       else if(previewAction)updateActionPreview();
     }
-    if(finished&&!endShown){endShown=true;const win=game.phase==='won';openModal('end',win?`ВОЛНЫ ПРОЙДЕНЫ · ${waveCount}/${waveCount}`:'БАЗА ПОТЕРЯНА',win?'Оборона выдержала':'Ещё одна попытка',`<p>${win?'Ты защитил базу. Попробуй пройти ещё раз и оставить корпуса в других местах.':'Попробуй раньше перехватывать противников и закрывать проходы корпусами.'}</p><div class="result-grid"><div><strong>${game.stats.kills}</strong><span>ТАНКОВ УНИЧТОЖЕНО</span></div><div><strong>${game.stats.wrecksCreated}</strong><span>КОРПУСОВ СОЗДАНО</span></div><div><strong>${baseHp}</strong><span>HP БАЗЫ</span></div></div><p>Удалось ли намеренно оставить полезный корпус? Пришлось ли разобрать его ради ремонта?</p>`,[['Играть ещё раз',reset,true],[exportLabel,exportAttempt,false],['Посмотреть поле',()=>{closeModal();},false]]);}
+    if(finished&&!endShown){endShown=true;const win=game.phase==='won';openModal('end',win?`ВОЛНЫ ПРОЙДЕНЫ · ${waveCount}/${waveCount}`:'БАЗА ПОТЕРЯНА',win?'Оборона выдержала':'Ещё одна попытка',`<p>${win?'Ты защитил базу. Попробуй пройти ещё раз и оставить корпуса в других местах.':baseDefeatText()}</p><div class="result-grid"><div><strong>${game.stats.kills}</strong><span>ТАНКОВ УНИЧТОЖЕНО</span></div><div><strong>${game.stats.wrecksCreated}</strong><span>КОРПУСОВ СОЗДАНО</span></div><div><strong>${baseHp}</strong><span>HP БАЗЫ</span></div></div><p>Удалось ли намеренно оставить полезный корпус? Пришлось ли разобрать его ради ремонта?</p>`,[['Играть ещё раз',reset,true],[exportLabel,exportAttempt,false],['Посмотреть поле',()=>{closeModal();},false]]);}
   }
   function roundRect(x,y,w,h,r){ctx.beginPath();ctx.roundRect(x,y,w,h,r);}
   function text(label,x,y,size,color,align='center',weight=600){
@@ -2160,6 +2236,16 @@
     const b=game.base;ctx.fillStyle='#54674340';roundRect(b.x-1,b.y-.85,2,2,.2);ctx.fill();ctx.fillStyle='#a7ad7d';roundRect(b.x-.9,b.y-.9,1.8,1.8,.12);ctx.fill();ctx.fillStyle=b.hp>0?'#dfc36e':'#645f51';roundRect(b.x-.72,b.y-.72,1.44,1.44,.1);ctx.fill();ctx.strokeStyle='#726e3d';ctx.lineWidth=.06;roundRect(b.x-.72,b.y-.72,1.44,1.44,.1);ctx.stroke();ctx.fillStyle='#817443';ctx.beginPath();ctx.moveTo(b.x,b.y-.42);ctx.lineTo(b.x+.34,b.y-.24);ctx.lineTo(b.x+.27,b.y+.21);ctx.lineTo(b.x,b.y+.42);ctx.lineTo(b.x-.27,b.y+.21);ctx.lineTo(b.x-.34,b.y-.24);ctx.closePath();ctx.fill();ctx.strokeStyle='#f0dea0';ctx.lineWidth=.07;ctx.beginPath();ctx.moveTo(b.x-.16,b.y);ctx.lineTo(b.x-.03,b.y+.12);ctx.lineTo(b.x+.19,b.y-.16);ctx.stroke();text('БАЗА',b.x,b.y+.58,.17,'#635927','center',800);
   }
   function hpBar(o,y,color,width=.9){ctx.fillStyle='#18322a55';roundRect(o.x-width/2,y,width,.09,.03);ctx.fill();ctx.fillStyle=color;roundRect(o.x-width/2,y,width*clamp(o.hp/o.maxHp,0,1),.09,.03);ctx.fill();}
+  function drawNoWreckIcon(x,y){
+    ctx.save();ctx.translate(x,y);
+    ctx.strokeStyle='#fff6dd';ctx.lineWidth=.035;ctx.lineCap='round';
+    roundRect(-.14,-.085,.28,.19,.03);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(0,-.085);ctx.lineTo(0,-.15);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(-.17,-.14);ctx.lineTo(.17,.14);
+    ctx.strokeStyle='#23342b';ctx.lineWidth=.09;ctx.stroke();
+    ctx.strokeStyle='#fff6dd';ctx.lineWidth=.04;ctx.stroke();
+    ctx.restore();
+  }
   function drawUnitLabels(actors,breaches){
     const height=.44,gap=.04;
     const occupied=actors.map(({x,y,r})=>({x,y,width:2*r,height:2*r}));
@@ -2174,8 +2260,8 @@
       }
     }
     ctx.save();ctx.font='700 34px system-ui,"DejaVu Sans",sans-serif';
-    for(const {label,actor} of unitLabels){
-      const {x,y,r}=actor,width=ctx.measureText(label).width/100+.22;
+    for(const {label,actor,noWreck} of unitLabels){
+      const {x,y,r}=actor,iconSpace=noWreck ? .43 : 0,width=ctx.measureText(label).width/100+.22+iconSpace;
       const cx=clamp(x,width/2,CONFIG.W-width/2);
       const preferred=y<1.2?1:-1;
       // Try the nearest row first, with space for the tank and its HP bar.
@@ -2190,7 +2276,8 @@
             ctx.moveTo(x,y+side*r);ctx.lineTo(cx,cy-side*height/2);ctx.stroke();
           }
           ctx.fillStyle='#23342b';roundRect(cx-width/2,cy-height/2,width,height,.08);ctx.fill();
-          ctx.save();ctx.translate(cx,cy);ctx.scale(.01,.01);
+          if(noWreck)drawNoWreckIcon(cx-width/2+.29,cy);
+          ctx.save();ctx.translate(cx+iconSpace/2,cy);ctx.scale(.01,.01);
           ctx.fillStyle='#fff6dd';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(label,0,0);
           ctx.restore();
           occupied.push({x:cx,y:cy,width,height});placed=true;break;
@@ -2202,6 +2289,11 @@
   }
   function drawWreck(w){
     const isSelected=w.id===selected;ctx.save();ctx.translate(w.x,w.y);ctx.rotate((Number(w.id)||0)*.8+.35);ctx.fillStyle='#253c2c25';ctx.beginPath();ctx.ellipse(.06,.11,.60,.5,0,0,Math.PI*2);ctx.fill();ctx.fillStyle='#5e6b5b';roundRect(-.43,-.43,.86,.86,.13);ctx.fill();ctx.fillStyle='#88907b';roundRect(-.27,-.34,.54,.68,.08);ctx.fill();ctx.fillStyle='#4a584c';roundRect(-.17,-.18,.34,.36,.05);ctx.fill();ctx.strokeStyle='#afb79d';ctx.lineWidth=.055;ctx.beginPath();ctx.moveTo(-.19,-.23);ctx.lineTo(.20,.20);ctx.moveTo(.17,-.21);ctx.lineTo(-.17,.22);ctx.stroke();ctx.fillStyle='#4f6250';ctx.fillRect(.08,-.43,.13,.27);ctx.restore();
+    if (w.reinforced) {
+      ctx.strokeStyle='#e4dda7';ctx.lineWidth=.055;ctx.beginPath();
+      ctx.moveTo(w.x-.30,w.y+.20);ctx.lineTo(w.x,w.y-.12);ctx.lineTo(w.x+.30,w.y+.20);
+      ctx.stroke();
+    }
     if(isSelected){ctx.strokeStyle='#f6f5d5';ctx.lineWidth=.07;ctx.beginPath();ctx.arc(w.x,w.y,.68,0,Math.PI*2);ctx.stroke();ctx.strokeStyle='#234633';ctx.lineWidth=.035;ctx.beginPath();ctx.arc(w.x,w.y,.78,0,Math.PI*2);ctx.stroke();}
     const isTarget=!isSelected&&w.id===reinforcement?.targetId;
     if(isTarget){ctx.save();ctx.strokeStyle='#223b2d';ctx.lineWidth=.075;ctx.setLineDash([.17,.09]);ctx.beginPath();ctx.arc(w.x,w.y,.68,0,Math.PI*2);ctx.stroke();ctx.restore();}
@@ -2224,7 +2316,9 @@
     else {
       const side=t.y<1.2?1:-1;
       hpBar(t,t.y+.64*side,look.dark);
-      unitLabels.push({actor:t,label:`${look.mark} · ${Math.ceil(t.hp)} HP · ×${hitsToKill(t.hp)}${t.intent==='press'?' · !':''}`});
+      const pursuit=t.type==='light' && t.intent==='press';
+      const noWreck=!!CONFIG.ENEMY_TYPES[t.type].wreck && isInSpawnZone(CONFIG,t.x,t.y);
+      unitLabels.push({actor:t,noWreck,label:`${look.mark} · ${Math.ceil(t.hp)} HP · ×${hitsToKill(t.hp)}${pursuit?' · !':''}`});
     }
   }
 
@@ -2280,6 +2374,65 @@
     }
   }
 
+  function drawFirstWreck() {
+    if (!showFirstWreck() || firstWreck.destroyed) return;
+    const wreck = game.wrecks.find(w => w.id === firstWreck.id);
+    if (!wreck) return;
+    const radius = wreck.r + .30;
+    const y = wreck.y > CONFIG.H - 1.4 ? -1 : 1;
+    ctx.save();ctx.translate(wreck.x,wreck.y);
+    ctx.lineWidth=.075;ctx.setLineDash([.14,.12]);
+    ctx.strokeStyle='#23342b';ctx.beginPath();ctx.arc(0,0,radius,0,Math.PI*2);ctx.stroke();
+    ctx.strokeStyle='#f5ffbc';ctx.lineDashOffset=.13;ctx.stroke();ctx.setLineDash([]);
+    ctx.fillStyle='#f5ffbc';ctx.strokeStyle='#23342b';ctx.lineWidth=.035;
+    ctx.beginPath();ctx.moveTo(0,y*(radius+.10));ctx.lineTo(-.19,y*(radius+.36));
+    ctx.lineTo(.19,y*(radius+.36));ctx.closePath();ctx.fill();ctx.stroke();
+    ctx.restore();
+  }
+
+  const effectStyles = {
+    hit: {life:.15,color:'#fff0b3',rays:4,spread:.43},
+    kill: {life:.28,color:'#e68d51',rays:8,spread:.83},
+    wreckAppears: {life:.27,color:'#ecffc5'},
+    wreckBreaks: {life:.34,color:'#544536',rays:6,spread:.91},
+    death: {life:.28,color:'#e68d51',rays:8,spread:.83},
+    repair: {life:.26,color:'#e0f4a0'}
+  };
+  function drawEffects() {
+    for (const {type,x,y,at} of effects) {
+      const {life,color,rays,spread} = effectStyles[type];
+      const progress = (visualTime-at)/life;
+      ctx.save();ctx.translate(x,y);
+      ctx.globalAlpha=1-progress;ctx.strokeStyle=color;ctx.fillStyle=color;ctx.lineWidth=.065;
+      if (type==='wreckAppears'||type==='repair') {
+        const radius=.52+.28*progress, corner=.23;
+        ctx.beginPath();
+        for (const dx of [-1,1]) for (const dy of [-1,1]) {
+          ctx.moveTo(dx*(radius-corner),dy*radius);
+          ctx.lineTo(dx*radius,dy*radius);
+          ctx.lineTo(dx*radius,dy*(radius-corner));
+        }
+        ctx.stroke();
+      } else {
+        ctx.beginPath();
+        for (let i=0;i<rays;i++) {
+          const angle=(i+.5)*Math.PI*2/rays;
+          const dx=Math.cos(angle),dy=Math.sin(angle);
+          const radius=.09+spread*progress;
+          if (type==='wreckBreaks') {
+            ctx.save();ctx.translate(dx*radius,dy*radius+.28*progress);ctx.rotate(angle+progress);
+            ctx.fillRect(-.075,-.045,.15,.09);ctx.restore();
+          } else {
+            ctx.moveTo(dx*radius,dy*radius);
+            ctx.lineTo(dx*(radius+.17),dy*(radius+.17));
+          }
+        }
+        if (type!=='wreckBreaks') ctx.stroke();
+      }
+      ctx.restore();
+    }
+  }
+
   function draw(){
     const r=canvas.getBoundingClientRect(),dpr=Math.min(devicePixelRatio||1,2),w=Math.round(r.width*dpr),h=Math.round(r.height*dpr);if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;}
     ctx.setTransform(w/CONFIG.W,0,0,h/CONFIG.H,0,0);ctx.clearRect(0,0,CONFIG.W,CONFIG.H);ctx.save();
@@ -2289,28 +2442,46 @@
     drawPreparationPreview();
     const actors=[...game.wrecks,...game.enemies];
     if(game.player.alive)actors.push(game.player);
+    drawEffects();drawFirstWreck();
     drawUnitLabels(actors,game.phase==='prep'&&el('routes').checked?routePreview:[]);
     for(const b of game.bullets){const own=b.team==='player';ctx.beginPath();ctx.moveTo(b.x-(b.dx||0)*.22,b.y-(b.dy||0)*.22);ctx.lineTo(b.x,b.y);ctx.strokeStyle=own?'#345868':'#843828';ctx.lineWidth=own?.14:.17;ctx.stroke();ctx.strokeStyle=own?'#f7ffd9':'#ffd49a';ctx.lineWidth=own?.07:.09;ctx.stroke();ctx.fillStyle=own?'#ffffe4':'#a24630';ctx.beginPath();ctx.arc(b.x,b.y,own?.06:.10,0,Math.PI*2);ctx.fill();}
-    for(const p of particles){ctx.globalAlpha=Math.max(0,1-p.age/p.life);ctx.fillStyle=p.color;ctx.beginPath();ctx.arc(p.x,p.y,p.size,0,Math.PI*2);ctx.fill();}ctx.globalAlpha=1;
     if(pointer.inside&&!game.paused&&game.player.alive&&game.phase==='battle'){
       const p=game.player,dist=Math.hypot(pointer.x-p.x,pointer.y-p.y),angle=Math.atan2(pointer.y-p.y,pointer.x-p.x);ctx.strokeStyle='#31596755';ctx.lineWidth=.025;ctx.setLineDash([.07,.14]);ctx.beginPath();ctx.moveTo(p.x+Math.cos(angle)*.8,p.y+Math.sin(angle)*.8);ctx.lineTo(p.x+Math.cos(angle)*Math.min(PLAYER_WEAPON.range,dist),p.y+Math.sin(angle)*Math.min(PLAYER_WEAPON.range,dist));ctx.stroke();ctx.setLineDash([]);ctx.strokeStyle=dist>PLAYER_WEAPON.range+TANK_RADIUS?'#a4775e':'#285c70';ctx.lineWidth=.04;ctx.beginPath();ctx.arc(pointer.x,pointer.y,.19,0,Math.PI*2);ctx.moveTo(pointer.x-.30,pointer.y);ctx.lineTo(pointer.x-.13,pointer.y);ctx.moveTo(pointer.x+.13,pointer.y);ctx.lineTo(pointer.x+.30,pointer.y);ctx.moveTo(pointer.x,pointer.y-.30);ctx.lineTo(pointer.x,pointer.y-.13);ctx.moveTo(pointer.x,pointer.y+.13);ctx.lineTo(pointer.x,pointer.y+.30);ctx.stroke();
     }
     ctx.restore();
   }
   function processEvents(){
-    for(const e of game.drainEvents()){
-      beep(e.type,e.side);if(['hit','kill','wreck','death','repair'].includes(e.type)&&Number.isFinite(e.x)){
-        const count=['kill','death'].includes(e.type)?18:e.type==='repair'?12:6;
-        for(let i=0;i<count;i++){const a=Math.random()*Math.PI*2,s=.3+Math.random()*1.8;particles.push({x:e.x,y:e.y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,age:0,life:.2+Math.random()*.5,size:.025+Math.random()*.07,color:e.type==='repair'?'#d9f29a':e.type==='hit'?'#e7bd6b':'#8b6240'});}
+    for (const event of game.drainEvents()) {
+      let type = event.type;
+      if (type==='shot') type = event.side==='player'?'playerShot':'enemyShot';
+      if (type==='wreck') type = event.removed?'wreckBreaks':'wreckAppears';
+      beep(type);
+      if (effectStyles[type] && Number.isFinite(event.x)) {
+        effects.push({ type, x:event.x, y:event.y, at:visualTime });
       }
-      if(e.type==='death'){shake=.06;toast('Танк потерян. Возвращение через 4 секунды.',3);}
-      if(e.type==='wreck'&&!e.removed&&game.stats.wrecksCreated===1)toast('Корпус появился. Прекрати огонь, если хочешь сохранить его.',4);
-      if(e.type==='repair')routeKey=null;
+      if (type==='death') {
+        shake=.06;
+        toast('Танк потерян. Возвращение через 4 секунды.',3);
+      }
+      if (type==='wreckAppears' && !firstWreck) {
+        firstWreck = {
+          id:event.id, until:visualTime+discoverySeconds, destroyed:false,
+          wave:game.waveNumber, inPrep:game.phase==='prep'
+        };
+      }
+      if (type==='wreckBreaks' && firstWreck?.id===event.id) firstWreck.destroyed=true;
+      if (type==='repair') routeKey=null;
     }
   }
   function frame(now){
     const dt=Math.min((now-(lastFrame||now))/1000,.05);lastFrame=now;
-    if(!game.paused){visualTime+=dt;game.update(dt,{x:(keys.has('KeyD')||keys.has('ArrowRight')?1:0)-(keys.has('KeyA')||keys.has('ArrowLeft')?1:0),y:(keys.has('KeyS')||keys.has('ArrowDown')?1:0)-(keys.has('KeyW')||keys.has('ArrowUp')?1:0),aimX:pointer.x,aimY:pointer.y,fire:pointer.down});processEvents();for(let i=particles.length-1;i>=0;i--){const p=particles[i];p.age+=dt;p.x+=p.vx*dt;p.y+=p.vy*dt;if(p.age>=p.life)particles.splice(i,1);}shake=Math.max(0,shake-dt*.4);}
+    if(!game.paused){visualTime+=dt;game.update(dt,{x:(keys.has('KeyD')||keys.has('ArrowRight')?1:0)-(keys.has('KeyA')||keys.has('ArrowLeft')?1:0),y:(keys.has('KeyS')||keys.has('ArrowDown')?1:0)-(keys.has('KeyW')||keys.has('ArrowUp')?1:0),aimX:pointer.x,aimY:pointer.y,fire:pointer.down});processEvents();
+      for (let i=effects.length-1;i>=0;i--) {
+        const {type,at}=effects[i];
+        if (visualTime-at>=effectStyles[type].life) effects.splice(i,1);
+      }
+      shake=Math.max(0,shake-dt*.4);
+    }
     if(toastUntil&&now>toastUntil){el('toast').classList.remove('show');toastUntil=0;}
     updateUi();draw();requestAnimationFrame(frame);
   }
