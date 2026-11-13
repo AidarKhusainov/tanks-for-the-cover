@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#152329">
-  <meta name="description" content="Защити базу на разрушенном поле боя. Лёгкие танки преследуют тебя, средние атакуют базу. Четыре волны, три направления, клавиатура и мышь.">
+  <meta name="description" content="Защити базу на разрушенном поле боя. Лёгкие танки преследуют тебя, средние и тяжёлые атакуют базу. Три направления, клавиатура и мышь.">
   <title>Танчики — магнитный рубеж</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect width='48' height='48' rx='10' fill='%23152329'/%3E%3Cpath fill='%23d4ed87' d='M11 15h6v25h-6zm20 0h6v25h-6zM18 19h12v17H18zM22 5h4v22h-4z'/%3E%3C/svg%3E">
   <style>
@@ -17,6 +17,16 @@
 .player-meter .meter-track{margin-top:6px}
 .dashboard .module-status{margin:4px 0 0;color:#bdced2;font-size:10px;line-height:1.2}
 .action-detail{margin:5px 0 0}
+#campaign-dialog{width:calc(100% - 32px);max-height:calc(100dvh - 32px);overflow:hidden}
+#campaign-dialog[open]{display:flex;flex-direction:column}
+#campaign-dialog::backdrop{background:#102024c9;backdrop-filter:blur(5px)}
+#campaign-content{min-height:0;overflow:auto;padding:4px 8px}
+#campaign-content:focus-visible{outline:2px solid var(--lime);outline-offset:-2px}
+@media(max-width:480px){.topbar{flex-wrap:wrap}.header-actions{flex-wrap:wrap}}
+.campaign-wave{padding:12px 0;border-top:1px solid var(--line)}
+.campaign-wave h3{font-size:13px;margin:0;color:var(--ink)}
+.campaign-wave:last-child h3{color:var(--lime)}
+.campaign-wave .lane-row{margin-top:7px}
 @media(min-width:900px) and (max-height:800px){.app{max-width:1180px;padding-top:16px}.topbar{margin-bottom:18px}.dashboard{height:62px}.sidebar{padding-top:17px}.sidebar h2{margin-top:14px}.sidebar-copy{margin-bottom:15px}.tactical-note{margin-top:18px}}
 @media(min-width:900px) and (max-height:800px){
   .sidebar h2{margin:9px 0 5px}
@@ -38,7 +48,7 @@
   <div class="app">
     <header class="topbar">
       <div class="brand"><span class="brand-icon" aria-hidden="true"><i></i></span><div><p class="eyebrow">ТАНЧИКИ <span>/</span> ПРОТОТИП 05</p><h1>Магнитный рубеж</h1></div></div>
-      <div class="header-actions"><button id="sound" class="icon-button" aria-pressed="false" title="Включить звук">Звук выкл</button><button id="help" class="icon-button" title="Правила и управление">Как играть <span>?</span></button><button id="pause" class="icon-button" title="Пауза (Esc)">Ⅱ <span class="desktop-label">Пауза</span></button></div>
+      <div class="header-actions"><button id="sound" class="icon-button" aria-pressed="false" title="Включить звук">Звук выкл</button><button id="campaign" class="icon-button" aria-haspopup="dialog">Кампания</button><button id="help" class="icon-button" title="Правила и управление">Как играть <span>?</span></button><button id="pause" class="icon-button" title="Пауза (Esc)">Ⅱ <span class="desktop-label">Пауза</span></button></div>
     </header>
     <div class="mobile-notice">Для игры нужны клавиатура и мышь. Открой эту страницу на компьютере.</div>
     <main class="game-layout">
@@ -46,7 +56,7 @@
         <div class="dashboard">
           <div class="meter base-meter"><div><span>БАЗА</span><strong id="base-value">240 <small>/ 240</small></strong></div><div class="meter-track"><i id="base-fill"></i></div></div>
           <div class="meter player-meter"><div><span>ТВОЙ ТАНК</span><strong id="player-value">60 <small>/ 60</small></strong></div><div class="meter-track"><i id="player-fill"></i></div><p class="module-status" id="player-module">Модуль: нет</p></div>
-          <div class="wave-meter"><span>ВОЛНА</span><strong><b id="wave-value">01</b><small>/ 04</small></strong></div>
+          <div class="wave-meter"><span>ВОЛНА</span><strong><b id="wave-value">01</b><small id="wave-max"></small></strong></div>
           <div class="kill-meter"><span>УНИЧТОЖЕНО</span><strong id="kill-value">0</strong></div>
         </div>
         <div class="board-shell" id="board-shell">
@@ -62,7 +72,7 @@
         <div class="underboard"><span><i class="legend-dot player" aria-hidden="true"></i>Ты</span><span><i class="legend-dot hunter" aria-hidden="true"></i>Лёгкий · за тобой</span><span><i class="legend-dot assault" aria-hidden="true"></i>Средний · к базе</span><span><i class="legend-square" aria-hidden="true"></i>Корпус</span><label class="route-toggle" title="Круг отмечает первый корпус для пролома."><input id="routes" type="checkbox" checked> Маршрут при текущих препятствиях</label></div>
       </section>
       <aside class="sidebar" aria-label="Управление волной и корпусами">
-        <div class="phase-head"><span id="phase-badge" class="phase-badge">ПОДГОТОВКА</span><span id="phase-number" class="muted">01 / 04</span></div>
+        <div class="phase-head"><span id="phase-badge" class="phase-badge">ПОДГОТОВКА</span><span id="phase-number" class="muted"></span></div>
         <h2 id="phase-title">Выбери позицию</h2><p id="phase-copy" class="sidebar-copy">Лёгкие отвлекают тебя, средние прорываются к базе. Используй руины, чтобы разделить угрозы.</p>
         <section class="wave-card"><div class="section-label"><span id="wave-card-title">СЛЕДУЮЩАЯ АТАКА</span><span id="enemy-total"></span></div><div id="wave-plan"></div><p id="wave-note" class="fineprint">Сначала займи удобную позицию, затем начни волну.</p></section>
         <button id="start" class="primary">Начать волну 1 <span>↵</span></button>
@@ -84,6 +94,11 @@
     </main>
     <footer><div class="controls"><span><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> движение</span><span><kbd>Мышь</kbd> прицел</span><span><kbd>ЛКМ</kbd> огонь / выбор корпуса</span><span><kbd>Esc</kbd> пауза</span></div><a id="download" href="index.html" download="tank-prototype.html">Скачать для игры офлайн ↓</a></footer>
   </div>
+  <dialog id="campaign-dialog" class="modal" aria-labelledby="campaign-title">
+    <h2 id="campaign-title">Кампания</h2>
+    <div id="campaign-content" tabindex="0" autofocus></div>
+    <form method="dialog" class="modal-actions"><button class="primary">Закрыть</button></form>
+  </dialog>
   <script>
 /* Scenario data shared by simulation, preview and presentation. Y grows down. */
 (function (root) {
@@ -130,7 +145,11 @@
       [{start:0,lane:'A',types:['light','medium']},{start:5,lane:'B',types:['light','light']}],
       [{start:0,lane:'B',types:['medium','light','light']},{start:4,lane:'C',types:['light','medium']}],
       [{start:0,lane:'A',types:['medium','light']},{start:2,lane:'B',types:['light','medium']},{start:6,lane:'C',types:['light','light']}],
-      [{start:0,lane:'A',types:['medium','light','medium']},{start:1,lane:'B',types:['light','medium','light']},{start:4,lane:'C',types:['light','medium']}]
+      [{start:0,lane:'A',types:['medium','light','heavy']},{start:1,lane:'B',types:['light','medium','light']},{start:4,lane:'C',types:['light','medium']}],
+      [{start:0,lane:'A',types:['light','medium','light']},{start:1,lane:'C',types:['light','medium','light']},{start:6,lane:'B',types:['heavy','light']}],
+      [{start:0,lane:'A',types:['light','medium','light']},{start:0,lane:'B',types:['light','light','medium']},{start:5,lane:'C',types:['light','medium','light','light']}],
+      [{start:0,lane:'B',types:['light','heavy','light','medium']},{start:0,lane:'C',types:['light','light','medium']},{start:4,lane:'A',types:['medium','light','light','heavy']}],
+      [{start:0,lane:'A',types:['heavy','light','medium','light','light']},{start:2,lane:'B',types:['light','medium','light','light']},{start:5,lane:'C',types:['heavy','light','medium','light','light']}]
     ],
     ROADS:[
       {width:2.0,points:[{x:3,y:0},{x:3,y:6.5},{x:9.4,y:8.8},{x:9.7,y:12.8},{x:12.7,y:13.5}]},
@@ -1279,7 +1298,7 @@
       if (oldCount !== this.wrecks.length) this._invalidateNavigation();
       if (completed === this.config.WAVES.length) {
         this.phase = 'won';
-        this.lastMessage = 'Все четыре волны отбиты';
+        this.lastMessage = `Отбито волн: ${completed}`;
         this._emit('win');
         return;
       }
@@ -1594,10 +1613,12 @@
   let selected = null, lastFrame = 0, visualTime = 0, lastUiKey = '', endShown = false;
   let reinforcement = null;
   let modalKind = null, pauseBeforeHelp = false, toastUntil = 0, routePreview = [];
+  const campaignDialog = el('campaign-dialog');
   let routeKey = null, soundOn = false, audio = null, shake = 0;
   const clamp = (v,a,b) => Math.max(a,Math.min(b,v));
-  const wavePackages = CONFIG.WAVES.map(wave => wave.map(p => ({time:p.start,lane:p.lane,types:p.types})));
-  const waveCount = wavePackages.length;
+  const waveCount = CONFIG.WAVES.length;
+  const waveLabel = wave => String(wave).padStart(2, '0');
+  el('wave-max').textContent = `/ ${waveLabel(waveCount)}`;
   const tankPlural = new Intl.PluralRules('ru');
   const enemyLooks = {
     light: { name: 'Лёгкий', role: 'преследует игрока', mark: 'Л', dark: '#8b453b', main: '#c76f58', top: '#e69b7d' },
@@ -1620,8 +1641,12 @@
     const { name, role, mark } = enemyLooks[type];
     const spec = CONFIG.ENEMY_TYPES[type];
     const description = `${name}: ${role} · ${spec.hp} HP · попаданий: ${hitsToKill(spec.hp)}${spec.wreck ? ' · оставляет корпус' : ''}`;
-    return `<span class="enemy-pip ${type}" title="${description}" aria-label="${description}">${mark}</span>`;
+    return `<span class="enemy-pip ${type}" role="img" title="${description}" aria-label="${description}">${mark}</span>`;
   }
+  function waveGroups(wave) {
+    return wave.map(({lane, start, types}) => `<div class="lane-row"><span class="lane-chip ${lane.toLowerCase()}">${lane}</span><div class="lane-enemies">${types.map(enemyPlanPip).join('')}</div><span class="lane-time">${start === 0 ? 'Сразу' : `+${start} с`}</span></div>`).join('');
+  }
+  const spawnInterval = CONFIG.SPAWN_INTERVAL.toLocaleString('ru');
   const breachPointRadius = .11, breachPointStroke = .045;
   const laneColors = ['#4d7469','#8b663e','#735f7f'];
   const laneColor = lane => laneColors[Object.keys(CONFIG.SPAWNS).indexOf(lane) % laneColors.length] || laneColors[0];
@@ -1648,10 +1673,33 @@
     game.paused=true;
     openModal('pause','БОЙ ОСТАНОВЛЕН','Пауза','<p>Можно выдохнуть. Поле и все снаряды ждут твоего возвращения.</p>',[['Продолжить',resume,true],['Начать попытку заново',reset,false]]);
   }
+  function showCampaign(){
+    if(modalKind)return;
+    const waves=CONFIG.WAVES.map((wave,index)=>`
+      <section class="campaign-wave">
+        <h3>Волна ${index+1}${index+1===waveCount?' · Финал':''}</h3>
+        ${waveGroups(wave)}
+      </section>`).join('');
+    const legend=Object.values(enemyLooks).map(({mark,name})=>`${mark} — ${name.toLowerCase()}`).join(' · ');
+    const content=el('campaign-content');
+    content.innerHTML=`<p>${legend}. Группы выходят параллельно, на одном входе между появлениями не менее ${spawnInterval} с.</p>${waves}`;
+    clearInput();
+    game.paused=true;
+    campaignDialog.showModal();
+    content.scrollTop=0;
+  }
+  campaignDialog.addEventListener('pointerdown',event=>{
+    if(event.target===campaignDialog)event.preventDefault();
+  });
+  campaignDialog.addEventListener('close',()=>{
+    game.paused=false;
+    lastFrame=performance.now();
+    el('campaign').focus({preventScroll:true});
+  });
   function help(){
     if(modalKind==='help'){closeHelp();return;}
     pauseBeforeHelp=game.paused;game.paused=true;
-    openModal('help','ТРИ НАПРАВЛЕНИЯ · ОДНА БАЗА','Как играть',`<ol class="modal-list"><li><b>Защищай базу.</b> WASD — движение, мышь — прицел, удержание ЛКМ — огонь. До старта проверь входы и время атаки в плане волны.</li><li><b>Лёгкий (Л) охотится за тобой.</b> Знак «!» означает преследование. Уходи за укрытие и меняй позицию.</li><li><b>Средний (С) и тяжёлый (Т) атакуют базу.</b> Рядом с танком указаны HP и число попаданий до уничтожения (×). Оставленные корпуса меняют маршрут и задерживают снаряды обеих сторон.</li><li><b>Враг стреляет без предупреждения.</b> При открытой цели и готовом орудии он сразу выпускает снаряд. Меняй позицию и используй твёрдые укрытия. Воронки и следы на земле проходимы.</li><li><b>Между волнами</b> нажми на корпус: оставь его баррикадой или разбери на ремонт базы до +${CONFIG.ENEMY_TYPES.medium.wreck.repairHp} HP за средний или +${CONFIG.ENEMY_TYPES.heavy.wreck.repairHp} HP за тяжёлый. Средний корпус также даёт двигатель, тяжёлый — броню. В слоте помещается один модуль. Последнее действие можно отменить через Ctrl+Z. Подпись «до N» показывает последнюю волну службы.</li><li>Твой танк восстанавливается между волнами и возвращается через 4 секунды после гибели. Пока ты возвращаешься, бой продолжается.</li></ol>`,[['Понятно',closeHelp,true]]);
+    openModal('help','ТРИ НАПРАВЛЕНИЯ · ОДНА БАЗА','Как играть',`<ol class="modal-list"><li><b>Защищай базу.</b> WASD — движение, мышь — прицел, удержание ЛКМ — огонь. До старта проверь входы и время атаки в плане волны. Кнопка «Кампания» показывает расписание всех волн (${waveCount}).</li><li><b>Лёгкий (Л) охотится за тобой.</b> Знак «!» означает преследование. Уходи за укрытие и меняй позицию.</li><li><b>Средний (С) и тяжёлый (Т) атакуют базу.</b> Рядом с танком указаны HP и число попаданий до уничтожения (×). Оставленные корпуса меняют маршрут и задерживают снаряды обеих сторон.</li><li><b>Враг стреляет без предупреждения.</b> При открытой цели и готовом орудии он сразу выпускает снаряд. Меняй позицию и используй твёрдые укрытия. Воронки и следы на земле проходимы.</li><li><b>Между волнами</b> нажми на корпус: оставь его баррикадой или разбери на ремонт базы до +${CONFIG.ENEMY_TYPES.medium.wreck.repairHp} HP за средний или +${CONFIG.ENEMY_TYPES.heavy.wreck.repairHp} HP за тяжёлый. Средний корпус также даёт двигатель, тяжёлый — броню. В слоте помещается один модуль. Последнее действие можно отменить через Ctrl+Z. Подпись «до N» показывает последнюю волну службы.</li><li>Твой танк восстанавливается между волнами и возвращается через 4 секунды после гибели. Пока ты возвращаешься, бой продолжается.</li></ol>`,[['Понятно',closeHelp,true]]);
   }
   function closeHelp(){game.paused=pauseBeforeHelp;closeModal();if(game.paused){game.paused=false;pause();}}
   function reset(){game.reset();selected=null;reinforcement=null;routeKey=null;routePreview=[];particles.length=0;endShown=false;lastUiKey='';closeModal();game.paused=false;toast('Новая попытка. Перед боем можно занять позицию.');}
@@ -1680,7 +1728,7 @@
     toast('Корпус укреплён. Донор разобран.');
   }
   function undo(){if(game.undo()){selected=null;reinforcement=null;routeKey=null;updateUi();toast('Действие отменено. Позиция танка восстановлена.');}}
-  el('start').onclick=start;el('pause').onclick=pause;el('help').onclick=help;el('repair').onclick=repair;
+  el('start').onclick=start;el('pause').onclick=pause;el('help').onclick=help;el('campaign').onclick=showCampaign;el('repair').onclick=repair;
   el('install-module').onclick=installModule;el('leave').onclick=()=>{selected=null;lastUiKey='';};el('undo').onclick=undo;
   el('choose-reinforcement').onclick=chooseReinforcement;
   el('confirm-reinforcement').onclick=confirmReinforcement;
@@ -1693,6 +1741,7 @@
     const o=audio.createOscillator(),g=audio.createGain();o.type=type==='repair'||type==='win'?'sine':'triangle';o.frequency.setValueAtTime(freq,audio.currentTime);o.frequency.exponentialRampToValueAtTime(Math.max(20,freq*.45),audio.currentTime+duration);g.gain.setValueAtTime(volume,audio.currentTime);g.gain.exponentialRampToValueAtTime(.0001,audio.currentTime+duration);o.connect(g);g.connect(audio.destination);o.start();o.stop(audio.currentTime+duration);
   }
   document.addEventListener('keydown',(e)=>{
+    if(campaignDialog.open)return;
     const interactive=e.target instanceof Element&&e.target.closest('button,a,input,select,textarea');
     if(['KeyW','KeyA','KeyS','KeyD','ArrowUp','ArrowLeft','ArrowDown','ArrowRight'].includes(e.code)&&!modalKind){e.preventDefault();keys.add(e.code);}
     if(e.code==='Escape'){e.preventDefault();if(!e.repeat){if(reinforcement&&!modalKind&&!game.paused)cancelReinforcement();else pause();}}
@@ -1727,7 +1776,7 @@
     const baseHp=Math.max(0,Math.ceil(game.base.hp)),playerHp=Math.max(0,Math.ceil(game.player.hp));
     el('base-value').innerHTML=`${baseHp} <small>/ ${game.base.maxHp}</small>`;el('base-value').classList.toggle('low-hp',baseHp<=60);el('base-fill').style.width=clamp(baseHp/game.base.maxHp*100,0,100)+'%';
     el('player-value').innerHTML=game.player.alive?`${playerHp} <small>/ ${game.player.maxHp}</small>`:`<small>Возврат</small> ${Math.ceil(game.player.respawn)}с`;
-    el('player-fill').style.width=clamp(playerHp/game.player.maxHp*100,0,100)+'%';el('wave-value').textContent=String(Math.min(waveCount,game.waveNumber)).padStart(2,'0');el('kill-value').textContent=game.stats.kills;
+    el('player-fill').style.width=clamp(playerHp/game.player.maxHp*100,0,100)+'%';el('wave-value').textContent=waveLabel(game.waveNumber);el('kill-value').textContent=game.stats.kills;
     el('start').hidden=!prep&&!finished;el('start').disabled=game.paused||!!reinforcement;el('start').innerHTML=finished?'Новая попытка <span>↵</span>':`Начать волну ${game.waveNumber} <span>↵</span>`;
     el('combat-status').hidden=!fighting;el('combat-copy').textContent=game.phase==='settling'?'Ждём последние снаряды…':`Осталось противников: ${game.remaining}`;
     el('board-tag-text').textContent=prep?'Разведай поле · выбери позицию':game.phase==='settling'?'Последние снаряды в полёте':finished?(game.phase==='won'?'База защищена':'База уничтожена'):'Лёгкие преследуют · остальные идут к базе';
@@ -1740,15 +1789,14 @@
       lastUiKey=stateKey;const badge=el('phase-badge');badge.className='phase-badge'+(fighting?' battle':finished?' end':'');badge.textContent=prep?'ПОДГОТОВКА':fighting?'БОЙ':game.phase==='won'?'ПОБЕДА':'ПОРАЖЕНИЕ';
       el('player-module').textContent=`Модуль: ${moduleNames[game.player.module]??'нет'}`;
       showActionReason('undo-reason',game.canUndo?null:!prep?preparationReasons['not-prep']:game.paused?preparationReasons.paused:'Пока нечего отменять.');
-      el('phase-number').textContent=`${String(Math.min(waveCount,game.waveNumber)).padStart(2,'0')} / ${String(waveCount).padStart(2,'0')}`;
+      el('phase-number').textContent=`${waveLabel(game.waveNumber)} / ${waveLabel(waveCount)}`;
       el('phase-title').textContent=prep?(game.waveIndex===0?'Выбери позицию':'Используй корпуса'):finished?(game.phase==='won'?'База уцелела':'Попробуй ещё'):'Держи оборону';
       el('phase-copy').textContent=prep?(game.waveIndex===0?'Лёгкие отвлекают тебя, средние прорываются к базе. Используй руины, чтобы разделить угрозы.':'Проверь направления следующей атаки. Оставь полезные корпуса или разбери их на ремонт либо модуль.'):fighting?'Уводи лёгких от открытой позиции и перехватывай атакующих базу.':'Попробуй другую позицию и используй корпуса у укрытий.';
       el('wave-card-title').textContent=prep?'СЛЕДУЮЩАЯ АТАКА':'АТАКА ЭТОЙ ВОЛНЫ';
-      const plan=wavePackages[Math.min(waveCount-1,game.waveIndex)],total=plan.reduce((n,p)=>n+p.types.length,0);
+      const plan=CONFIG.WAVES[game.waveIndex],total=plan.reduce((n,p)=>n+p.types.length,0);
       el('enemy-total').textContent=`${total} ${{one:'танк',few:'танка',many:'танков',other:'танка'}[tankPlural.select(total)]}`;
-      el('wave-plan').innerHTML=plan.map(p=>`<div class="lane-row"><span class="lane-chip ${p.lane.toLowerCase()}">${p.lane}</span><div class="lane-enemies">${p.types.map(enemyPlanPip).join('')}</div><span class="lane-time">${p.time===0?'сразу':'+'+p.time+'с'}</span></div>`).join('');
-      const lanes=[...new Set(plan.map(p=>p.lane))].join(' · '),interval=String(CONFIG.SPAWN_INTERVAL??2.5).replace('.',',');
-      el('wave-note').textContent=`Входы ${lanes}. На каждом входе интервал ${interval} с.`;
+      el('wave-plan').innerHTML=waveGroups(plan);
+      el('wave-note').textContent=`Между появлениями на одном входе не менее ${spawnInterval} с.`;
       el('salvage-actions').hidden=!prep||!wreck||!!reinforcement;
       el('reinforcement-actions').hidden=!reinforcement;
       if(reinforcement){
@@ -1779,7 +1827,7 @@
       } else el('salvage-content').innerHTML=`<p class="empty-state">${!game.wrecks.length?'Пока нет корпусов. Их оставляют средние и тяжёлые танки.':prep?'Нажми на корпус на поле, чтобы выбрать действие.':'Корпуса уже работают как препятствия. Разбор и установка модулей доступны между волнами.'}</p>`;
       el('tip').textContent=!game.player.alive?'Твой танк скоро вернётся. Бой продолжается, а база остаётся уязвимой.':prep?'Маршрут ведёт к базе или до первого корпуса для пролома, отмеченного кругом. Лёгкий может свернуть к тебе.':'За тобой идёт лёгкий? Разорви видимость у руин, затем вернись к защите базы. Следи за флангами.';
     }
-    if(finished&&!endShown){endShown=true;const win=game.phase==='won';openModal('end',win?'ЧЕТЫРЕ ВОЛНЫ ПРОЙДЕНЫ':'БАЗА ПОТЕРЯНА',win?'Оборона выдержала':'Ещё одна попытка',`<p>${win?'Ты защитил базу. Попробуй пройти ещё раз и оставить корпуса в других местах.':'Попробуй раньше перехватывать противников и закрывать проходы корпусами.'}</p><div class="result-grid"><div><strong>${game.stats.kills}</strong><span>ТАНКОВ УНИЧТОЖЕНО</span></div><div><strong>${game.stats.wrecksCreated}</strong><span>КОРПУСОВ СОЗДАНО</span></div><div><strong>${baseHp}</strong><span>HP БАЗЫ</span></div></div><p>Удалось ли намеренно оставить полезный корпус? Пришлось ли разобрать его ради ремонта?</p>`,[['Играть ещё раз',reset,true],['Посмотреть поле',()=>{closeModal();},false]]);}
+    if(finished&&!endShown){endShown=true;const win=game.phase==='won';openModal('end',win?`ВОЛНЫ ПРОЙДЕНЫ · ${waveCount}/${waveCount}`:'БАЗА ПОТЕРЯНА',win?'Оборона выдержала':'Ещё одна попытка',`<p>${win?'Ты защитил базу. Попробуй пройти ещё раз и оставить корпуса в других местах.':'Попробуй раньше перехватывать противников и закрывать проходы корпусами.'}</p><div class="result-grid"><div><strong>${game.stats.kills}</strong><span>ТАНКОВ УНИЧТОЖЕНО</span></div><div><strong>${game.stats.wrecksCreated}</strong><span>КОРПУСОВ СОЗДАНО</span></div><div><strong>${baseHp}</strong><span>HP БАЗЫ</span></div></div><p>Удалось ли намеренно оставить полезный корпус? Пришлось ли разобрать его ради ремонта?</p>`,[['Играть ещё раз',reset,true],['Посмотреть поле',()=>{closeModal();},false]]);}
   }
   function roundRect(x,y,w,h,r){ctx.beginPath();ctx.roundRect(x,y,w,h,r);}
   function text(label,x,y,size,color,align='center',weight=600){

@@ -694,3 +694,123 @@ test('starting a wave commits reinforcement; target expires one wave later, incl
   assert.equal(game.phase, 'won');
   assert.equal(game.undo(), false);
 });
+
+// PDD §8, approved in #2. Each line records the start, lane and ordered types.
+const APPROVED_WAVES = [
+  '0 A ЛС; 5 B ЛЛ',
+  '0 B СЛЛ; 4 C ЛС',
+  '0 A СЛ; 2 B ЛС; 6 C ЛЛ',
+  '0 A СЛТ; 1 B ЛСЛ; 4 C ЛС',
+  '0 A ЛСЛ; 1 C ЛСЛ; 6 B ТЛ',
+  '0 A ЛСЛ; 0 B ЛЛС; 5 C ЛСЛЛ',
+  '0 B ЛТЛС; 0 C ЛЛС; 4 A СЛЛТ',
+  '0 A ТЛСЛЛ; 2 B ЛСЛЛ; 5 C ТЛСЛЛ'
+];
+const TYPE_MARKS = { light: 'Л', medium: 'С', heavy: 'Т' };
+
+test('battlefield packages and totals match the approved eight-wave table', () => {
+  const actual = Array.from(CONFIG.WAVES, wave => Array.from(wave, ({ start, lane, types }) =>
+    `${start} ${lane} ${types.map(type => TYPE_MARKS[type]).join('')}`
+  ).join('; '));
+  assert.deepEqual(actual, APPROVED_WAVES);
+
+  const types = CONFIG.WAVES.flatMap(wave => wave.flatMap(group => group.types));
+  assert.deepEqual(Object.fromEntries(Object.keys(TYPE_MARKS).map(type =>
+    [type, types.filter(item => item === type).length]
+  )), { light: 41, medium: 19, heavy: 6 });
+});
+
+test('the approved campaign advances through eight waves, settles and resets', () => {
+  const game = new Game();
+  // The fixture clears enemies immediately after observing each real spawn.
+  // Queue, clock, wreck expiry and completion still run through Game.update.
+  const spawnTimes = [];
+  game._updateEnemy = enemy => {
+    spawnTimes.push([game._waveTime, enemy.lane, TYPE_MARKS[enemy.type]]);
+    game._killEnemy(enemy);
+  };
+
+  Object.assign(game.player, { x: 3, y: 6.5 });
+  game.base.hp = 210;
+  game._killEnemy(mediumAt({ x: 5, y: 6.5 }));
+  assert.equal(game.repairFromWreck(game.wrecks[0].id).ok, true);
+  const armor = createWreck(game, 'heavy', 7, 6.5);
+  assert.equal(game.installModuleFromWreck(armor.id).ok, true);
+  assert.equal(game.player.module, 'armor');
+  assert.equal(game.player.hp, 90);
+  assert.equal(game.player.maxHp, 90);
+  game.update(0.25, { x: -1 });
+  assert.equal(game.undo(), true);
+  assert.deepEqual(position(game.player), { x: 3, y: 6.5 });
+  assert.equal(game.player.module, null);
+  assert.equal(game.player.hp, 60);
+  assert.equal(game.player.maxHp, 60);
+  assert.equal(game.base.hp, 240, 'undo only reverses the module installation');
+  assert.equal(game.wrecks[0].id, armor.id);
+  assert.equal(game.installModuleFromWreck(armor.id).ok, true);
+  game.update(60);
+  assert.equal(game.phase, 'prep', 'preparation has no timer');
+
+  for (const [index, wave] of APPROVED_WAVES.entries()) {
+    const waveNumber = index + 1;
+    const expected = wave.split('; ').flatMap(group => {
+      const [start, lane, marks] = group.split(' ');
+      return [...marks].map((mark, position) => [Number(start) + position * 2.5, lane, mark]);
+    }).sort(([leftTime, leftLane], [rightTime, rightLane]) =>
+      leftTime - rightTime || leftLane.localeCompare(rightLane)
+    );
+    assert.equal(game.phase, 'prep', `preparation for wave ${waveNumber}`);
+    assert.equal(game.waveNumber, waveNumber);
+    assert.equal(game.startWave(), true);
+    assert.equal(game.remaining, expected.length);
+    assert.deepEqual(position(game.player), { x: 3, y: 6.5 });
+    assert.equal(game.base.hp, 240);
+    assert.equal(game.player.module, 'armor');
+    assert.equal(game.player.hp, 90);
+    assert.equal(game.player.maxHp, 90);
+    assert.equal(game._undo.length, 0);
+    assert.equal(game.undo(), false);
+    game.player.hp = 30;
+
+    for (const enemy of game.enemies) game._updateEnemy(enemy); // Start-time spawns.
+    game.update(expected.at(-1)[0] - FRAME);
+    assert.equal(game.phase, 'battle');
+    assert.ok(game.remaining > 0);
+
+    if (waveNumber === APPROVED_WAVES.length) {
+      shootEnemy(game, { x: 10.6, y: 13.5 }, game.base);
+    }
+    game.update(FRAME * 2);
+    assert.deepEqual(spawnTimes.splice(0).map(([time, lane, mark]) =>
+      [Math.round(time * 60) / 60, lane, mark]
+    ), expected, `spawns in wave ${waveNumber}`);
+
+    if (waveNumber === APPROVED_WAVES.length) {
+      assert.equal(game.phase, 'settling');
+      assert.equal(game.remaining, 0);
+      assert.equal(game.base.hp, 240);
+      assert.equal(game.bullets.length, 1);
+      game.update(0.3, { fire: true });
+      assert.equal(game.phase, 'won');
+      assert.equal(game.base.hp, 228);
+      assert.equal(game.stats.shots, 0);
+      assert.match(game.lastMessage, /8/);
+    }
+  }
+
+  game.reset();
+  const fresh = new Game();
+  assert.equal(game.phase, 'prep');
+  assert.equal(game.waveNumber, 1);
+  assert.deepEqual(game.player, fresh.player);
+  assert.equal(game.player.module, null);
+  assert.deepEqual(game.base, fresh.base);
+  assert.deepEqual(game.stats, fresh.stats);
+  assert.equal(game.remaining, 0);
+  assert.equal(game.wrecks.length, 0);
+  assert.equal(game.bullets.length, 0);
+  assert.equal(game.canUndo, false);
+  game.startWave();
+  assert.equal(game.remaining, 4);
+  assert.deepEqual(Array.from(game.enemies, enemy => [enemy.lane, enemy.type]), [['A', 'light']]);
+});
