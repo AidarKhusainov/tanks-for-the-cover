@@ -249,3 +249,21 @@ test('blocked preview ends at the same first contact used by the enemy and updat
   assert.equal(reopened.blockedWreckId, null);
   assert.deepEqual(reopened.points.at(-1), enemy.route.at(-1));
 });
+
+test('reinforcement frees the donor passage and undo restores its collisions and route', () => {
+  const game = controlScene();
+  for (const wreck of game.wrecks) wreck.type = 'medium';
+  const [donor, target] = game.wrecks;
+  const probe = { r: 0.5 };
+  const route = () => game.getPreviewPaths().find(path => path.lane === 'A');
+  const before = route();
+  assert.equal(before.blockedWreckId, donor.id);
+  assert.equal(game._positionFree(donor.x, donor.y, probe, false), false);
+  assert.equal(game.reinforceWreck(donor.id, target.id).ok, true);
+  assert.equal(route().blockedWreckId, null);
+  assert.equal(game._positionFree(donor.x, donor.y, probe, false), true);
+  assert.equal(game._positionFree(target.x, target.y, probe, false), false);
+  assert.equal(game.undo(), true);
+  assert.deepEqual(route(), before);
+  assert.equal(game._positionFree(donor.x, donor.y, probe, false), false);
+});
