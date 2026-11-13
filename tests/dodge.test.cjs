@@ -203,3 +203,62 @@ test('a tank that has cleared the shot does not return into it when blocked fart
   assert.equal(shot.hits.length, 0);
   assert.equal(fixture.enemy.hp, 20);
 });
+
+test('a pursuing light dodges a distant grazing shot on a forward arc', () => {
+  const {game, enemy} = scene('light', { player: [3, 6.8], tank: [8.6, 7] });
+  for (let i = 0; i < 4; i++) game.update(STEP);
+  const [aimX, aimY] = grazingAim({game, enemy}, -0.2);
+  for (let i = 0; i < 15; i++) {
+    const {x, y, bodyAngle} = enemy;
+    game.update(STEP, { fire: i === 0, aimX, aimY });
+    if (i === 0) assert.ok(enemy.dodge, 'light starts the forward arc when the shot is fired');
+    if (!enemy.dodge) continue;
+    const turn = enemy.bodyAngle - bodyAngle;
+    assert.ok(Math.abs(Math.atan2(Math.sin(turn), Math.cos(turn))) <= Math.PI / 10 + 1e-7);
+    const heading = bodyAngle + Math.atan2(Math.sin(turn), Math.cos(turn)) / 2;
+    assert.ok((enemy.x - x) * Math.cos(heading) + (enemy.y - y) * Math.sin(heading) > 0);
+  }
+  assert.equal(enemy.hp, 20);
+});
+
+test('a light comes to a full stop for a step before reversing to dodge', () => {
+  const {game, enemy} = scene('light', {
+    player: [3, 6.8], tank: [8.6, 7.22],
+    blockers: [{kind: 'wreck', x: 8.55679, y: 8.32}]
+  });
+  enemy.bodyAngle = Math.PI / 2;
+  const travel = [];
+  for (let i = 0; i < 9; i++) {
+    const {x, y, bodyAngle} = enemy;
+    game.update(STEP, { fire: i === 0, aimX: 20, aimY: 6.8 });
+    const turn = enemy.bodyAngle - bodyAngle;
+    const heading = bodyAngle + Math.atan2(Math.sin(turn), Math.cos(turn)) / 2;
+    travel.push((enemy.x - x) * Math.cos(heading) + (enemy.y - y) * Math.sin(heading));
+  }
+  const reverse = travel.findIndex(distance => distance < -1e-7);
+  assert.ok(reverse > 1, 'tank uses reverse during the dodge');
+  assert.ok(Math.abs(travel[reverse - 1]) < 1e-7, 'no displacement before reversing');
+  assert.ok(travel.slice(0, reverse - 1).some(distance => distance > 1e-7));
+  assert.equal(enemy.hp, 20);
+});
+
+test('a light smoothly returns to pursuit around an obstacle', () => {
+  for (const blocker of [{kind: 'wreck', x: 7.7, y: 7.92}, {kind: 'enemy', x: 7.5, y: 7.72}]) {
+    const {game, enemy} = scene('light', { player: [3, 6.8], tank: [8.6, 7.22], blockers: [blocker] });
+    enemy.bodyAngle = Math.PI / 2;
+    let dodged = false;
+    for (let i = 0; i < 40; i++) {
+      const previous = enemy.bodyAngle;
+      game.update(STEP, { fire: i === 0, aimX: 20, aimY: 6.8 });
+      dodged ||= Boolean(enemy.dodge);
+      if (!dodged || enemy.dodge) continue;
+      const turn = enemy.bodyAngle - previous;
+      assert.ok(Math.abs(Math.atan2(Math.sin(turn), Math.cos(turn))) <= Math.PI / 15 + 1e-7);
+      assert.ok(game._positionFree(enemy.x, enemy.y, enemy, false));
+    }
+    assert.ok(dodged);
+    assert.equal(enemy.dodgeReturn ?? null, null);
+    assert.equal(enemy.intent, 'press');
+    assert.equal(enemy.hp, 20);
+  }
+});

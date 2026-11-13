@@ -215,8 +215,15 @@
   const playerStatsFor = module => PLAYER_MODULES[module] ?? PLAYER_BASE_STATS;
   const ENEMY_PROJECTILE_SPEED = 10;
   const LIGHT_DODGE_SPEED = 3;
+  const DRIVE_ACCELERATION = 180;
+  const TURN_ACCELERATION = 64800 * Math.PI / 180;
+  const RETURN_HORIZON = 0.15;
+  const RETURN_TURN_RATE = 720 * Math.PI / 180;
+  const RETURN_STEERING_MIN_TIME = 0.35;
+  const approach = (from, to, limit) => from + clamp(to - from, -limit, limit);
+  const DODGE_TURN_RATE = 1080 * Math.PI / 180;
   const ATTEMPT_LOG_VERSION = 1;
-  const BUILD_ID = 'prototype-06-attempt-log-1';
+  const BUILD_ID = 'prototype-06-smooth-dodge-1';
   const scenarios = typeof module !== 'undefined' && module.exports ? require('./scenarios.js') : root.TankScenarios;
   const ENEMY_TYPES = Object.freeze({
     light: Object.freeze({ hp: 20, speed: 2.6, damage: 8, range: 6, cooldown: 1.4 }),
@@ -238,7 +245,16 @@
 
   const clamp = (n, lo, hi) => Math.max(lo, Math.min(hi, n));
   const square = n => n * n;
+  const angleDelta = (to, from) => Math.atan2(Math.sin(to - from), Math.cos(to - from));
   const distance = (a, b) => Math.hypot(a.x - b.x, a.y - b.y);
+  const shotOffset = (tank, bullet) => bullet.dx * (tank.y - bullet.y) - bullet.dy * (tank.x - bullet.x);
+
+  function clearsShot(tank, bullet, direction, startOffset) {
+    const offset = shotOffset(tank, bullet);
+    // A tank outside the shot corridor must still move sideways to dodge.
+    const minimumShift = Math.abs(startOffset) > tank.r + EPS ? tank.r * 0.15 : EPS;
+    return offset * direction > tank.r + EPS && (offset - startOffset) * direction > minimumShift;
+  }
   const centerRect = r => ({ x: r.x - r.w / 2, y: r.y - r.h / 2, w: r.w, h: r.h });
 
   function pointRectDistanceSq(x, y, rect) {
@@ -838,7 +854,14 @@
       const spec = this._normalizeEnemy(enemy);
       const dodge = order && this.config.AI_MODE === 'roles' &&
         (enemy.type === 'light' || enemy.type === 'medium') ? this._chooseDodge(enemy, spec, dt, order, index) : plannedDodge;
-      if (enemy.dodge && !dodge && !enemy.pressure) enemy.routeVersion = -1;
+      if (enemy.dodge && !dodge) {
+        if (!enemy.pressure) enemy.routeVersion = -1;
+        enemy.dodgeReturn = {};
+      }
+      if (dodge) {
+        enemy.dodgeReturn = null;
+        enemy.smoothDrive = RETURN_STEERING_MIN_TIME;
+      }
       enemy.dodge = dodge;
       enemy.cooldown = Math.max(0, enemy.cooldown - dt);
       if (this.config.AI_MODE === 'roles' && enemy.type === 'light') this._updatePressure(enemy, dt);
@@ -876,41 +899,186 @@
         }
       }
       enemy.stationaryTarget = stationaryTarget;
+      const beforeMove = {x: enemy.x, y: enemy.y, angle: enemy.bodyAngle};
+      enemy.arcStep = false;
+      let blocked = false;
       if (dodge) {
-        const { x, y } = enemy;
-        this._moveCircle(enemy, dodge.dx * dodge.speed * dt, dodge.dy * dodge.speed * dt, false);
-        if (distance(enemy, { x, y }) > EPS) enemy.bodyAngle = Math.atan2(enemy.y - y, enemy.x - x);
-      } else if (!stationary) {
-        if (enemy.pressure) this._followPressure(enemy, spec.speed, dt);
-        else this._followRoute(enemy, spec.speed, dt);
+        blocked = !this._driveArc(enemy, dodge.heading, dodge.gear * dodge.speed * dt, dt);
+      } else {
+        if (!stationary) {
+          if (enemy.pressure) this._followPressure(enemy, spec.speed, dt);
+          else this._followRoute(enemy, spec.speed, dt);
+        }
+        if (enemy.smoothDrive && !enemy.arcStep) {
+          this._followSteeredMotion(enemy, enemy.x, enemy.y, dt);
+        }
       }
       enemy.intent = enemy.pressure ? 'press' : enemy.reacquireDelay > EPS ? 'return' :
         stationaryTarget === 'wreck' || (!stationaryTarget && enemy.targetWreckId) ? 'breach' : 'advance';
       if (facingPoint) enemy.angle = Math.atan2(facingPoint.y - enemy.y, facingPoint.x - enemy.x);
       else if (!enemy.aimPoint && !stationary) enemy.angle = enemy.bodyAngle;
+      const dx = enemy.x - beforeMove.x;
+      const dy = enemy.y - beforeMove.y;
+      if (!enemy.arcStep) {
+        enemy.driveSpeed = (dx * Math.cos(enemy.bodyAngle) + dy * Math.sin(enemy.bodyAngle)) / dt;
+        enemy.driveTurn = angleDelta(enemy.bodyAngle, beforeMove.angle) / dt;
+      }
+      return blocked;
+    }
+
+    _arcDestination(enemy, heading, travel, dt, turnRate, travelLimit) {
+      const maxTurn = turnRate * dt;
+      const gap = angleDelta(heading, enemy.bodyAngle);
+      let turn = clamp(gap, -maxTurn, maxTurn);
+      const previousTurn = clamp(enemy.driveTurn ?? 0, -DODGE_TURN_RATE, DODGE_TURN_RATE);
+      turn = clamp(approach(previousTurn, turn / dt, TURN_ACCELERATION * dt) * dt, -maxTurn, maxTurn);
+      if (turn * gap > 0 && Math.abs(turn) > Math.abs(gap)) turn = gap;
+      const oldSpeed = enemy.driveSpeed ?? 0;
+      const requested = travel / dt;
+      const oldGear = Math.sign(oldSpeed) || enemy.driveGear || 0;
+      const changingGear = oldGear * requested < 0;
+      const dwell = enemy.shiftDwell ?? 0;
+      const targetSpeed = changingGear && (Math.abs(oldSpeed) > EPS || dwell > EPS) ? 0 : requested;
+      enemy.shiftDwell = Math.max(0, dwell - dt);
+      const nextSpeed = approach(oldSpeed, targetSpeed, DRIVE_ACCELERATION * dt);
+      const rampTime = Math.abs(nextSpeed - oldSpeed) / DRIVE_ACCELERATION;
+      travel = (oldSpeed + nextSpeed) / 2 * rampTime + nextSpeed * (dt - rampTime);
+      enemy.driveSpeed = nextSpeed;
+      enemy.driveGear = Math.sign(nextSpeed) || oldGear;
+      if (Math.abs(oldSpeed) > EPS && Math.abs(nextSpeed) <= EPS) enemy.shiftDwell = STEP;
+      if (Math.abs(travel) > travelLimit) {
+        travel = Math.sign(travel) * travelLimit;
+        if (Math.abs(enemy.driveSpeed) > EPS) enemy.shiftDwell = STEP;
+        enemy.driveSpeed = 0;
+      }
+      const halfTurn = turn / 2;
+      const midHeading = enemy.bodyAngle + halfTurn;
+      const chord = Math.abs(halfTurn) > EPS ? travel * Math.sin(halfTurn) / halfTurn : travel;
+      const beforeAngle = enemy.bodyAngle;
+      enemy.bodyAngle += turn;
+      enemy.driveTurn = angleDelta(enemy.bodyAngle, beforeAngle) / dt;
+      if (Math.abs(travel) <= EPS) return null;
+      return { x: enemy.x + chord * Math.cos(midHeading), y: enemy.y + chord * Math.sin(midHeading) };
+    }
+
+    _driveArc(enemy, heading, travel, dt, turnRate = DODGE_TURN_RATE, travelLimit = Infinity) {
+      enemy.arcStep = true;
+      const destination = this._arcDestination(enemy, heading, travel, dt, turnRate, travelLimit);
+      if (!destination) return true;
+
+      const { x, y } = destination;
+      const stop = () => {
+        if (Math.abs(enemy.driveSpeed) > EPS) enemy.shiftDwell = STEP;
+        enemy.driveSpeed = 0;
+        return false;
+      };
+      if (!staticSegmentFree(this.config, enemy.x, enemy.y, x, y, enemy.r)) return stop();
+      // The same circular footprints and contact tolerance as ordinary motion.
+      const clear = actor => pointSegmentDistanceSq(actor.x, actor.y, enemy.x, enemy.y, x, y) >=
+        square(enemy.r + actor.r) - EPS;
+      if (this.player.alive && !clear(this.player)) return stop();
+      if (this.wrecks.some(actor => !clear(actor))) return stop();
+      if (this.enemies.some(actor => actor !== enemy && !actor.dead && actor.hp > 0 && !clear(actor))) return stop();
+      enemy.x = x;
+      enemy.y = y;
+      return true;
+    }
+
+    _followSteeredMotion(enemy, x, y, dt, travelLimit = 0, unconstrainedTravel = 0, upcomingTurn = false) {
+      // Use the ordinary collision/shoulder solver to pick a direction, then
+      // follow it with the same hull and drivetrain used for the dodge.
+      const dx = enemy.x - x;
+      const dy = enemy.y - y;
+      const travel = Math.hypot(dx, dy);
+      enemy.x = x;
+      enemy.y = y;
+      const heading = travel > EPS ? Math.atan2(dy, dx) : enemy.bodyAngle;
+      const gap = Math.abs(angleDelta(heading, enemy.bodyAngle));
+      const requested = gap <= Math.PI / 3 ? travel : 0;
+      const clear = this._driveArc(enemy, heading, requested, dt, RETURN_TURN_RATE, travelLimit);
+      const aligned = Math.abs(angleDelta(heading, enemy.bodyAngle)) < Math.PI / 30;
+      const settled = Math.abs(enemy.driveSpeed - requested / dt) < 0.15 &&
+        (enemy.shiftDwell ?? 0) <= EPS;
+      const stable = clear && aligned && settled;
+      const returning = enemy.dodgeReturn;
+      if (returning) {
+        returning.blocked = !clear;
+        returning.clearSteps = stable ? (returning.clearSteps ?? 0) + 1 : 0;
+        if (returning.clearSteps >= 3) enemy.dodgeReturn = null;
+      }
+      // Keep steering through contact with a blocker. Let the ordinary
+      // controller take over after stable, unobstructed movement resumes.
+      enemy.smoothDrive = Math.max(EPS, enemy.smoothDrive - dt);
+      if (enemy.smoothDrive <= EPS && !enemy.dodgeReturn && stable && !upcomingTurn &&
+        travel >= unconstrainedTravel - EPS) enemy.smoothDrive = 0;
     }
 
     _chooseDodge(enemy, spec, dt, order, index) {
       const speed = enemy.type === 'light' ? LIGHT_DODGE_SPEED : spec.speed;
       for (const bullet of this.bullets) {
-        // React only once the player's shot has travelled a segment.
-        if (bullet.team !== 'player' || bullet.remaining >= PLAYER_WEAPON.range - EPS) continue;
+        if (bullet.team !== 'player') continue;
+        // A light tank can start a forward arc on the launch tick. A gear
+        // change and medium dodges still wait for the first flight segment.
+        const justFired = bullet.remaining >= PLAYER_WEAPON.range - EPS;
+        if (justFired && enemy.type !== 'light') continue;
+        if (enemy.dodge?.bulletId === bullet.id) return enemy.dodge;
         const timeLeft = bullet.remaining / bullet.speed;
         const end = projectileStep(bullet, timeLeft);
         const reach = enemy.r + speed * timeLeft;
         if (pointSegmentDistanceSq(enemy.x, enemy.y, bullet.x, bullet.y, end.x, end.y) > square(reach) + EPS) continue;
 
-        const active = enemy.dodge?.bulletId === bullet.id ? enemy.dodge : null;
-        if (active) return active;
         if (this._forecastShot(enemy, bullet, dt, order, index) !== 'target') continue;
 
-        const side = Math.sign(bullet.dx * (enemy.y - bullet.y) - bullet.dy * (enemy.x - bullet.x)) || 1;
+        const startOffset = shotOffset(enemy, bullet);
+        const side = Math.sign(startOffset) || 1;
+        const options = [];
+        const initial = enemy.driveSpeed ?? 0;
         for (const direction of [side, -side]) {
-          const dodge = { bulletId: bullet.id, dx: -bullet.dy * direction, dy: bullet.dx * direction, speed };
-          if (this._forecastShot(enemy, bullet, dt, order, index, dodge) === 'clear') return dodge;
+          const perpendicular = Math.atan2(bullet.dx * direction, -bullet.dy * direction);
+          for (const gear of [1, -1]) {
+            if (justFired && (gear < 0 || initial < -EPS || (enemy.shiftDwell ?? 0) > EPS)) continue;
+            for (const offset of [0, Math.PI / 6, -Math.PI / 6]) {
+              const heading = perpendicular + offset + (gear < 0 ? Math.PI : 0);
+              const turn = Math.abs(angleDelta(heading, enemy.bodyAngle));
+              const reversePenalty = initial * gear < -EPS ? 1.4 : gear < 0 ? 0.3 : 0;
+              const score = turn + reversePenalty + Math.abs(offset) * 0.1;
+              options.push({ bulletId: bullet.id, heading, direction, gear, speed, score });
+            }
+          }
+        }
+        const brakeDirection = Math.sign(startOffset);
+        if (!justFired && Math.abs(initial) > EPS && brakeDirection) {
+          options.push({ bulletId: bullet.id, heading: enemy.bodyAngle,
+            direction: brakeDirection, gear: 1, speed: 0, score: 0.1 });
+        }
+        options.sort((a, b) => a.score - b.score);
+        for (const dodge of options) {
+          if (this._canReachShotClearance(enemy, bullet, dt, dodge, startOffset) &&
+            this._forecastShot(enemy, bullet, dt, order, index, dodge) === 'clear') return dodge;
         }
       }
       return null;
+    }
+
+    _canReachShotClearance(enemy, bullet, dt, dodge, startOffset) {
+      // Before clearance a blocked step already disqualifies the maneuver.
+      // Only paths that can clear in open space need a full traffic forecast.
+      const tank = { ...enemy };
+      let projected = bullet;
+      let step = dt;
+      const speed = dodge.gear * dodge.speed;
+      while (projected.remaining > EPS) {
+        const destination = this._arcDestination(tank, dodge.heading, speed * step, step, DODGE_TURN_RATE, Infinity);
+        if (destination) Object.assign(tank, destination);
+        if (clearsShot(tank, bullet, dodge.direction, startOffset)) return true;
+
+        const end = projectileStep(projected, step);
+        if (segmentCircle(projected.x, projected.y, end.x, end.y, tank.x, tank.y, tank.r) !== null) return false;
+        if (end.x < 0 || end.x > this.config.W || end.y < 0 || end.y > this.config.H) return false;
+        projected = { ...projected, ...end };
+        step = Math.max(dt, STEP / 2);
+      }
+      return false;
     }
 
     _forecastShot(enemy, bullet, dt, order, index, dodge = null) {
@@ -919,7 +1087,8 @@
       // The player and wrecks stay at their current positions.
       const world = Object.assign(Object.create(Game.prototype), this);
       const copies = new Map(this.enemies.map(actor => [actor, {
-        ...actor, pressure: actor.pressure && { ...actor.pressure }
+        ...actor, pressure: actor.pressure && { ...actor.pressure },
+        dodgeReturn: actor.dodgeReturn && { ...actor.dodgeReturn }
       }]));
       world.enemies = [...copies.values()];
       world.bullets = [];
@@ -932,24 +1101,31 @@
       let next = order.slice(index).map(actor => copies.get(actor));
       let projected = bullet;
       let step = dt;
-      const lateralDistance = () => bullet.dx * (tank.y - bullet.y) - bullet.dy * (tank.x - bullet.x);
-      const startedInside = Math.abs(lateralDistance()) < tank.r;
+      const startOffset = shotOffset(tank, bullet);
       let cleared = false;
+      const escaped = () => dodge && clearsShot(tank, bullet, dodge.direction, startOffset);
+
+      const finish = () => {
+        if (!dodge) return 'clear';
+        if (!escaped()) return 'blocked';
+        for (let elapsed = 0; elapsed < RETURN_HORIZON - EPS; elapsed += step) {
+          world._updateTraffic(step);
+          for (const actor of world._enemyUpdateOrder()) {
+            if (!actor.dead && actor.hp > 0) world._updateEnemy(actor, step, null);
+          }
+          if (tank.dodgeReturn?.blocked) return 'blocked';
+        }
+        return 'clear';
+      };
 
       while (projected.remaining > EPS) {
         for (const actor of next) {
           if (actor.dead || actor.hp <= 0) continue;
+          const currentDodge = actor === tank ? dodge : actor.dodge?.bulletId === bullet.id ? actor.dodge : null;
+          const blocked = world._updateEnemy(actor, step, null, 0, currentDodge);
           if (actor === tank && dodge) {
-            const before = lateralDistance();
-            world._moveCircle(tank, dodge.dx * dodge.speed * step, dodge.dy * dodge.speed * step, false);
-            const after = lateralDistance();
-            cleared ||= startedInside && Math.abs(after) > tank.r + EPS;
-            // Holding still can keep a moving tank out of the shot. That alone
-            // is not a viable lateral path.
-            if (!cleared && Math.abs(after - before) < dodge.speed * step - EPS) return 'blocked';
-          } else {
-            const currentDodge = actor !== tank && actor.dodge?.bulletId === bullet.id ? actor.dodge : null;
-            world._updateEnemy(actor, step, null, 0, currentDodge);
+            cleared ||= escaped();
+            if (blocked && !cleared) return 'blocked';
           }
         }
         const end = projectileStep(projected, step);
@@ -957,7 +1133,7 @@
         if (hit) {
           if (hit.object === tank) return 'target';
           // After a genuine lateral escape, a farther object may take the shot.
-          return dodge && Math.abs(lateralDistance()) > tank.r + EPS ? 'clear' : 'intercepted';
+          return escaped() ? finish() : 'intercepted';
         }
         if (end.x < 0 || end.x > this.config.W || end.y < 0 || end.y > this.config.H) break;
         projected = { ...projected, ...end };
@@ -967,7 +1143,7 @@
           next = world._enemyUpdateOrder();
         }
       }
-      return 'clear';
+      return finish();
     }
 
     _canSeePlayer(enemy) {
@@ -1019,8 +1195,11 @@
       const beforeX = enemy.x;
       const beforeY = enemy.y;
       this._moveCircle(enemy, dx / length * travel, dy / length * travel, false);
+      const steered = Boolean(enemy.smoothDrive);
+      if (steered) this._followSteeredMotion(enemy, beforeX, beforeY, dt,
+        Math.min(length - 2, leashRemaining), travel);
       const moved = Math.hypot(enemy.x - beforeX, enemy.y - beforeY);
-      if (moved > EPS) enemy.bodyAngle = Math.atan2(enemy.y - beforeY, enemy.x - beforeX);
+      if (!steered && moved > EPS) enemy.bodyAngle = Math.atan2(enemy.y - beforeY, enemy.x - beforeX);
       pressure.blocked = moved < travel * 0.25 ? pressure.blocked + dt : 0;
       if (pressure.blocked >= 0.4 - EPS || distance(enemy, pressure.origin) >= 4 - EPS) this._endPressure(enemy);
     }
@@ -1169,7 +1348,15 @@
         }
         moved = Math.hypot(enemy.x - beforeX, enemy.y - beforeY);
       }
-      if (moved > EPS) enemy.bodyAngle = Math.atan2(enemy.y - beforeY, enemy.x - beforeX);
+      if (enemy.smoothDrive) {
+        const nextWaypoint = enemy.route[enemy.routeIndex + 1];
+        const upcomingTurn = Boolean(nextWaypoint &&
+          length <= waypointTolerance + speed * RETURN_STEERING_MIN_TIME);
+        this._followSteeredMotion(enemy, beforeX, beforeY, dt, length, travel, upcomingTurn);
+        moved = Math.hypot(enemy.x - beforeX, enemy.y - beforeY);
+      } else if (moved > EPS) {
+        enemy.bodyAngle = Math.atan2(enemy.y - beforeY, enemy.x - beforeX);
+      }
       enemy.stuck = moved < travel * 0.25 ? enemy.stuck + dt : Math.max(0, enemy.stuck - dt * 2);
       // A local bypass also handles a player deliberately parked on a route.
       // Recompute at most once per second per blocked tank.
@@ -1295,7 +1482,8 @@
       const beforeX = enemy.x;
       const beforeY = enemy.y;
       this._moveCircle(enemy, dx / length * travel, dy / length * travel, false);
-      if (Math.hypot(enemy.x - beforeX, enemy.y - beforeY) > EPS) {
+      if (enemy.smoothDrive) this._followSteeredMotion(enemy, beforeX, beforeY, dt, length, travel);
+      else if (Math.hypot(enemy.x - beforeX, enemy.y - beforeY) > EPS) {
         enemy.bodyAngle = Math.atan2(enemy.y - beforeY, enemy.x - beforeX);
       }
     }
@@ -1862,7 +2050,9 @@
   const el = (id) => document.getElementById(id);
   const canvas = el('board'), ctx = canvas.getContext('2d');
   const keys = new Set(), effects = [], unitLabels = [];
-  const pointer = { x: 14, y: 7, down: false, inside: false };
+  const simulationStep = 1 / 60;
+  let pendingSimulation = 0;
+  const pointer = { x: 14, y: 7, down: false, inside: false, pendingShot: null };
   let selected = null, lastFrame = 0, visualTime = 0, lastUiKey = '', endShown = false;
   let reinforcement = null;
   let previewAction = null, preparationPreview = null;
@@ -1917,7 +2107,7 @@
   function toast(text, seconds = 3.5) {
     el('toast').textContent=text; el('toast').classList.add('show'); toastUntil=performance.now()+seconds*1000;
   }
-  function clearInput(){keys.clear();pointer.down=false;}
+  function clearInput(){keys.clear();pointer.down=false;pointer.pendingShot=null;pendingSimulation=0;}
   function focusBoard(){canvas.focus({preventScroll:true});}
   function openModal(kind,kicker,title,body,buttons){
     clearInput(); modalKind=kind;el('modal-kicker').textContent=kicker;el('modal-title').textContent=title;
@@ -1974,6 +2164,7 @@
   }
   function closeHelp(){game.paused=pauseBeforeHelp;closeModal();if(game.paused){game.paused=false;pause();}else lastFrame=performance.now();}
   function reset(){
+    clearInput();
     game.reset();selected=null;reinforcement=null;setActionPreview(null);routeKey=null;routePreview=[];effects.length=0;shake=0;
     firstWreck=null;prepLesson=null;endShown=false;lastUiKey='';
     closeModal();game.paused=false;toast('Новая попытка. Перед боем можно занять позицию.');
@@ -2076,9 +2267,13 @@
       if(reinforcement)reinforcement.targetId=id;
       else selected=id;
       updateUi();
-    }else{pointer.down=true;canvas.setPointerCapture(e.pointerId);}
+    }else{
+      pointer.down=true;
+      pointer.pendingShot={x:pointer.x,y:pointer.y};
+      canvas.setPointerCapture(e.pointerId);
+    }
   });
-  window.addEventListener('pointerup',()=>pointer.down=false);canvas.addEventListener('pointercancel',()=>pointer.down=false);canvas.addEventListener('contextmenu',e=>e.preventDefault());
+  window.addEventListener('pointerup',()=>pointer.down=false);canvas.addEventListener('pointercancel',()=>{pointer.down=false;pointer.pendingShot=null;});canvas.addEventListener('contextmenu',e=>e.preventDefault());
   window.addEventListener('blur',()=>{clearInput();setActionPreview(null);if(['battle','settling'].includes(game.phase)&&!game.paused)pause();});
   document.addEventListener('visibilitychange',()=>{if(document.hidden){clearInput();if(['battle','settling'].includes(game.phase)&&!game.paused)pause();}});
   function showActionReason(id, message){
@@ -2579,12 +2774,28 @@
   }
   function frame(now){
     const dt=Math.min((now-(lastFrame||now))/1000,.05);lastFrame=now;
-    if(!game.paused){visualTime+=dt;game.update(dt,{x:(keys.has('KeyD')||keys.has('ArrowRight')?1:0)-(keys.has('KeyA')||keys.has('ArrowLeft')?1:0),y:(keys.has('KeyS')||keys.has('ArrowDown')?1:0)-(keys.has('KeyW')||keys.has('ArrowUp')?1:0),aimX:pointer.x,aimY:pointer.y,fire:pointer.down});processEvents();
+    if(!game.paused){
+      visualTime+=dt;
+      pendingSimulation += dt;
+      const input = {
+        x: Number(keys.has('KeyD') || keys.has('ArrowRight')) - Number(keys.has('KeyA') || keys.has('ArrowLeft')),
+        y: Number(keys.has('KeyS') || keys.has('ArrowDown')) - Number(keys.has('KeyW') || keys.has('ArrowUp')),
+        aimX: pointer.x, aimY: pointer.y, fire: pointer.down
+      };
+      while (pendingSimulation >= simulationStep - 1e-9) {
+        const shot = pointer.pendingShot;
+        game.update(simulationStep, shot ? {...input, fire:true, aimX:shot.x, aimY:shot.y} : input);
+        pointer.pendingShot = null;
+        pendingSimulation -= simulationStep;
+      }
+      processEvents();
       for (let i=effects.length-1;i>=0;i--) {
         const {type,at}=effects[i];
         if (visualTime-at>=effectStyles[type].life) effects.splice(i,1);
       }
       shake=Math.max(0,shake-dt*.4);
+    } else {
+      pendingSimulation = 0;
     }
     if(toastUntil&&now>toastUntil){el('toast').classList.remove('show');toastUntil=0;}
     updateUi();draw();requestAnimationFrame(frame);
