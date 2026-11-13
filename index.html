@@ -13,7 +13,24 @@
 .enemy-pip{display:inline-flex;align-items:center;justify-content:center;min-width:15px;height:15px;color:#201c19;font-size:9px;font-weight:800}
 .enemy-pip.heavy{min-width:18px;background:#d3b6d7;border:3px double #563e57}
 .enemy-pip.heavy:after{left:5px;top:-6px}
+.dashboard{min-height:74px}
+.player-meter .meter-track{margin-top:6px}
+.dashboard .module-status{margin:4px 0 0;color:#bdced2;font-size:10px;line-height:1.2}
+.action-detail{margin:5px 0 0}
 @media(min-width:900px) and (max-height:800px){.app{max-width:1180px;padding-top:16px}.topbar{margin-bottom:18px}.dashboard{height:62px}.sidebar{padding-top:17px}.sidebar h2{margin-top:14px}.sidebar-copy{margin-bottom:15px}.tactical-note{margin-top:18px}}
+@media(min-width:900px) and (max-height:800px){
+  .sidebar h2{margin:9px 0 5px}
+  .sidebar-copy{font-size:12px;line-height:1.4;margin-bottom:10px}
+  .wave-card{padding:9px 11px}
+  .section-label{margin-bottom:7px}
+  .lane-row{margin-top:5px}
+  #wave-note{margin-top:8px}
+  #start{padding:10px 13px}
+  .salvage-card{margin-top:13px;padding-top:11px}
+  .salvage-card .secondary{padding:7px 8px;margin-top:7px}
+  .wreck-life{margin-top:6px}
+  .undo-button{margin-top:9px}
+}
 
 </style>
 </head>
@@ -28,7 +45,7 @@
       <section class="play-area" aria-label="Игровое поле">
         <div class="dashboard">
           <div class="meter base-meter"><div><span>БАЗА</span><strong id="base-value">240 <small>/ 240</small></strong></div><div class="meter-track"><i id="base-fill"></i></div></div>
-          <div class="meter player-meter"><div><span>ТВОЙ ТАНК</span><strong id="player-value">60 <small>/ 60</small></strong></div><div class="meter-track"><i id="player-fill"></i></div></div>
+          <div class="meter player-meter"><div><span>ТВОЙ ТАНК</span><strong id="player-value">60 <small>/ 60</small></strong></div><div class="meter-track"><i id="player-fill"></i></div><p class="module-status" id="player-module">Модуль: нет</p></div>
           <div class="wave-meter"><span>ВОЛНА</span><strong><b id="wave-value">01</b><small>/ 04</small></strong></div>
           <div class="kill-meter"><span>УНИЧТОЖЕНО</span><strong id="kill-value">0</strong></div>
         </div>
@@ -50,7 +67,12 @@
         <section class="wave-card"><div class="section-label"><span id="wave-card-title">СЛЕДУЮЩАЯ АТАКА</span><span id="enemy-total"></span></div><div id="wave-plan"></div><p id="wave-note" class="fineprint">Сначала займи удобную позицию, затем начни волну.</p></section>
         <button id="start" class="primary">Начать волну 1 <span>↵</span></button>
         <div id="combat-status" class="combat-status" hidden><span class="pulse-dot"></span><span id="combat-copy"></span></div>
-        <section class="salvage-card" id="salvage-card"><div class="section-label"><span>КОРПУСА НА ПОЛЕ</span><span id="wreck-count">0</span></div><div id="salvage-content"></div><div id="salvage-actions" hidden><button id="repair" class="secondary"></button><button id="leave" class="text-button">Оставить на месте</button></div><button id="undo" class="undo-button" disabled>↶ Отменить разбор <kbd>Ctrl Z</kbd></button></section>
+        <section class="salvage-card" id="salvage-card"><div class="section-label"><span>КОРПУСА НА ПОЛЕ</span><span id="wreck-count">0</span></div><div id="salvage-content"></div><div id="salvage-actions" hidden>
+          <button id="repair" class="secondary" aria-describedby="repair-reason"></button><p id="repair-reason" class="fineprint action-detail" hidden></p>
+          <button id="install-module" class="secondary" aria-describedby="module-effect module-reason"></button>
+          <p id="module-effect" class="fineprint action-detail"></p><p id="module-reason" class="fineprint action-detail" hidden></p>
+          <button id="leave" class="text-button">Оставить на месте</button>
+        </div><button id="undo" class="undo-button" aria-describedby="undo-reason" disabled>↶ Отменить действие <kbd>Ctrl Z</kbd></button><p id="undo-reason" class="fineprint action-detail"></p></section>
         <div class="tactical-note"><span class="note-icon">↳</span><p id="tip">Маршрут ведёт к базе или до первого корпуса для пролома, отмеченного кругом. Лёгкий может свернуть к тебе.</p></div>
       </aside>
     </main>
@@ -139,17 +161,22 @@
   const TANK_RADIUS = 0.5;
   const STEP = 1 / 60;
   const PLAYER_WEAPON = Object.freeze({ speed: 40, damage: 20, range: 6, cooldown: 0.30 });
+  const PLAYER_BASE_STATS = Object.freeze({ speed: 4, maxHp: 60 });
+  const PLAYER_MODULES = Object.freeze({
+    engine: Object.freeze({ ...PLAYER_BASE_STATS, speed: 5 }),
+    armor: Object.freeze({ ...PLAYER_BASE_STATS, maxHp: 90 })
+  });
   const ENEMY_PROJECTILE_SPEED = 10;
   const scenarios = typeof module !== 'undefined' && module.exports ? require('./scenarios.js') : root.TankScenarios;
   const ENEMY_TYPES = Object.freeze({
     light: Object.freeze({ hp: 20, speed: 2.6, damage: 8, range: 6, cooldown: 1.4 }),
     medium: Object.freeze({
       hp: 60, speed: 1.7, damage: 12, range: 5, cooldown: 1.2,
-      wreck: Object.freeze({ hp: 60, waves: 1, repairHp: 30 })
+      wreck: Object.freeze({ hp: 60, waves: 1, repairHp: 30, module: 'engine' })
     }),
     heavy: Object.freeze({
       hp: 120, speed: 1.1, damage: 20, range: 6, cooldown: 2,
-      wreck: Object.freeze({ hp: 120, waves: 2, repairHp: 50 })
+      wreck: Object.freeze({ hp: 120, waves: 2, repairHp: 50, module: 'armor' })
     })
   });
   const CLASSIC_ENEMY_TYPES = Object.freeze({
@@ -341,10 +368,11 @@
       this.paused = false;
       this.waveIndex = 0;
       this.player = {
-        id: 'player', x: 16.4, y: 17.2, r: TANK_RADIUS, hp: 60, maxHp: 60,
+        id: 'player', x: 16.4, y: 17.2, r: TANK_RADIUS, module: null,
         angle: -Math.PI / 2, bodyAngle: -Math.PI / 2,
         alive: true, respawn: 0, cooldown: 0
       };
+      this._restorePlayerHp();
       this.base = { x: 14, y: 13.5, w: 1.8, h: 1.8, hp: 240, maxHp: 240 };
       this.enemies = [];
       this.wrecks = [];
@@ -371,7 +399,13 @@
 
     get waveNumber() { return this.waveIndex + 1; }
     get remaining() { return this.enemies.filter(enemy => !enemy.dead && enemy.hp > 0).length + this._spawnQueue.length; }
-    get canUndo() { return this.phase === 'prep' && this._undo.length > 0; }
+    get canUndo() { return this.phase === 'prep' && !this.paused && this._undo.length > 0; }
+
+    get _playerStats() { return PLAYER_MODULES[this.player.module] ?? PLAYER_BASE_STATS; }
+
+    _restorePlayerHp() {
+      this.player.hp = this.player.maxHp = this._playerStats.maxHp;
+    }
 
     drainEvents() {
       const events = this._events;
@@ -383,6 +417,7 @@
 
     startWave() {
       if (this.phase !== 'prep' || this.paused) return false;
+      this._restorePlayerHp();
       this.phase = 'battle';
       this._waveTime = 0;
       this._undo = [];
@@ -397,12 +432,39 @@
       return true;
     }
 
-    getWreckRepairHp(id) {
-      if (this.phase !== 'prep' || this.paused) return null;
+    _getPreparationWreck(id) {
       const wreck = this.wrecks.find(item => item.id === id);
       const spec = this.config.ENEMY_TYPES[wreck?.type]?.wreck;
-      if (!spec || wreck.hp <= 0 || wreck.expiresAfterWave < this.waveNumber) return null;
-      return Math.min(spec.repairHp, this.base.maxHp - this.base.hp);
+      let reason = null;
+      if (this.phase !== 'prep') reason = 'not-prep';
+      else if (this.paused) reason = 'paused';
+      else if (!wreck) reason = 'missing-wreck';
+      else if (!spec || !(wreck.hp > 0 && wreck.expiresAfterWave >= this.waveNumber)) reason = 'unusable-wreck';
+      return { wreck, spec, reason };
+    }
+
+    getWreckActions(id) {
+      const { spec, reason } = this._getPreparationWreck(id);
+      const module = spec?.module ?? null;
+      return {
+        repairHp: reason ? null : Math.min(spec.repairHp, this.base.maxHp - this.base.hp),
+        repairReason: reason,
+        module,
+        moduleReason: reason ?? (!module ? 'no-module' : module === this.player.module ? 'same-module' : null)
+      };
+    }
+
+    getWreckRepairHp(id) {
+      return this.getWreckActions(id).repairHp;
+    }
+
+    // Call once, after validation and before changing any of the affected hulls.
+    _recordPreparation(wrecks) {
+      this._undo.push({
+        wrecks: wrecks.map(wreck => ({ wreck: { ...wreck }, index: this.wrecks.indexOf(wreck) })),
+        baseHp: this.base.hp, player: { ...this.player },
+        repairs: this.stats.repairs, baseRepaired: this.stats.baseRepaired
+      });
     }
 
     repairFromWreck(id) {
@@ -410,10 +472,7 @@
       if (hp === null) return { ok: false, hp: 0 };
       const index = this.wrecks.findIndex(wreck => wreck.id === id);
       const wreck = this.wrecks[index];
-      this._undo.push({
-        wreck: { ...wreck }, index, baseHp: this.base.hp, player: { ...this.player },
-        repairs: this.stats.repairs, baseRepaired: this.stats.baseRepaired
-      });
+      this._recordPreparation([wreck]);
       this.base.hp += hp;
       this.wrecks.splice(index, 1);
       this.stats.repairs++;
@@ -424,16 +483,34 @@
       return { ok: true, hp };
     }
 
+    installModuleFromWreck(id) {
+      const { module, moduleReason } = this.getWreckActions(id);
+      if (moduleReason) return { ok: false, reason: moduleReason };
+      const index = this.wrecks.findIndex(wreck => wreck.id === id);
+      this._recordPreparation([this.wrecks[index]]);
+      this.wrecks.splice(index, 1);
+      this.player.module = module;
+      this._restorePlayerHp();
+      this._invalidateNavigation();
+      this.lastMessage = 'Модуль установлен';
+      return { ok: true, module };
+    }
+
     undo() {
-      if (!this.canUndo || this.paused) return false;
+      if (!this.canUndo) return false;
       const state = this._undo.pop();
-      this.wrecks.splice(state.index, 0, state.wreck);
+      const restoredIds = new Set(state.wrecks.map(({ wreck }) => wreck.id));
+      this.wrecks = this.wrecks.filter(wreck => !restoredIds.has(wreck.id));
+      for (const { wreck, index } of state.wrecks.sort((a, b) => a.index - b.index)) {
+        this.wrecks.splice(index, 0, wreck);
+      }
       this.base.hp = state.baseHp;
       Object.assign(this.player, state.player);
+      this._restorePlayerHp();
       this.stats.repairs = state.repairs;
       this.stats.baseRepaired = state.baseRepaired;
       this._invalidateNavigation();
-      this.lastMessage = 'Разбор обломка отменён';
+      this.lastMessage = 'Операция подготовки отменена';
       return true;
     }
 
@@ -488,7 +565,8 @@
       if (length > 1) { x /= length; y /= length; }
       if (length > EPS) {
         player.bodyAngle = Math.atan2(y, x);
-        this._moveCircle(player, x * 4 * dt, y * 4 * dt, true);
+        const { speed } = this._playerStats;
+        this._moveCircle(player, x * speed * dt, y * speed * dt, true);
       }
       let canAim = true;
       if (Number.isFinite(input.aimX) && Number.isFinite(input.aimY)) {
@@ -512,7 +590,8 @@
       if (this.player.respawn > EPS) return;
       const spot = this._respawnPosition();
       if (!spot) return; // Wait for a free niche position, never displace a tank.
-      Object.assign(this.player, spot, { alive: true, hp: this.player.maxHp, respawn: 0, cooldown: 0 });
+      Object.assign(this.player, spot, { alive: true, respawn: 0, cooldown: 0 });
+      this._restorePlayerHp();
       this.lastMessage = 'Танк восстановлен';
     }
 
@@ -1181,7 +1260,7 @@
         if (position) Object.assign(this.player, position);
       }
       this.player.alive = true;
-      this.player.hp = this.player.maxHp;
+      this._restorePlayerHp();
       this.player.respawn = 0;
       this.player.cooldown = 0;
       this.lastMessage = `Волна ${completed} отбита. Подготовка к волне ${this.waveNumber}`;
@@ -1465,7 +1544,7 @@
 
   }
 
-  const api = { Game, CONFIG, CLASSIC_CONFIG, PLAYER_WEAPON, TANK_RADIUS };
+  const api = { Game, CONFIG, CLASSIC_CONFIG, PLAYER_WEAPON, PLAYER_MODULES, TANK_RADIUS };
   root.TankCore = api;
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
 })(typeof globalThis !== 'undefined' ? globalThis : this);
@@ -1474,7 +1553,7 @@
   <script>
 (() => {
   'use strict';
-  const { Game, CONFIG, PLAYER_WEAPON, TANK_RADIUS } = globalThis.TankCore;
+  const { Game, CONFIG, PLAYER_WEAPON, PLAYER_MODULES, TANK_RADIUS } = globalThis.TankCore;
   const game = new Game();
   const el = (id) => document.getElementById(id);
   const canvas = el('board'), ctx = canvas.getContext('2d');
@@ -1493,6 +1572,15 @@
     heavy: { name: 'Тяжёлый', role: 'атакует базу', mark: 'Т', dark: '#553f58', main: '#85648a', top: '#e1bde5' }
   };
   const hitsToKill = hp => Math.ceil(hp / PLAYER_WEAPON.damage);
+  const moduleNames = { engine: 'Двигатель', armor: 'Броня' };
+  const preparationReasons = {
+    'not-prep': 'Доступно только в подготовке.',
+    paused: 'Сначала сними игру с паузы.',
+    'missing-wreck': 'Корпуса больше нет на поле.',
+    'unusable-wreck': 'Корпус разрушен или истёк срок его службы.',
+    'no-module': 'Этот корпус не даёт модуль.',
+    'same-module': 'Этот модуль уже установлен.'
+  };
   function enemyPlanPip(type) {
     const { name, role, mark } = enemyLooks[type];
     const spec = CONFIG.ENEMY_TYPES[type];
@@ -1528,19 +1616,22 @@
   function help(){
     if(modalKind==='help'){closeHelp();return;}
     pauseBeforeHelp=game.paused;game.paused=true;
-    openModal('help','ТРИ НАПРАВЛЕНИЯ · ОДНА БАЗА','Как играть',`<ol class="modal-list"><li><b>Защищай базу.</b> WASD — движение, мышь — прицел, удержание ЛКМ — огонь. До старта проверь входы и время атаки в плане волны.</li><li><b>Лёгкий (Л) охотится за тобой.</b> Знак «!» означает преследование. Уходи за укрытие и меняй позицию.</li><li><b>Средний (С) и тяжёлый (Т) атакуют базу.</b> Рядом с танком указаны HP и число попаданий до уничтожения (×). Оставленные корпуса меняют маршрут и задерживают снаряды обеих сторон.</li><li><b>Враг стреляет без предупреждения.</b> При открытой цели и готовом орудии он сразу выпускает снаряд. Меняй позицию и используй твёрдые укрытия. Воронки и следы на земле проходимы.</li><li><b>Между волнами</b> нажми на корпус: оставь его баррикадой или разбери на ремонт базы до +${CONFIG.ENEMY_TYPES.medium.wreck.repairHp} HP за средний или +${CONFIG.ENEMY_TYPES.heavy.wreck.repairHp} HP за тяжёлый. Разбор можно отменить. Подпись «до N» показывает последнюю волну службы.</li><li>Твой танк восстанавливается между волнами и возвращается через 4 секунды после гибели. Пока ты возвращаешься, бой продолжается.</li></ol>`,[['Понятно',closeHelp,true]]);
+    openModal('help','ТРИ НАПРАВЛЕНИЯ · ОДНА БАЗА','Как играть',`<ol class="modal-list"><li><b>Защищай базу.</b> WASD — движение, мышь — прицел, удержание ЛКМ — огонь. До старта проверь входы и время атаки в плане волны.</li><li><b>Лёгкий (Л) охотится за тобой.</b> Знак «!» означает преследование. Уходи за укрытие и меняй позицию.</li><li><b>Средний (С) и тяжёлый (Т) атакуют базу.</b> Рядом с танком указаны HP и число попаданий до уничтожения (×). Оставленные корпуса меняют маршрут и задерживают снаряды обеих сторон.</li><li><b>Враг стреляет без предупреждения.</b> При открытой цели и готовом орудии он сразу выпускает снаряд. Меняй позицию и используй твёрдые укрытия. Воронки и следы на земле проходимы.</li><li><b>Между волнами</b> нажми на корпус: оставь его баррикадой или разбери на ремонт базы до +${CONFIG.ENEMY_TYPES.medium.wreck.repairHp} HP за средний или +${CONFIG.ENEMY_TYPES.heavy.wreck.repairHp} HP за тяжёлый. Средний корпус также даёт двигатель, тяжёлый — броню. В слоте помещается один модуль. Последнее действие можно отменить через Ctrl+Z. Подпись «до N» показывает последнюю волну службы.</li><li>Твой танк восстанавливается между волнами и возвращается через 4 секунды после гибели. Пока ты возвращаешься, бой продолжается.</li></ol>`,[['Понятно',closeHelp,true]]);
   }
   function closeHelp(){game.paused=pauseBeforeHelp;closeModal();if(game.paused){game.paused=false;pause();}}
   function reset(){game.reset();selected=null;routeKey=null;routePreview=[];particles.length=0;endShown=false;lastUiKey='';closeModal();game.paused=false;toast('Новая попытка. Перед боем можно занять позицию.');}
   function start(){if(['won','lost'].includes(game.phase)){reset();return;}if(game.phase!=='prep'||game.paused)return;if(game.startWave()){selected=null;routeKey=null;toast(`Волна ${game.waveNumber}. Защищай базу.`,2);focusBoard();}}
   function repair(){
-    if(!selected||game.phase!=='prep'||game.paused)return;
     const result=game.repairFromWreck(selected);
-    if(result?.ok){selected=null;routeKey=null;toast(result.hp>0?`Корпус разобран. База +${result.hp} HP.`:'Корпус разобран. Проход освобождён.');}
+    if(result.ok){selected=null;routeKey=null;toast(result.hp>0?`Корпус разобран. База +${result.hp} HP.`:'Корпус разобран. Проход освобождён.');}
   }
-  function undo(){if(game.phase==='prep'&&!game.paused&&game.undo()){selected=null;routeKey=null;toast('Разбор отменён. Корпус и позиция танка восстановлены.');}}
+  function installModule(){
+    const result=game.installModuleFromWreck(selected);
+    if(result.ok){selected=null;routeKey=null;toast(`Модуль установлен: ${moduleNames[result.module]}.`);}
+  }
+  function undo(){if(game.undo()){selected=null;routeKey=null;toast('Действие отменено. Позиция танка восстановлена.');}}
   el('start').onclick=start;el('pause').onclick=pause;el('help').onclick=help;el('repair').onclick=repair;
-  el('leave').onclick=()=>{selected=null;lastUiKey='';};el('undo').onclick=undo;
+  el('install-module').onclick=installModule;el('leave').onclick=()=>{selected=null;lastUiKey='';};el('undo').onclick=undo;
   el('sound').onclick=()=>{soundOn=!soundOn;el('sound').textContent=soundOn?'Звук вкл':'Звук выкл';el('sound').setAttribute('aria-pressed',String(soundOn));el('sound').title=soundOn?'Выключить звук':'Включить звук';if(soundOn){try{audio ||= new (window.AudioContext||window.webkitAudioContext)();audio.resume();beep('wave');}catch{soundOn=false;el('sound').textContent='Звук недоступен';el('sound').setAttribute('aria-pressed','false');el('sound').title='Попробовать включить звук';}}};
   function beep(type, side){
     if(!soundOn||!audio)return;
@@ -1563,6 +1654,11 @@
   window.addEventListener('pointerup',()=>pointer.down=false);canvas.addEventListener('pointercancel',()=>pointer.down=false);canvas.addEventListener('contextmenu',e=>e.preventDefault());
   window.addEventListener('blur',()=>{clearInput();if(['battle','settling'].includes(game.phase)&&!game.paused)pause();});
   document.addEventListener('visibilitychange',()=>{if(document.hidden){clearInput();if(['battle','settling'].includes(game.phase)&&!game.paused)pause();}});
+  function showActionReason(id, message){
+    const note=el(id);
+    note.textContent=message??'';
+    note.hidden=!message;
+  }
   function updateUi(){
     const prep=game.phase==='prep',fighting=['battle','settling'].includes(game.phase),finished=['won','lost'].includes(game.phase);
     const baseHp=Math.max(0,Math.ceil(game.base.hp)),playerHp=Math.max(0,Math.ceil(game.player.hp));
@@ -1572,14 +1668,16 @@
     el('start').hidden=!prep&&!finished;el('start').disabled=game.paused;el('start').innerHTML=finished?'Новая попытка <span>↵</span>':`Начать волну ${game.waveNumber} <span>↵</span>`;
     el('combat-status').hidden=!fighting;el('combat-copy').textContent=game.phase==='settling'?'Ждём последние снаряды…':`Осталось противников: ${game.remaining}`;
     el('board-tag-text').textContent=prep?'Разведай поле · выбери позицию':game.phase==='settling'?'Последние снаряды в полёте':finished?(game.phase==='won'?'База защищена':'База уничтожена'):'Лёгкие преследуют · остальные идут к базе';
-    el('pause').disabled=finished;el('wreck-count').textContent=game.wrecks.length;el('undo').disabled=!prep||!game.canUndo||game.paused;
+    el('pause').disabled=finished;el('wreck-count').textContent=game.wrecks.length;el('undo').disabled=!game.canUndo;
     const wreck=game.wrecks.find(w=>w.id===selected);if(!wreck)selected=null;
-    const stateKey=[game.phase,game.waveIndex,selected,wreck?.hp,wreck?.expiresAfterWave,game.paused,game.wrecks.length,baseHp,game.player.alive].join('|');
+    const stateKey=[game.phase,game.waveIndex,selected,wreck?.hp,wreck?.expiresAfterWave,game.paused,game.wrecks.length,baseHp,game.player.alive,game.player.module,game.canUndo].join('|');
     if(stateKey!==lastUiKey){
       lastUiKey=stateKey;const badge=el('phase-badge');badge.className='phase-badge'+(fighting?' battle':finished?' end':'');badge.textContent=prep?'ПОДГОТОВКА':fighting?'БОЙ':game.phase==='won'?'ПОБЕДА':'ПОРАЖЕНИЕ';
+      el('player-module').textContent=`Модуль: ${moduleNames[game.player.module]??'нет'}`;
+      showActionReason('undo-reason',game.canUndo?null:!prep?preparationReasons['not-prep']:game.paused?preparationReasons.paused:'Пока нечего отменять.');
       el('phase-number').textContent=`${String(Math.min(waveCount,game.waveNumber)).padStart(2,'0')} / ${String(waveCount).padStart(2,'0')}`;
       el('phase-title').textContent=prep?(game.waveIndex===0?'Выбери позицию':'Используй корпуса'):finished?(game.phase==='won'?'База уцелела':'Попробуй ещё'):'Держи оборону';
-      el('phase-copy').textContent=prep?(game.waveIndex===0?'Лёгкие отвлекают тебя, средние прорываются к базе. Используй руины, чтобы разделить угрозы.':'Проверь направления следующей атаки. Оставь полезные корпуса или разбери их на ремонт.'):fighting?'Уводи лёгких от открытой позиции и перехватывай атакующих базу.':'Попробуй другую позицию и используй корпуса у укрытий.';
+      el('phase-copy').textContent=prep?(game.waveIndex===0?'Лёгкие отвлекают тебя, средние прорываются к базе. Используй руины, чтобы разделить угрозы.':'Проверь направления следующей атаки. Оставь полезные корпуса или разбери их на ремонт либо модуль.'):fighting?'Уводи лёгких от открытой позиции и перехватывай атакующих базу.':'Попробуй другую позицию и используй корпуса у укрытий.';
       el('wave-card-title').textContent=prep?'СЛЕДУЮЩАЯ АТАКА':'АТАКА ЭТОЙ ВОЛНЫ';
       const plan=wavePackages[Math.min(waveCount-1,game.waveIndex)],total=plan.reduce((n,p)=>n+p.types.length,0);
       el('enemy-total').textContent=`${total} ${{one:'танк',few:'танка',many:'танков',other:'танка'}[tankPlural.select(total)]}`;
@@ -1588,11 +1686,18 @@
       el('wave-note').textContent=`Входы ${lanes}. На каждом входе интервал ${interval} с.`;
       el('salvage-actions').hidden=!prep||!wreck;
       if(prep&&wreck){
-        const heal=game.getWreckRepairHp(wreck.id),look=enemyLooks[wreck.type];
+        const { repairHp, repairReason, module, moduleReason }=game.getWreckActions(wreck.id),look=enemyLooks[wreck.type];
         el('salvage-content').innerHTML=`<div class="selected-wreck"><span class="wreck-symbol" aria-hidden="true">${look.mark}</span><div class="wreck-info"><strong>${look.name} корпус</strong><p>${Math.ceil(wreck.hp)} / ${wreck.maxHp} HP</p></div></div><p class="wreck-life">${wreck.expiresAfterWave===game.waveNumber?'Последняя волна службы. ':''}Исчезнет после волны ${wreck.expiresAfterWave}.</p>`;
-        el('repair').disabled=heal===null;
-        el('repair').textContent=heal>0?`Разобрать · +${heal} HP базе`:'Разобрать · +0 HP, убрать корпус';
-      } else el('salvage-content').innerHTML=`<p class="empty-state">${!game.wrecks.length?'Пока нет корпусов. Их оставляют средние и тяжёлые танки.':prep?'Нажми на корпус на поле, чтобы выбрать действие.':'Корпуса уже работают как препятствия. Разобрать их можно между волнами.'}</p>`;
+        el('repair').disabled=!!repairReason;
+        el('repair').textContent=repairReason?'Разобрать на ремонт':repairHp>0?`Разобрать · +${repairHp} HP базе`:'Разобрать · +0 HP, убрать корпус';
+        showActionReason('repair-reason',preparationReasons[repairReason]);
+        el('install-module').disabled=!!moduleReason;
+        el('install-module').textContent=module?`Взять модуль · ${moduleNames[module]}`:'Взять модуль';
+        const stats=PLAYER_MODULES[module], current=moduleNames[game.player.module];
+        const replacement=module===game.player.module?'':current?` Заменит модуль «${current}».`:' Слот пуст.';
+        el('module-effect').textContent=stats?`${stats.speed} ед/с · ${stats.maxHp} HP.${replacement}${moduleReason?'':' Корпус будет разобран.'}`:'';
+        showActionReason('module-reason',preparationReasons[moduleReason]);
+      } else el('salvage-content').innerHTML=`<p class="empty-state">${!game.wrecks.length?'Пока нет корпусов. Их оставляют средние и тяжёлые танки.':prep?'Нажми на корпус на поле, чтобы выбрать действие.':'Корпуса уже работают как препятствия. Разбор и установка модулей доступны между волнами.'}</p>`;
       el('tip').textContent=!game.player.alive?'Твой танк скоро вернётся. Бой продолжается, а база остаётся уязвимой.':prep?'Маршрут ведёт к базе или до первого корпуса для пролома, отмеченного кругом. Лёгкий может свернуть к тебе.':'За тобой идёт лёгкий? Разорви видимость у руин, затем вернись к защите базы. Следи за флангами.';
     }
     if(finished&&!endShown){endShown=true;const win=game.phase==='won';openModal('end',win?'ЧЕТЫРЕ ВОЛНЫ ПРОЙДЕНЫ':'БАЗА ПОТЕРЯНА',win?'Оборона выдержала':'Ещё одна попытка',`<p>${win?'Ты защитил базу. Попробуй пройти ещё раз и оставить корпуса в других местах.':'Попробуй раньше перехватывать противников и закрывать проходы корпусами.'}</p><div class="result-grid"><div><strong>${game.stats.kills}</strong><span>ТАНКОВ УНИЧТОЖЕНО</span></div><div><strong>${game.stats.wrecksCreated}</strong><span>КОРПУСОВ СОЗДАНО</span></div><div><strong>${baseHp}</strong><span>HP БАЗЫ</span></div></div><p>Удалось ли намеренно оставить полезный корпус? Пришлось ли разобрать его ради ремонта?</p>`,[['Играть ещё раз',reset,true],['Посмотреть поле',()=>{closeModal();},false]]);}

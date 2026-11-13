@@ -2,7 +2,7 @@
 
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
-const { Game, CONFIG } = require('./load-core.cjs');
+const { Game, CONFIG, PLAYER_WEAPON } = require('./load-core.cjs');
 
 const FRAME = 1 / 60;
 const NEST = { x: 16.4, y: 17.2 };
@@ -377,4 +377,179 @@ test('start commits repairs and the next preparation cannot undo combat losses',
   assert.equal(game.undo(), true);
   assert.deepEqual(Array.from(game.wrecks, wreck => wreck.id), [survivor.id]);
   assert.equal(game.undo(), false);
+});
+
+function createWreck(game, type, x, y = 6) {
+  game._killEnemy({ ...mediumAt({ x, y }, `test-${type}-${x}-${y}`), type });
+  return game.wrecks.at(-1);
+}
+
+function assertLoadout(game, module, hp, speed) {
+  assert.equal(game.player.module, module);
+  assert.equal(game.player.maxHp, hp);
+  assert.equal(game.player.hp, hp);
+  const x = game.player.x;
+  game.update(0.1, { x: 1 });
+  assert.ok(Math.abs(game.player.x - x - speed * 0.1) < 1e-7);
+}
+
+test('one module slot swaps engine → armor → engine, then resets on a new attempt', () => {
+  const game = new Game(EMPTY_WAVES);
+  Object.assign(game.player, { x: 3, y: 6.5 });
+  assertLoadout(game, null, 60, 4);
+  const engine = createWreck(game, 'medium', 22, 13);
+  const armor = createWreck(game, 'heavy', 24, 13);
+  const nextEngine = createWreck(game, 'medium', 26, 13);
+  for (const [wreck, module, hp, speed] of [
+    [engine, 'engine', 60, 5],
+    [armor, 'armor', 90, 4],
+    [nextEngine, 'engine', 60, 5]
+  ]) {
+    assert.equal(game.getWreckActions(wreck.id).module, module);
+    assert.equal(game.installModuleFromWreck(wreck.id).ok, true);
+    assert.equal(game.wrecks.some(w => w.id === wreck.id), false);
+    assertLoadout(game, module, hp, speed);
+  }
+  assert.equal(game.wrecks.length, 0, 'discarded modules do not become resources');
+
+  assert.equal(game.startWave(), true);
+  game.update(FRAME, { fire: true, aimX: 2, aimY: 6.5 });
+  const [shot] = game.bullets;
+  assert.equal(shot.damage, PLAYER_WEAPON.damage);
+  assert.equal(shot.speed, PLAYER_WEAPON.speed);
+  assert.ok(Math.abs(shot.remaining + FRAME * shot.speed - PLAYER_WEAPON.range) < 1e-7);
+  assert.equal(game.player.cooldown, PLAYER_WEAPON.cooldown);
+  game.reset();
+  assert.equal(game.canUndo, false);
+  assert.equal(game.waveNumber, 1);
+  Object.assign(game.player, { x: 3, y: 6.5 });
+  assertLoadout(game, null, 60, 4);
+});
+
+test('unavailable preparation operations explain their reason and leave state and history intact', () => {
+  const game = new Game(EMPTY_WAVES);
+  const first = createWreck(game, 'medium', 7);
+  const same = createWreck(game, 'medium', 9);
+  const armor = createWreck(game, 'heavy', 12);
+  const expired = createWreck(game, 'heavy', 20);
+  expired.expiresAfterWave = 0;
+  const destroyed = createWreck(game, 'heavy', 22);
+  destroyed.hp = 0;
+  assert.equal(game.installModuleFromWreck(first.id).ok, true);
+  function reject(id, reason) {
+    const before = JSON.stringify([game.player, game.wrecks, game.base, game.stats]);
+    assert.equal(game.getWreckActions(id).moduleReason, reason);
+    assert.deepEqual({ ...game.installModuleFromWreck(id) }, { ok: false, reason });
+    assert.equal(JSON.stringify([game.player, game.wrecks, game.base, game.stats]), before);
+  }
+  reject(same.id, 'same-module');
+  assert.equal(game.getWreckRepairHp(same.id), 0, 'same-type hull can still clear a passage');
+  reject('unknown', 'missing-wreck');
+  reject(expired.id, 'unusable-wreck');
+  reject(destroyed.id, 'unusable-wreck');
+  assert.equal(game.getWreckRepairHp(expired.id), null);
+  game.paused = true;
+  reject(armor.id, 'paused');
+  assert.equal(game.getWreckRepairHp(armor.id), null);
+  assert.equal(game.canUndo, false);
+  assert.equal(game.undo(), false);
+  game.paused = false;
+  assert.equal(game.undo(), true);
+  assert.equal(game.player.module, null);
+  assert.equal(game.canUndo, false, 'only the first installation created history');
+  assert.equal(game.installModuleFromWreck(same.id).ok, true);
+  assert.equal(game.startWave(), true);
+  reject(armor.id, 'not-prep');
+  assert.equal(game.getWreckRepairHp(armor.id), null);
+  assert.equal(game.undo(), false);
+  game.update(FRAME);
+  assert.equal(game.phase, 'prep');
+  assert.equal(game.player.module, 'engine');
+  assert.equal(game.undo(), false, 'starting combat committed the installation');
+});
+
+test('mixed preparation undo restores hull order, repair counters, modules and earlier positions', () => {
+  const game = new Game(EMPTY_WAVES);
+  Object.assign(game.player, { x: 3, y: 6.5 });
+  game.base.hp = 191;
+  const repair = createWreck(game, 'medium', 4.2, 6.5);
+  const engine = createWreck(game, 'medium', 22, 13);
+  const armor = createWreck(game, 'heavy', 24, 13);
+  const left = createWreck(game, 'heavy', 26, 13);
+  armor.hp = 43;
+  const snapshot = () => ({
+    wrecks: Array.from(game.wrecks, w => ({ ...w })),
+    base: game.base.hp,
+    module: game.player.module,
+    hp: game.player.hp,
+    maxHp: game.player.maxHp,
+    repairs: game.stats.repairs,
+    baseRepaired: game.stats.baseRepaired,
+    position: position(game.player)
+  });
+  const beforeRepair = snapshot();
+  assert.deepEqual({ ...game.repairFromWreck(repair.id) }, { ok: true, hp: 30 });
+  game.update(0.65, { x: 1 });
+  assert.ok(game.player.x > repair.x + 1, 'tank moved fully past the hull');
+  const beforeEngine = snapshot();
+  const beforeInstallNav = game.navigationVersion;
+  assert.equal(game.installModuleFromWreck(engine.id).ok, true);
+  assert.ok(game.navigationVersion > beforeInstallNav);
+  game.update(0.2, { y: 1 });
+  const beforeArmor = snapshot();
+  assert.equal(game.installModuleFromWreck(armor.id).ok, true);
+  game.update(0.2, { x: -1 });
+  assert.notDeepEqual(position(game.player), beforeArmor.position);
+  assert.deepEqual(Array.from(game.wrecks, w => w.id), [left.id]);
+
+  let nav = game.navigationVersion;
+  for (const before of [beforeArmor, beforeEngine, beforeRepair]) {
+    assert.equal(game.undo(), true);
+    assert.deepEqual(snapshot(), before);
+    assert.ok(game.navigationVersion > nav);
+    nav = game.navigationVersion;
+  }
+  assert.equal(game.undo(), false);
+});
+
+test('armor stays equipped through timed respawn, early wave end, preparation and the next battle', () => {
+  const config = { ...CONFIG, WAVES: [[{ start: 12, lane: 'A', types: ['light'] }], [], [], []] };
+  const game = new Game(config);
+  const armor = createWreck(game, 'heavy', 24, 13);
+  assert.equal(game.installModuleFromWreck(armor.id).ok, true);
+  game.player.hp = 29;
+  assert.equal(game.startWave(), true);
+  assert.equal(game.player.hp, 90);
+
+  function killPlayer() {
+    Object.assign(game.player, { x: 3, y: 6 });
+    shootEnemy(game, { x: 4, y: 6 }, game.player, 90);
+    game.update(0.05);
+    assert.equal(game.player.alive, false);
+    assert.equal(game.player.module, 'armor');
+    assert.equal(game.player.respawn, 4);
+  }
+  killPlayer();
+  game.update(4 - FRAME);
+  assert.equal(game.player.alive, false);
+  game.update(FRAME);
+  assert.equal(game.player.alive, true);
+  assert.equal(game.player.hp, 90);
+  assert.deepEqual(position(game.player), NEST);
+
+  killPlayer();
+  game._spawnQueue.length = 0; // No further enemies; the wave ends before the second timer.
+  game.update(FRAME);
+  assert.equal(game.phase, 'prep');
+  assert.equal(game.player.alive, true);
+  assert.equal(game.player.module, 'armor');
+  assert.equal(game.player.hp, 90);
+  assert.deepEqual(position(game.player), NEST);
+  assert.equal(game.startWave(), true);
+  assert.equal(game.player.hp, 90);
+  game.player.hp = 12;
+  game.update(FRAME);
+  assert.equal(game.phase, 'prep');
+  assert.equal(game.player.hp, 90);
+  assert.equal(game.player.module, 'armor');
 });
