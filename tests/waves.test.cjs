@@ -884,3 +884,39 @@ test('the approved campaign advances through eight waves, settles and resets', (
   assert.equal(game.remaining, 4);
   assert.deepEqual(Array.from(game.enemies, enemy => [enemy.lane, enemy.type]), [['A', 'light']]);
 });
+
+test('base defeat retains the first lethal enemy impact through settling and event drain', () => {
+  const game = new Game(EMPTY_WAVES);
+  game.waveIndex = 2;
+  game.base.hp = 19;
+  game.startWave();
+  const from = { x: 12.8, y: 13.5 };
+  assert.equal(game._shoot({ id: 'test-player', ...from }, game.base, 'player', 10, 40, 5), true);
+  shootEnemy(game, from, game.base, 8);
+  game.update(0.04);
+  assert.equal(game.phase, 'prep');
+  assert.equal(game.base.hp, 11);
+  assert.equal(game.baseLoss, null);
+
+  game.startWave();
+  shootEnemy(game, { x: 12.6, y: 13.5 }, game.base, 12);
+  shootEnemy(game, { x: 12.6, y: 13.5 }, game.base, 20);
+  game.update(0.02);
+  assert.equal(game.phase, 'settling');
+  game.update(0.04);
+  assert.equal(game.phase, 'lost');
+  assert.equal(game.base.hp, 0);
+  assert.equal(game.drainEvents().filter(event => event.type === 'lose').length, 1);
+  assert.deepEqual({ ...game.baseLoss }, { wave: 4, hpBefore: 11, damage: 12 });
+  game.update(0.5);
+  const log = JSON.parse(game.exportAttemptLog());
+  const outcomes = log.events.filter(event => event.type === 'attempt_end');
+  assert.deepEqual(outcomes.map(({ outcome, wave, baseHp }) => ({ outcome, wave, baseHp })),
+    [{ outcome: 'lost', wave: 4, baseHp: 0 }]);
+
+  game.reset();
+  assert.equal(game.baseLoss, null);
+  const nextLog = JSON.parse(game.exportAttemptLog());
+  assert.equal(nextLog.attemptNumber, log.attemptNumber + 1);
+  assert.deepEqual(nextLog.events.map(event => event.type), ['attempt_start']);
+});
