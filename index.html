@@ -17,6 +17,7 @@
 .player-meter .meter-track{margin-top:6px}
 .dashboard .module-status{margin:4px 0 0;color:#bdced2;font-size:10px;line-height:1.2}
 .action-detail{margin:5px 0 0}
+.footer-actions{display:flex;flex-wrap:wrap;align-items:center;gap:12px}
 #campaign-dialog{width:calc(100% - 32px);max-height:calc(100dvh - 32px);overflow:hidden}
 #campaign-dialog[open]{display:flex;flex-direction:column}
 #campaign-dialog::backdrop{background:#102024c9;backdrop-filter:blur(5px)}
@@ -92,7 +93,7 @@
         <div class="tactical-note"><span class="note-icon">↳</span><p id="tip">Маршрут ведёт к базе или до первого корпуса для пролома, отмеченного кругом. Лёгкий может свернуть к тебе.</p></div>
       </aside>
     </main>
-    <footer><div class="controls"><span><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> движение</span><span><kbd>Мышь</kbd> прицел</span><span><kbd>ЛКМ</kbd> огонь / выбор корпуса</span><span><kbd>Esc</kbd> пауза</span></div><a id="download" href="index.html" download="tank-prototype.html">Скачать для игры офлайн ↓</a></footer>
+    <footer><div class="controls"><span><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> движение</span><span><kbd>Мышь</kbd> прицел</span><span><kbd>ЛКМ</kbd> огонь / выбор корпуса</span><span><kbd>Esc</kbd> пауза</span></div><div class="footer-actions"><button id="export-attempt" class="icon-button">Скачать журнал JSON</button><a id="download" href="index.html" download="tank-prototype.html">Скачать для игры офлайн ↓</a></div></footer>
   </div>
   <dialog id="campaign-dialog" class="modal" aria-labelledby="campaign-title">
     <h2 id="campaign-title">Кампания</h2>
@@ -192,6 +193,8 @@
     armor: Object.freeze({ ...PLAYER_BASE_STATS, maxHp: 90 })
   });
   const ENEMY_PROJECTILE_SPEED = 10;
+  const ATTEMPT_LOG_VERSION = 1;
+  const BUILD_ID = 'prototype-05-attempt-log-1';
   const scenarios = typeof module !== 'undefined' && module.exports ? require('./scenarios.js') : root.TankScenarios;
   const ENEMY_TYPES = Object.freeze({
     light: Object.freeze({ hp: 20, speed: 2.6, damage: 8, range: 6, cooldown: 1.4 }),
@@ -415,6 +418,15 @@
       this._breachSearch = null;
       this._traffic = null;
       this.lastMessage = 'Подготовка к первой волне';
+      this._attemptNumber = (this._attemptNumber ?? 0) + 1;
+      this._preparationSeconds = 0;
+      this._attemptEvents = [];
+      this._attemptConfiguration = JSON.parse(JSON.stringify({
+        game: this.config, base: this.base, stepSeconds: STEP,
+        playerBaseStats: PLAYER_BASE_STATS, playerModules: PLAYER_MODULES,
+        playerWeapon: PLAYER_WEAPON, enemyProjectileSpeed: ENEMY_PROJECTILE_SPEED
+      }));
+      this._recordAttempt('attempt_start', this._attemptState());
     }
 
     get navigationVersion() {
@@ -440,6 +452,42 @@
 
     _emit(type, detail = {}) { this._events.push({ type, ...detail }); }
 
+    _attemptState() {
+      const { x, y, hp, maxHp, alive, module } = this.player;
+      return { baseHp: this.base.hp, player: { x, y, hp, maxHp, alive, module } };
+    }
+
+    _attemptWrecks() {
+      return this.wrecks.map(wreck => ({ ...wreck }));
+    }
+
+    _recordAttempt(type, detail = {}) {
+      const sequence = this._attemptEvents.length + 1;
+      this._attemptEvents.push({
+        sequence, type, wave: this.waveNumber,
+        preparationSeconds: this._preparationSeconds, battleSeconds: this.stats.time,
+        ...detail
+      });
+      return sequence;
+    }
+
+    _recordWreckRemoval(wreck, reason, detail) {
+      this._recordAttempt('wreck_removed', { wreck: { ...wreck }, reason, ...detail });
+    }
+
+    exportAttemptLog() {
+      return JSON.stringify({
+        formatVersion: ATTEMPT_LOG_VERSION, buildId: BUILD_ID, attemptNumber: this._attemptNumber,
+        configuration: this._attemptConfiguration,
+        current: {
+          phase: this.phase, wave: this.waveNumber,
+          preparationSeconds: this._preparationSeconds, battleSeconds: this.stats.time,
+          ...this._attemptState(), wrecks: this._attemptWrecks(), stats: this.stats
+        },
+        events: this._attemptEvents
+      }, null, 2);
+    }
+
     startWave() {
       if (this.phase !== 'prep' || this.paused) return false;
       this._restorePlayerHp();
@@ -453,6 +501,7 @@
       }))).sort((a, b) => a.at - b.at || a.lane.localeCompare(b.lane));
       this.lastMessage = `Волна ${this.waveNumber}`;
       this._emit('wave', { wave: this.waveNumber });
+      this._recordAttempt('wave_start', { ...this._attemptState(), wrecks: this._attemptWrecks() });
       this._spawnDue();
       return true;
     }
@@ -485,11 +534,13 @@
 
     // Call once, after validation and before changing any of the affected hulls.
     _recordPreparation(wrecks) {
-      this._undo.push({
+      const state = {
         wrecks: wrecks.map(wreck => ({ wreck: { ...wreck }, index: this.wrecks.indexOf(wreck) })),
         baseHp: this.base.hp, player: { ...this.player },
         repairs: this.stats.repairs, baseRepaired: this.stats.baseRepaired
-      });
+      };
+      this._undo.push(state);
+      return state;
     }
 
     repairFromWreck(id) {
@@ -497,7 +548,7 @@
       if (hp === null) return { ok: false, hp: 0 };
       const index = this.wrecks.findIndex(wreck => wreck.id === id);
       const wreck = this.wrecks[index];
-      this._recordPreparation([wreck]);
+      const before = this._recordPreparation([wreck]);
       this.base.hp += hp;
       this.wrecks.splice(index, 1);
       this.stats.repairs++;
@@ -505,6 +556,10 @@
       this._invalidateNavigation();
       this.lastMessage = hp ? `База: +${hp} HP` : 'Обломок разобран: база уже цела';
       this._emit('repair', { x: wreck.x, y: wreck.y, hp });
+      before.actionSequence = this._recordAttempt('repair', {
+        wreckId: id, hpRestored: hp, ...this._attemptState()
+      });
+      this._recordWreckRemoval(wreck, 'salvaged', { actionSequence: before.actionSequence });
       return { ok: true, hp };
     }
 
@@ -512,12 +567,17 @@
       const { module, moduleReason } = this.getWreckActions(id);
       if (moduleReason) return { ok: false, reason: moduleReason };
       const index = this.wrecks.findIndex(wreck => wreck.id === id);
-      this._recordPreparation([this.wrecks[index]]);
+      const wreck = this.wrecks[index];
+      const before = this._recordPreparation([wreck]);
       this.wrecks.splice(index, 1);
       this.player.module = module;
       this._restorePlayerHp();
       this._invalidateNavigation();
       this.lastMessage = 'Модуль установлен';
+      before.actionSequence = this._recordAttempt('module_change', {
+        wreckId: id, previousModule: before.player.module, ...this._attemptState()
+      });
+      this._recordWreckRemoval(wreck, 'salvaged', { actionSequence: before.actionSequence });
       return { ok: true, module };
     }
 
@@ -539,11 +599,14 @@
       if (reason) return { ok: false, reason };
       const donorIndex = this.wrecks.findIndex(wreck => wreck.id === donorId);
       const target = this.wrecks.find(wreck => wreck.id === targetId);
-      this._recordPreparation([this.wrecks[donorIndex], target]);
+      const donor = this.wrecks[donorIndex];
+      const before = this._recordPreparation([donor, target]);
       this.wrecks.splice(donorIndex, 1);
       Object.assign(target, { hp, expiresAfterWave, reinforced: true });
       this._invalidateNavigation();
       this.lastMessage = 'Корпус укреплён';
+      before.actionSequence = this._recordAttempt('reinforce', { donorId, target: { ...target } });
+      this._recordWreckRemoval(donor, 'salvaged', { actionSequence: before.actionSequence });
       return { ok: true };
     }
 
@@ -562,6 +625,10 @@
       this.stats.baseRepaired = state.baseRepaired;
       this._invalidateNavigation();
       this.lastMessage = 'Операция подготовки отменена';
+      this._recordAttempt('undo', {
+        actionSequence: state.actionSequence, ...this._attemptState(),
+        wrecks: state.wrecks.map(({ wreck }) => ({ ...wreck }))
+      });
       return true;
     }
 
@@ -583,6 +650,8 @@
         this.stats.time += dt;
         this._waveTime += dt;
         this._updateRespawn(dt);
+      } else if (this.phase === 'prep') {
+        this._preparationSeconds += dt;
       }
       this._updatePlayer(dt, input);
       if (this.phase === 'battle') this._spawnDue();
@@ -644,6 +713,7 @@
       Object.assign(this.player, spot, { alive: true, respawn: 0, cooldown: 0 });
       this._restorePlayerHp();
       this.lastMessage = 'Танк восстановлен';
+      this._recordAttempt('player_return', { reason: 'respawn_timer', ...this._attemptState() });
     }
 
     _respawnPosition() {
@@ -1254,6 +1324,7 @@
           this.stats.deaths++;
           this.lastMessage = 'Танк уничтожен. Возвращение через 4 с';
           this._emit('death', { x: target.x, y: target.y, side: 'player' });
+          this._recordAttempt('player_death', this._attemptState());
         }
         return;
       }
@@ -1263,6 +1334,7 @@
           this.wrecks = this.wrecks.filter(wreck => wreck !== target);
           this._invalidateNavigation();
           this._emit('wreck', { x: target.x, y: target.y, removed: true });
+          this._recordWreckRemoval(target, bullet.team === 'player' ? 'destroyed_by_player' : 'destroyed_by_enemy');
         }
         return;
       }
@@ -1288,25 +1360,33 @@
       this.stats.wrecksCreated++;
       this._invalidateNavigation();
       this._emit('wreck', { x: wreck.x, y: wreck.y, id: wreck.id });
+      this._recordAttempt('wreck_created', { wreck: { ...wreck } });
     }
 
     _completeWave() {
       if (this.base.hp <= 0) { this._lose(); return; }
       const completed = this.waveNumber;
       const oldCount = this.wrecks.length;
-      this.wrecks = this.wrecks.filter(wreck => wreck.expiresAfterWave > completed);
+      this.wrecks = this.wrecks.filter(wreck => {
+        if (wreck.expiresAfterWave > completed) return true;
+        this._recordWreckRemoval(wreck, 'expired');
+        return false;
+      });
       if (oldCount !== this.wrecks.length) this._invalidateNavigation();
+      this._recordWaveEnd('cleared');
       if (completed === this.config.WAVES.length) {
         this.phase = 'won';
         this.lastMessage = `Отбито волн: ${completed}`;
         this._emit('win');
+        this._recordAttempt('attempt_end', { outcome: this.phase, ...this._attemptState() });
         return;
       }
       this.waveIndex++;
       this.phase = 'prep';
       this._traffic = null;
       this._undo = [];
-      if (!this.player.alive) {
+      const returning = !this.player.alive;
+      if (returning) {
         const position = this._respawnPosition();
         if (position) Object.assign(this.player, position);
       }
@@ -1316,14 +1396,26 @@
       this.player.cooldown = 0;
       this.lastMessage = `Волна ${completed} отбита. Подготовка к волне ${this.waveNumber}`;
       this._emit('wave', { wave: this.waveNumber, preparation: true });
+      if (returning) {
+        this._recordAttempt('player_return', { reason: 'wave_transition', ...this._attemptState() });
+      }
+    }
+
+    _recordWaveEnd(outcome) {
+      this._recordAttempt('wave_end', {
+        outcome, ...this._attemptState(), wrecks: this._attemptWrecks()
+      });
     }
 
     _lose() {
       if (this.phase === 'lost') return;
+      const waveActive = this.phase === 'battle' || this.phase === 'settling';
       this.base.hp = 0;
       this.phase = 'lost';
       this.lastMessage = 'База уничтожена';
       this._emit('lose', { x: this.base.x, y: this.base.y });
+      if (waveActive) this._recordWaveEnd('lost');
+      this._recordAttempt('attempt_end', { outcome: this.phase, ...this._attemptState() });
     }
 
     _invalidateNavigation() {
@@ -1665,13 +1757,23 @@
     el('overlay').hidden=false;el('modal-actions').querySelector('button')?.focus({preventScroll:true});
   }
   function closeModal(){el('overlay').hidden=true;modalKind=null;focusBoard();}
+  const exportLabel = 'Скачать журнал JSON';
+  function exportAttempt(){
+    const blob = new Blob([game.exportAttemptLog()], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'tanks-attempt.json';
+    link.click();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
   function resume(){game.paused=false;closeModal();lastFrame=performance.now();}
   function pause(){
     if(modalKind==='help'){closeHelp();return;}
     if(['won','lost'].includes(game.phase))return;
     if(game.paused){resume();return;}
     game.paused=true;
-    openModal('pause','БОЙ ОСТАНОВЛЕН','Пауза','<p>Можно выдохнуть. Поле и все снаряды ждут твоего возвращения.</p>',[['Продолжить',resume,true],['Начать попытку заново',reset,false]]);
+    openModal('pause','БОЙ ОСТАНОВЛЕН','Пауза','<p>Можно выдохнуть. Поле и все снаряды ждут твоего возвращения.</p>',[['Продолжить',resume,true],[exportLabel,exportAttempt,false],['Начать попытку заново',reset,false]]);
   }
   function showCampaign(){
     if(modalKind)return;
@@ -1701,7 +1803,7 @@
     pauseBeforeHelp=game.paused;game.paused=true;
     openModal('help','ТРИ НАПРАВЛЕНИЯ · ОДНА БАЗА','Как играть',`<ol class="modal-list"><li><b>Защищай базу.</b> WASD — движение, мышь — прицел, удержание ЛКМ — огонь. До старта проверь входы и время атаки в плане волны. Кнопка «Кампания» показывает расписание всех волн (${waveCount}).</li><li><b>Лёгкий (Л) охотится за тобой.</b> Знак «!» означает преследование. Уходи за укрытие и меняй позицию.</li><li><b>Средний (С) и тяжёлый (Т) атакуют базу.</b> Рядом с танком указаны HP и число попаданий до уничтожения (×). Оставленные корпуса меняют маршрут и задерживают снаряды обеих сторон.</li><li><b>Враг стреляет без предупреждения.</b> При открытой цели и готовом орудии он сразу выпускает снаряд. Меняй позицию и используй твёрдые укрытия. Воронки и следы на земле проходимы.</li><li><b>Между волнами</b> нажми на корпус: оставь его баррикадой или разбери на ремонт базы до +${CONFIG.ENEMY_TYPES.medium.wreck.repairHp} HP за средний или +${CONFIG.ENEMY_TYPES.heavy.wreck.repairHp} HP за тяжёлый. Средний корпус также даёт двигатель, тяжёлый — броню. В слоте помещается один модуль. Последнее действие можно отменить через Ctrl+Z. Подпись «до N» показывает последнюю волну службы.</li><li>Твой танк восстанавливается между волнами и возвращается через 4 секунды после гибели. Пока ты возвращаешься, бой продолжается.</li></ol>`,[['Понятно',closeHelp,true]]);
   }
-  function closeHelp(){game.paused=pauseBeforeHelp;closeModal();if(game.paused){game.paused=false;pause();}}
+  function closeHelp(){game.paused=pauseBeforeHelp;closeModal();if(game.paused){game.paused=false;pause();}else lastFrame=performance.now();}
   function reset(){game.reset();selected=null;reinforcement=null;routeKey=null;routePreview=[];particles.length=0;endShown=false;lastUiKey='';closeModal();game.paused=false;toast('Новая попытка. Перед боем можно занять позицию.');}
   function start(){if(['won','lost'].includes(game.phase)){reset();return;}if(game.phase!=='prep'||game.paused||reinforcement)return;if(game.startWave()){selected=null;routeKey=null;toast(`Волна ${game.waveNumber}. Защищай базу.`,2);focusBoard();}}
   function repair(){
@@ -1732,6 +1834,7 @@
   el('install-module').onclick=installModule;el('leave').onclick=()=>{selected=null;lastUiKey='';};el('undo').onclick=undo;
   el('choose-reinforcement').onclick=chooseReinforcement;
   el('confirm-reinforcement').onclick=confirmReinforcement;
+  el('export-attempt').onclick=exportAttempt;
   el('cancel-reinforcement').onclick=cancelReinforcement;
   el('sound').onclick=()=>{soundOn=!soundOn;el('sound').textContent=soundOn?'Звук вкл':'Звук выкл';el('sound').setAttribute('aria-pressed',String(soundOn));el('sound').title=soundOn?'Выключить звук':'Включить звук';if(soundOn){try{audio ||= new (window.AudioContext||window.webkitAudioContext)();audio.resume();beep('wave');}catch{soundOn=false;el('sound').textContent='Звук недоступен';el('sound').setAttribute('aria-pressed','false');el('sound').title='Попробовать включить звук';}}};
   function beep(type, side){
@@ -1827,7 +1930,7 @@
       } else el('salvage-content').innerHTML=`<p class="empty-state">${!game.wrecks.length?'Пока нет корпусов. Их оставляют средние и тяжёлые танки.':prep?'Нажми на корпус на поле, чтобы выбрать действие.':'Корпуса уже работают как препятствия. Разбор и установка модулей доступны между волнами.'}</p>`;
       el('tip').textContent=!game.player.alive?'Твой танк скоро вернётся. Бой продолжается, а база остаётся уязвимой.':prep?'Маршрут ведёт к базе или до первого корпуса для пролома, отмеченного кругом. Лёгкий может свернуть к тебе.':'За тобой идёт лёгкий? Разорви видимость у руин, затем вернись к защите базы. Следи за флангами.';
     }
-    if(finished&&!endShown){endShown=true;const win=game.phase==='won';openModal('end',win?`ВОЛНЫ ПРОЙДЕНЫ · ${waveCount}/${waveCount}`:'БАЗА ПОТЕРЯНА',win?'Оборона выдержала':'Ещё одна попытка',`<p>${win?'Ты защитил базу. Попробуй пройти ещё раз и оставить корпуса в других местах.':'Попробуй раньше перехватывать противников и закрывать проходы корпусами.'}</p><div class="result-grid"><div><strong>${game.stats.kills}</strong><span>ТАНКОВ УНИЧТОЖЕНО</span></div><div><strong>${game.stats.wrecksCreated}</strong><span>КОРПУСОВ СОЗДАНО</span></div><div><strong>${baseHp}</strong><span>HP БАЗЫ</span></div></div><p>Удалось ли намеренно оставить полезный корпус? Пришлось ли разобрать его ради ремонта?</p>`,[['Играть ещё раз',reset,true],['Посмотреть поле',()=>{closeModal();},false]]);}
+    if(finished&&!endShown){endShown=true;const win=game.phase==='won';openModal('end',win?`ВОЛНЫ ПРОЙДЕНЫ · ${waveCount}/${waveCount}`:'БАЗА ПОТЕРЯНА',win?'Оборона выдержала':'Ещё одна попытка',`<p>${win?'Ты защитил базу. Попробуй пройти ещё раз и оставить корпуса в других местах.':'Попробуй раньше перехватывать противников и закрывать проходы корпусами.'}</p><div class="result-grid"><div><strong>${game.stats.kills}</strong><span>ТАНКОВ УНИЧТОЖЕНО</span></div><div><strong>${game.stats.wrecksCreated}</strong><span>КОРПУСОВ СОЗДАНО</span></div><div><strong>${baseHp}</strong><span>HP БАЗЫ</span></div></div><p>Удалось ли намеренно оставить полезный корпус? Пришлось ли разобрать его ради ремонта?</p>`,[['Играть ещё раз',reset,true],[exportLabel,exportAttempt,false],['Посмотреть поле',()=>{closeModal();},false]]);}
   }
   function roundRect(x,y,w,h,r){ctx.beginPath();ctx.roundRect(x,y,w,h,r);}
   function text(label,x,y,size,color,align='center',weight=600){
