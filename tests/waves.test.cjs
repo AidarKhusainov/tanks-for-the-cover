@@ -553,3 +553,144 @@ test('armor stays equipped through timed respawn, early wave end, preparation an
   assert.equal(game.player.hp, 90);
   assert.equal(game.player.module, 'armor');
 });
+
+test('reinforcement uses the target type, current HP and remaining service for every donor type', () => {
+  for (const [targetType, donorType, hp, expectedHp, expectedMax] of [
+    ['medium', 'medium', 10, 40, 60],
+    ['medium', 'heavy', 60, 60, 60],
+    ['heavy', 'medium', 30, 90, 120],
+    ['heavy', 'heavy', 100, 120, 120]
+  ]) {
+    const game = new Game(EMPTY_WAVES);
+    const target = createWreck(game, targetType, 22, 13);
+    const donor = createWreck(game, donorType, 24, 13);
+    Object.assign(donor, { hp: 1, expiresAfterWave: 4, reinforced: true });
+    target.hp = hp;
+    const expected = {
+      ...target, hp: expectedHp, maxHp: expectedMax,
+      expiresAfterWave: target.expiresAfterWave + 1, reinforced: true
+    };
+    const before = JSON.stringify(game.wrecks);
+    const nav = game.navigationVersion;
+    assert.deepEqual({ ...game.getWreckReinforcement(donor.id, target.id) },
+      { reason: null, hp: expected.hp, expiresAfterWave: expected.expiresAfterWave });
+    assert.equal(JSON.stringify(game.wrecks), before, 'query has no side effects');
+    assert.equal(game.canUndo, false);
+    assert.equal(game.reinforceWreck(donor.id, target.id).ok, true);
+    assert.deepEqual(Array.from(game.wrecks, w => ({ ...w })), [expected]);
+    assert.equal(game.navigationVersion, nav + 1);
+  }
+});
+
+test('reinforcement refuses invalid pairs, repeat repair, pause and combat without side effects', () => {
+  const game = new Game(EMPTY_WAVES);
+  const donor = createWreck(game, 'medium', 7);
+  const target = createWreck(game, 'heavy', 9);
+  const other = createWreck(game, 'medium', 12);
+  const expired = createWreck(game, 'heavy', 20);
+  expired.expiresAfterWave = 0;
+  const destroyed = createWreck(game, 'heavy', 22);
+  destroyed.hp = 0;
+  const unsupported = createWreck(game, 'heavy', 24);
+  unsupported.type = 'light';
+
+  function reject(from, to, reason) {
+    const snapshot = () => JSON.stringify([
+      game.wrecks, game.player, game.base, game.stats, game._undo, game._events, game.lastMessage, game.navigationVersion
+    ]);
+    const before = snapshot();
+    assert.equal(game.getWreckReinforcement(from, to).reason, reason);
+    assert.deepEqual({ ...game.reinforceWreck(from, to) }, { ok: false, reason });
+    assert.equal(snapshot(), before);
+  }
+  reject(donor.id, donor.id, 'same-wreck');
+  for (const [id, reason] of [
+    ['missing', 'missing-wreck'], [expired.id, 'unusable-wreck'],
+    [destroyed.id, 'unusable-wreck'], [unsupported.id, 'unusable-wreck']
+  ]) {
+    reject(id, target.id, reason);
+    reject(donor.id, id, reason);
+  }
+  game.paused = true;
+  reject(donor.id, target.id, 'paused');
+  game.paused = false;
+  assert.equal(game.reinforceWreck(donor.id, target.id).ok, true);
+  target.hp = 30;
+  reject(other.id, target.id, 'already-reinforced');
+  assert.equal(game.undo(), true);
+  assert.equal(game.canUndo, false);
+  assert.equal(game.startWave(), true);
+  reject(donor.id, target.id, 'not-prep');
+});
+
+test('reinforced hulls remain ordinary resources and one undo restores both hulls in a mixed chain', () => {
+  const game = new Game(EMPTY_WAVES);
+  Object.assign(game.player, { x: 3, y: 6.5 });
+  game.base.hp = 135;
+  const repair = createWreck(game, 'medium', 4.2, 6.5);
+  const target = createWreck(game, 'heavy', 22, 13);
+  const engine = createWreck(game, 'medium', 24, 13);
+  const donor = createWreck(game, 'medium', 26, 13);
+  target.hp = 30;
+  const snapshots = [];
+  const snapshot = () => ({
+    hulls: Array.from(game.wrecks, w => ({ ...w })),
+    base: game.base.hp, stats: { ...game.stats }, player: { ...game.player }
+  });
+  function step(action, input, dt) {
+    const before = snapshot();
+    snapshots.push(before);
+    assert.equal(action().ok, true);
+    game.update(dt, input);
+    assert.notDeepEqual(position(game.player), position(before.player));
+  }
+  step(() => game.repairFromWreck(repair.id), { x: 1 }, 0.65);
+  step(() => game.installModuleFromWreck(engine.id), { y: 1 }, 0.2);
+  step(() => game.reinforceWreck(donor.id, target.id), { x: -1 }, 0.2);
+  assert.equal(game.getWreckActions(target.id).repairHp, 50);
+  assert.equal(game.getWreckActions(target.id).module, 'armor');
+  step(() => game.installModuleFromWreck(target.id), { y: 1 }, 0.2);
+  assert.equal(game.player.hp, 90);
+  assert.equal(game.wrecks.length, 0);
+
+  for (const before of snapshots.reverse()) {
+    assert.equal(game.undo(), true);
+    assert.deepEqual(snapshot(), before);
+  }
+  assert.equal(game.undo(), false);
+  assert.equal(game.reinforceWreck(donor.id, target.id).ok, true);
+  assert.deepEqual({ ...game.repairFromWreck(target.id) }, { ok: true, hp: 50 });
+});
+
+test('starting a wave commits reinforcement; target expires one wave later, including the final wave rule', () => {
+  const game = new Game(EMPTY_WAVES);
+  const target = createWreck(game, 'medium', 22, 13);
+  const ordinary = createWreck(game, 'medium', 24, 13);
+  const donor = createWreck(game, 'medium', 26, 13);
+  assert.equal(game.startWave(), true); // Creation wave does not count.
+  game.update(FRAME);
+  assert.equal(game.waveNumber, 2);
+  assert.equal(game.reinforceWreck(donor.id, target.id).ok, true);
+  assert.equal(game.startWave(), true);
+  assert.equal(game.undo(), false);
+  game.update(FRAME);
+  assert.equal(game.waveNumber, 3);
+  assert.equal(game.canUndo, false);
+  assert.deepEqual(Array.from(game.wrecks, w => w.id), [target.id]);
+  assert.ok(!game.wrecks.includes(ordinary));
+  assert.equal(game.startWave(), true);
+  game.update(FRAME);
+  assert.equal(game.waveNumber, 4);
+  assert.equal(game.wrecks.length, 0);
+
+  const lastTarget = createWreck(game, 'heavy', 22, 13);
+  const lastDonor = createWreck(game, 'medium', 24, 13);
+  Object.assign(lastTarget, { hp: 30, expiresAfterWave: 4 });
+  assert.equal(game.reinforceWreck(lastDonor.id, lastTarget.id).ok, true);
+  assert.equal(lastTarget.hp, 90);
+  assert.equal(lastTarget.expiresAfterWave, 5, 'lifetime is extended even beyond the last wave');
+  assert.equal(game.startWave(), true);
+  game.update(FRAME);
+  assert.equal(game.phase, 'won');
+  assert.equal(game.undo(), false);
+});
