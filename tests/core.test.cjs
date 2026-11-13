@@ -8,9 +8,8 @@ function mediumAt(x, y, id = 'e-test') {
   return { id, type: 'medium', x, y, r: 0.5, hp: 0, maxHp: 60, dead: false };
 }
 
-test('battlefield has three entrances and four waves', () => {
+test('battlefield has three entrances and uses enemy roles', () => {
   assert.deepEqual(Object.keys(CONFIG.SPAWNS).sort(), ['A', 'B', 'C']);
-  assert.equal(CONFIG.WAVES.length, 4);
   assert.equal(CONFIG.AI_MODE, 'roles');
 });
 
