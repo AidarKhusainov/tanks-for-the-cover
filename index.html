@@ -214,6 +214,7 @@
   });
   const playerStatsFor = module => PLAYER_MODULES[module] ?? PLAYER_BASE_STATS;
   const ENEMY_PROJECTILE_SPEED = 10;
+  const LIGHT_DODGE_SPEED = 3;
   const ATTEMPT_LOG_VERSION = 1;
   const BUILD_ID = 'prototype-06-attempt-log-1';
   const scenarios = typeof module !== 'undefined' && module.exports ? require('./scenarios.js') : root.TankScenarios;
@@ -243,6 +244,15 @@
   function pointRectDistanceSq(x, y, rect) {
     return square(x - clamp(x, rect.x, rect.x + rect.w)) +
       square(y - clamp(y, rect.y, rect.y + rect.h));
+  }
+
+  function projectileStep(bullet, dt) {
+    const travel = Math.min(bullet.speed * dt, bullet.remaining);
+    return {
+      x: bullet.x + bullet.dx * Math.max(0, travel),
+      y: bullet.y + bullet.dy * Math.max(0, travel),
+      remaining: bullet.remaining - travel
+    };
   }
 
   function isInSpawnZone(config, x, y) {
@@ -707,15 +717,11 @@
       this._updatePlayer(dt, input);
       if (this.phase === 'battle') this._spawnDue();
       this._updateTraffic(dt);
-      const order = this.enemies.slice();
-      if (this._traffic) {
-        const traffic = this._traffic;
-        const priority = enemy => !traffic.members.has(enemy.id) ? 2 : enemy.id === traffic.winnerId ? 1 : 0;
-        // Retreat the tail first so a full queue can make room for its front.
-        order.sort((a, b) => priority(a) - priority(b) ||
-          (priority(a) === 0 ? distance(b, traffic.origin) - distance(a, traffic.origin) : 0));
+      const order = this._enemyUpdateOrder();
+      for (let i = 0; i < order.length; i++) {
+        const enemy = order[i];
+        if (!enemy.dead && enemy.hp > 0) this._updateEnemy(enemy, dt, order, i);
       }
-      for (const enemy of order) if (!enemy.dead && enemy.hp > 0) this._updateEnemy(enemy, dt);
       this._updateBullets(dt);
       this.enemies = this.enemies.filter(enemy => !enemy.dead && enemy.hp > 0);
       if (this.base.hp <= 0) { this._lose(); return; }
@@ -724,6 +730,18 @@
         this.lastMessage = 'Последние снаряды ещё в полёте';
       }
       if (this.phase === 'settling' && this.bullets.length === 0) this._completeWave();
+    }
+
+    _enemyUpdateOrder() {
+      const order = this.enemies.slice();
+      if (this._traffic) {
+        const traffic = this._traffic;
+        const priority = enemy => !traffic.members.has(enemy.id) ? 2 : enemy.id === traffic.winnerId ? 1 : 0;
+        // Retreat the tail first so a full queue can make room for its front.
+        order.sort((a, b) => priority(a) - priority(b) ||
+          (priority(a) === 0 ? distance(b, traffic.origin) - distance(a, traffic.origin) : 0));
+      }
+      return order;
     }
 
     _updatePlayer(dt, input) {
@@ -816,8 +834,12 @@
       return spec;
     }
 
-    _updateEnemy(enemy, dt) {
+    _updateEnemy(enemy, dt, order = [enemy], index = 0, plannedDodge = null) {
       const spec = this._normalizeEnemy(enemy);
+      const dodge = order && this.config.AI_MODE === 'roles' &&
+        (enemy.type === 'light' || enemy.type === 'medium') ? this._chooseDodge(enemy, spec, dt, order, index) : plannedDodge;
+      if (enemy.dodge && !dodge && !enemy.pressure) enemy.routeVersion = -1;
+      enemy.dodge = dodge;
       enemy.cooldown = Math.max(0, enemy.cooldown - dt);
       if (this.config.AI_MODE === 'roles' && enemy.type === 'light') this._updatePressure(enemy, dt);
       if (!enemy.pressure && enemy.routeVersion !== this._navVersion) this._assignRoute(enemy);
@@ -841,7 +863,7 @@
         if (target) {
           const point = target.point || target.object;
           if (!(this.config.ENEMY_WINDUP > EPS)) facingPoint = point;
-          if (enemy.cooldown <= EPS) {
+          if (enemy.cooldown <= EPS && (!stationary || !dodge)) {
             enemy.cooldown = spec.cooldown;
             if (this.config.ENEMY_WINDUP > EPS) {
               // Locked preparation is retained only by historical scenarios.
@@ -854,7 +876,11 @@
         }
       }
       enemy.stationaryTarget = stationaryTarget;
-      if (!stationary) {
+      if (dodge) {
+        const { x, y } = enemy;
+        this._moveCircle(enemy, dodge.dx * dodge.speed * dt, dodge.dy * dodge.speed * dt, false);
+        if (distance(enemy, { x, y }) > EPS) enemy.bodyAngle = Math.atan2(enemy.y - y, enemy.x - x);
+      } else if (!stationary) {
         if (enemy.pressure) this._followPressure(enemy, spec.speed, dt);
         else this._followRoute(enemy, spec.speed, dt);
       }
@@ -862,6 +888,86 @@
         stationaryTarget === 'wreck' || (!stationaryTarget && enemy.targetWreckId) ? 'breach' : 'advance';
       if (facingPoint) enemy.angle = Math.atan2(facingPoint.y - enemy.y, facingPoint.x - enemy.x);
       else if (!enemy.aimPoint && !stationary) enemy.angle = enemy.bodyAngle;
+    }
+
+    _chooseDodge(enemy, spec, dt, order, index) {
+      const speed = enemy.type === 'light' ? LIGHT_DODGE_SPEED : spec.speed;
+      for (const bullet of this.bullets) {
+        // React only once the player's shot has travelled a segment.
+        if (bullet.team !== 'player' || bullet.remaining >= PLAYER_WEAPON.range - EPS) continue;
+        const timeLeft = bullet.remaining / bullet.speed;
+        const end = projectileStep(bullet, timeLeft);
+        const reach = enemy.r + speed * timeLeft;
+        if (pointSegmentDistanceSq(enemy.x, enemy.y, bullet.x, bullet.y, end.x, end.y) > square(reach) + EPS) continue;
+
+        const active = enemy.dodge?.bulletId === bullet.id ? enemy.dodge : null;
+        if (active) return active;
+        if (this._forecastShot(enemy, bullet, dt, order, index) !== 'target') continue;
+
+        const side = Math.sign(bullet.dx * (enemy.y - bullet.y) - bullet.dy * (enemy.x - bullet.x)) || 1;
+        for (const direction of [side, -side]) {
+          const dodge = { bulletId: bullet.id, dx: -bullet.dy * direction, dy: bullet.dx * direction, speed };
+          if (this._forecastShot(enemy, bullet, dt, order, index, dodge) === 'clear') return dodge;
+        }
+      }
+      return null;
+    }
+
+    _forecastShot(enemy, bullet, dt, order, index, dodge = null) {
+      // Advance enemies from this point in their update order. The horizon is
+      // one flight. Other tanks continue their current maneuver, if any.
+      // The player and wrecks stay at their current positions.
+      const world = Object.assign(Object.create(Game.prototype), this);
+      const copies = new Map(this.enemies.map(actor => [actor, {
+        ...actor, pressure: actor.pressure && { ...actor.pressure }
+      }]));
+      world.enemies = [...copies.values()];
+      world.bullets = [];
+      world._events = [];
+      world._traffic = this._traffic && {
+        ...this._traffic, members: new Map(this._traffic.members), released: new Set(this._traffic.released)
+      };
+      world._breachSearch = null;
+      const tank = copies.get(enemy);
+      let next = order.slice(index).map(actor => copies.get(actor));
+      let projected = bullet;
+      let step = dt;
+      const lateralDistance = () => bullet.dx * (tank.y - bullet.y) - bullet.dy * (tank.x - bullet.x);
+      const startedInside = Math.abs(lateralDistance()) < tank.r;
+      let cleared = false;
+
+      while (projected.remaining > EPS) {
+        for (const actor of next) {
+          if (actor.dead || actor.hp <= 0) continue;
+          if (actor === tank && dodge) {
+            const before = lateralDistance();
+            world._moveCircle(tank, dodge.dx * dodge.speed * step, dodge.dy * dodge.speed * step, false);
+            const after = lateralDistance();
+            cleared ||= startedInside && Math.abs(after) > tank.r + EPS;
+            // Holding still can keep a moving tank out of the shot. That alone
+            // is not a viable lateral path.
+            if (!cleared && Math.abs(after - before) < dodge.speed * step - EPS) return 'blocked';
+          } else {
+            const currentDodge = actor !== tank && actor.dodge?.bulletId === bullet.id ? actor.dodge : null;
+            world._updateEnemy(actor, step, null, 0, currentDodge);
+          }
+        }
+        const end = projectileStep(projected, step);
+        const hit = world._firstCollision(projected.x, projected.y, end.x, end.y, projected.ownerId);
+        if (hit) {
+          if (hit.object === tank) return 'target';
+          // After a genuine lateral escape, a farther object may take the shot.
+          return dodge && Math.abs(lateralDistance()) > tank.r + EPS ? 'clear' : 'intercepted';
+        }
+        if (end.x < 0 || end.x > this.config.W || end.y < 0 || end.y > this.config.H) break;
+        projected = { ...projected, ...end };
+        step = Math.max(dt, STEP / 2);
+        if (projected.remaining > EPS) {
+          world._updateTraffic(step);
+          next = world._enemyUpdateOrder();
+        }
+      }
+      return 'clear';
     }
 
     _canSeePlayer(enemy) {
@@ -1341,20 +1447,18 @@
       for (const bullet of this.bullets) {
         const travel = Math.min(bullet.speed * dt, bullet.remaining);
         if (travel < -EPS || !Number.isFinite(travel)) continue;
-        const endX = bullet.x + bullet.dx * Math.max(0, travel);
-        const endY = bullet.y + bullet.dy * Math.max(0, travel);
-        const hit = this._firstCollision(bullet.x, bullet.y, endX, endY, bullet.ownerId);
+        const end = projectileStep(bullet, dt);
+        const hit = this._firstCollision(bullet.x, bullet.y, end.x, end.y, bullet.ownerId);
         if (hit) {
-          const x = bullet.x + (endX - bullet.x) * hit.t;
-          const y = bullet.y + (endY - bullet.y) * hit.t;
+          const x = bullet.x + (end.x - bullet.x) * hit.t;
+          const y = bullet.y + (end.y - bullet.y) * hit.t;
           this._emit('hit', { x, y, side: bullet.team, target: hit.kind });
           this._applyHit(hit, bullet);
           continue; // A lethal projectile is consumed before a new wreck exists.
         }
-        bullet.x = endX;
-        bullet.y = endY;
-        bullet.remaining -= travel;
-        if (bullet.remaining > EPS && endX >= 0 && endX <= this.config.W && endY >= 0 && endY <= this.config.H) surviving.push(bullet);
+        Object.assign(bullet, end);
+        if (bullet.remaining > EPS && bullet.x >= 0 && bullet.x <= this.config.W &&
+            bullet.y >= 0 && bullet.y <= this.config.H) surviving.push(bullet);
       }
       this.bullets = surviving;
     }
