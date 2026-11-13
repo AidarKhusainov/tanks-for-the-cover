@@ -57,7 +57,7 @@
 <body>
   <div class="app">
     <header class="topbar">
-      <div class="brand"><span class="brand-icon" aria-hidden="true"><i></i></span><div><p class="eyebrow">ТАНЧИКИ <span>/</span> ПРОТОТИП 05</p><h1>Магнитный рубеж</h1></div></div>
+      <div class="brand"><span class="brand-icon" aria-hidden="true"><i></i></span><div><p class="eyebrow">ТАНЧИКИ <span>/</span> ПРОТОТИП 06</p><h1>Магнитный рубеж</h1></div></div>
       <div class="header-actions"><button id="sound" class="icon-button" aria-pressed="false" title="Включить звук">Звук выкл</button><button id="campaign" class="icon-button" aria-haspopup="dialog">Кампания</button><button id="help" class="icon-button" title="Правила и управление">Как играть <span>?</span></button><button id="pause" class="icon-button" title="Пауза (Esc)">Ⅱ <span class="desktop-label">Пауза</span></button></div>
     </header>
     <div class="mobile-notice">Для игры нужны клавиатура и мышь. Открой эту страницу на компьютере.</div>
@@ -215,7 +215,7 @@
   const playerStatsFor = module => PLAYER_MODULES[module] ?? PLAYER_BASE_STATS;
   const ENEMY_PROJECTILE_SPEED = 10;
   const ATTEMPT_LOG_VERSION = 1;
-  const BUILD_ID = 'prototype-05-attempt-log-1';
+  const BUILD_ID = 'prototype-06-attempt-log-1';
   const scenarios = typeof module !== 'undefined' && module.exports ? require('./scenarios.js') : root.TankScenarios;
   const ENEMY_TYPES = Object.freeze({
     light: Object.freeze({ hp: 20, speed: 2.6, damage: 8, range: 6, cooldown: 1.4 }),

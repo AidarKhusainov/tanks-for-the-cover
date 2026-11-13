@@ -131,13 +131,15 @@ for (const [type, hp] of [['medium', 60], ['heavy', 120]]) {
     assert.equal(wreck.maxHp, hp);
     assert.equal(game.bullets.length, 0);
 
-    fire();
+    // A shot already inside the new wreck hits at the start of its next segment.
+    shootEnemy(game, wreck, game.player, 20);
+    game._updateBullets(FRAME);
     assert.equal(wreck.hp, hp - 20);
-    assert.equal(rear.hp, 60);
-    shootEnemy(game, rear, game.player, 20);
-    game._updateBullets(0.3);
-    assert.equal(wreck.hp, hp - 40);
+    assert.equal(game.bullets.length, 0);
     assert.equal(game.player.hp, 60);
+    fire();
+    assert.equal(wreck.hp, hp - 40);
+    assert.equal(rear.hp, 60);
 
     const navVersion = game._navVersion;
     for (let remaining = hp - 40; remaining > 0; remaining -= 20) fire();
@@ -536,47 +538,62 @@ test('mixed preparation undo restores hull order, repair counters, modules and e
   assert.equal(game.undo(), false);
 });
 
-test('armor stays equipped through timed respawn, early wave end, preparation and the next battle', () => {
-  const config = { ...CONFIG, WAVES: [[{ start: 12, lane: 'A', types: ['light'] }], [], [], []] };
-  const game = new Game(config);
-  const armor = createWreck(game, 'heavy', 24, 13);
-  assert.equal(game.installModuleFromWreck(armor.id).ok, true);
-  game.player.hp = 29;
-  assert.equal(game.startWave(), true);
-  assert.equal(game.player.hp, 90);
+for (const [module, hull, maxHp, speed] of [
+  ['armor', 'heavy', 90, 4],
+  ['engine', 'medium', 60, 5]
+]) {
+  test(`${module} stays equipped through timed respawn, early wave end, preparation and the next battle`, () => {
+    const config = { ...CONFIG, WAVES: [[{ start: 12, lane: 'A', types: ['light'] }], [], [], []] };
+    const game = new Game(config);
+    const wreck = createWreck(game, hull, 24, 13);
+    assert.equal(game.installModuleFromWreck(wreck.id).ok, true);
+    game.player.hp = 29;
+    assert.equal(game.startWave(), true);
+    assert.equal(game.player.hp, maxHp);
 
-  function killPlayer() {
-    Object.assign(game.player, { x: 3, y: 6 });
-    shootEnemy(game, { x: 4, y: 6 }, game.player, 90);
-    game.update(0.05);
+    function killPlayer() {
+      Object.assign(game.player, { x: 3, y: 6 });
+      shootEnemy(game, { x: 4, y: 6 }, game.player, maxHp);
+      game.update(0.05);
+      assert.equal(game.player.alive, false);
+      assert.equal(game.player.module, module);
+      assert.equal(game.player.respawn, 4);
+      assert.equal(game.player.maxHp, maxHp);
+    }
+    killPlayer();
+    // The tank can return in R even when a wreck blocks its exit.
+    const obstruction = createWreck(game, 'medium', 15.8, 15.75);
+    game.update(4 - FRAME);
     assert.equal(game.player.alive, false);
-    assert.equal(game.player.module, 'armor');
-    assert.equal(game.player.respawn, 4);
-  }
-  killPlayer();
-  game.update(4 - FRAME);
-  assert.equal(game.player.alive, false);
-  game.update(FRAME);
-  assert.equal(game.player.alive, true);
-  assert.equal(game.player.hp, 90);
-  assert.deepEqual(position(game.player), NEST);
+    game.update(FRAME);
+    assert.equal(game.player.alive, true);
+    assert.equal(game.phase, 'battle');
+    assert.deepEqual(position(game.player), NEST);
+    game.update(0.35, { y: -1 });
+    assert.ok(game.player.y > 16.5);
+    game.update(1.1, { aimX: obstruction.x, aimY: obstruction.y, fire: true });
+    assert.equal(game.wrecks.length, 0);
+    game.update(0.4, { y: -1 });
+    assert.ok(game.player.y < 16);
+    assertLoadout(game, module, maxHp, speed);
 
-  killPlayer();
-  game._spawnQueue.length = 0; // No further enemies; the wave ends before the second timer.
-  game.update(FRAME);
-  assert.equal(game.phase, 'prep');
-  assert.equal(game.player.alive, true);
-  assert.equal(game.player.module, 'armor');
-  assert.equal(game.player.hp, 90);
-  assert.deepEqual(position(game.player), NEST);
-  assert.equal(game.startWave(), true);
-  assert.equal(game.player.hp, 90);
-  game.player.hp = 12;
-  game.update(FRAME);
-  assert.equal(game.phase, 'prep');
-  assert.equal(game.player.hp, 90);
-  assert.equal(game.player.module, 'armor');
-});
+    killPlayer();
+    game._spawnQueue.length = 0; // No further enemies; the wave ends before the second timer.
+    game.update(FRAME);
+    assert.equal(game.phase, 'prep');
+    assert.equal(game.player.alive, true);
+    assert.equal(game.player.module, module);
+    assert.equal(game.player.hp, maxHp);
+    assert.deepEqual(position(game.player), NEST);
+    assert.equal(game.startWave(), true);
+    assert.equal(game.player.hp, maxHp);
+    game.player.hp = 12;
+    game.update(FRAME);
+    assert.equal(game.phase, 'prep');
+    assert.equal(game.player.hp, maxHp);
+    assert.equal(game.player.module, module);
+  });
+}
 
 test('reinforcement uses the target type, current HP and remaining service for every donor type', () => {
   for (const [targetType, donorType, hp, expectedHp, expectedMax] of [
