@@ -10,6 +10,9 @@
   <style>
 :root{color-scheme:dark;--bg:#111b20;--panel:#1b2a30;--line:#34434a;--muted:#9cacae;--ink:#edf0e7;--lime:#d4ed87;--blue:#78b8de;--orange:#e6a37d}*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 35% 0,#24343a 0,#111b20 70%);font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--ink);font-size:14px}.app{max-width:1500px;margin:auto;padding:24px 30px 16px}.topbar{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-bottom:24px}.brand{display:flex;align-items:center;gap:14px}.eyebrow{font-size:10px;letter-spacing:2px;font-weight:700;color:var(--muted);margin:0 0 5px}.eyebrow span{padding:0 8px;color:#56666b}h1{font-size:25px;letter-spacing:-.8px;font-weight:650;margin:0}.brand-icon{display:block;width:44px;height:44px;border:1px solid #526449;border-radius:12px;position:relative;background:#273831}.brand-icon:before,.brand-icon:after{content:"";position:absolute;top:13px;width:5px;height:23px;background:var(--lime);border-radius:2px}.brand-icon:before{left:9px}.brand-icon:after{right:9px}.brand-icon i{position:absolute;left:16px;top:17px;width:11px;height:15px;background:var(--lime);border-radius:3px}.brand-icon i:after{content:"";position:absolute;left:4px;top:-12px;width:3px;height:17px;background:var(--lime)}button,a,input{touch-action:manipulation}button{font:inherit;cursor:pointer}button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(--lime);outline-offset:4px}button:disabled{cursor:default;opacity:.38}.header-actions{display:flex;gap:8px}.icon-button{border:1px solid var(--line);border-radius:8px;color:#c4d0d0;background:#1d2a30;padding:9px 12px;font-size:12px}.icon-button:hover{background:#2d3d42}.icon-button span{margin-left:5px}.icon-button[aria-pressed=true]{color:var(--lime);border-color:#7d9554}.game-layout{display:grid;grid-template-columns:minmax(0,1fr) 274px;gap:22px}.play-area{min-width:0}.dashboard{height:73px;display:grid;grid-template-columns:1.35fr 1fr .7fr .7fr;align-items:center;gap:26px;padding:0 8px 18px}.meter>div:first-child{display:flex;align-items:baseline;justify-content:space-between;gap:8px}.dashboard span{font-size:10px;font-weight:700;letter-spacing:1.4px;color:var(--muted)}.dashboard strong{font-size:19px;font-weight:600;font-variant-numeric:tabular-nums}.dashboard small{font-weight:400;font-size:11px;color:#829396;margin-left:3px}.meter-track{height:4px;background:#314149;border-radius:4px;margin-top:10px;overflow:hidden}.meter-track i{display:block;height:100%;width:100%;background:var(--lime);border-radius:4px;transition:width .2s}.player-meter .meter-track i{background:var(--blue)}.wave-meter,.kill-meter{display:flex;flex-direction:column;gap:5px;border-left:1px solid var(--line);padding-left:20px}.wave-meter b{font-weight:650}.board-shell{position:relative;width:100%;border:5px solid #415154;outline:1px solid #6a7975;border-radius:12px;overflow:hidden;background:#b5b49c;box-shadow:0 20px 42px #0005,0 0 0 8px #17242a}canvas{display:block;width:100%;height:auto;aspect-ratio:28/18;cursor:crosshair;outline:none;touch-action:none}.board-tag{position:absolute;top:12px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:7px;background:#172b2ddb;border:1px solid #667c6a;border-radius:30px;padding:6px 12px;font-size:10px;font-weight:600;white-space:nowrap;pointer-events:none;backdrop-filter:blur(4px)}.pulse-dot{width:6px;height:6px;display:inline-block;background:var(--lime);border-radius:50%;flex:none}.underboard{display:flex;align-items:center;gap:17px;margin-top:17px;font-size:10px;color:#b1c0bd;flex-wrap:wrap;padding:0 5px}.underboard>span{display:flex;align-items:center;gap:6px}.legend-dot{width:7px;height:7px;border-radius:50%;display:inline-block}.legend-dot.player{background:#78b8de}.legend-dot.hunter{background:#df8764}.legend-dot.assault{background:#d4a15b;border-radius:1px;width:8px;height:8px}.legend-square{width:8px;height:8px;background:#95a59a;transform:rotate(15deg)}.route-toggle{margin-left:auto;display:flex;gap:6px;align-items:center;cursor:pointer}.route-toggle input{accent-color:var(--lime);margin:0;width:12px;height:12px}.sidebar{padding:21px 19px 18px;background:linear-gradient(145deg,#213238,#19272d);border:1px solid var(--line);border-radius:14px;align-self:start;min-height:calc(100% - 31px)}.phase-head{display:flex;align-items:center;justify-content:space-between;gap:10px}.phase-badge{border-radius:4px;background:#344639;color:var(--lime);font-size:9px;letter-spacing:1.5px;font-weight:800;padding:5px 7px}.phase-badge.battle{color:#ffc697;background:#523e30}.phase-badge.end{color:#e7e9df;background:#405056}.muted{font-size:11px;color:#829699;font-variant-numeric:tabular-nums}.sidebar h2{font-size:23px;font-weight:600;letter-spacing:-.6px;margin:18px 0 9px}.sidebar-copy{color:#c0cdca;font-size:12px;line-height:1.6;margin:0 0 21px}.wave-card{background:#142328;border:1px solid #35464a;border-radius:9px;padding:14px}.section-label{display:flex;align-items:center;justify-content:space-between;color:#9dafad;font-size:9px;letter-spacing:1.3px;font-weight:700;margin-bottom:13px}.section-label span:last-child{letter-spacing:.3px}.lane-row{display:flex;align-items:center;gap:9px;margin-top:10px;min-height:20px}.lane-chip{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:5px;font-size:10px;font-weight:800;color:#203238;background:#a6bbaf;flex:none}.lane-chip.b{background:#d2bca0}.lane-chip.c{background:#c4b4cb}.lane-enemies{display:flex;gap:6px;flex:1;align-items:center;flex-wrap:wrap}.enemy-pip{display:inline-block;height:13px;width:10px;border-radius:2px;background:#d07860;position:relative;border:1px solid #e69879}.enemy-pip:after{content:"";position:absolute;left:3px;top:-4px;background:inherit;width:2px;height:5px}.enemy-pip.medium{width:13px;background:#bd8b4e;border-color:#f1bc70}.enemy-pip.medium:after{left:5px}.lane-time{font-size:10px;color:#b0c0b7;white-space:nowrap;font-variant-numeric:tabular-nums}.fineprint{font-size:10px;line-height:1.5;color:#94a8a5;margin:13px 0 0}.primary{border:1px solid #e2f5ad;background:var(--lime);color:#233323;width:100%;font-weight:750;border-radius:8px;padding:14px 13px;margin-top:12px;text-align:left;display:flex;justify-content:space-between;align-items:center;box-shadow:0 3px 0 #93aa55;transition:background .15s,transform .15s}.primary:hover{background:#e3f7ab}.primary:active{transform:translateY(2px);box-shadow:0 1px 0 #93aa55}.primary span{font-size:19px;line-height:15px;opacity:.65}.combat-status{margin:15px 0 0;display:flex;align-items:center;gap:9px;font-size:12px;color:#e4cfb6;padding:9px 0}.combat-status .pulse-dot{background:#eaaa75}.salvage-card{border-top:1px solid #3b4b4e;margin-top:23px;padding-top:19px}.empty-state{font-size:12px;line-height:1.6;color:#91a6a4;margin:0;min-height:47px}.selected-wreck{display:flex;gap:10px;align-items:center}.wreck-symbol{font-size:24px;width:37px;height:37px;background:#34423b;border:1px dashed #89a28b;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#c5d3bf}.wreck-info strong{font-size:12px;font-weight:650;display:block}.wreck-info p{font-size:10px;color:#b2c1b7;margin:5px 0 0}.wreck-life{font-size:10px;color:#d9cfa5;margin:10px 0 0;line-height:1.45}.secondary{width:100%;border:1px solid #72927f;background:#304a40;color:#e5f1cf;border-radius:7px;font-size:11px;font-weight:650;padding:11px 8px;margin-top:12px}.secondary:hover{background:#3b5b4e}.text-button{border:0;background:none;color:#adbfb8;font-size:11px;padding:9px 0 0;width:100%}.text-button:hover{color:white}.undo-button{border:0;background:none;display:flex;width:100%;align-items:center;justify-content:space-between;color:#c3d0c7;font-size:10px;margin-top:15px;padding:0}.undo-button kbd{font-size:9px;background:#203237;border-color:#435552}.tactical-note{display:flex;gap:9px;color:#a4b7b0;font-size:11px;line-height:1.6;margin-top:24px}.tactical-note p{margin:0}.note-icon{font-size:20px;line-height:20px;color:var(--lime)}footer{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-top:23px;padding-top:17px;border-top:1px solid #2d3c41;font-size:10px;color:#8b9f9d}.controls{display:flex;gap:20px;flex-wrap:wrap}.controls>span{display:flex;align-items:center;gap:4px}kbd{font-family:inherit;font-size:10px;background:#25353b;color:#cfdbd4;border:1px solid #4d5e61;border-bottom-width:2px;padding:2px 5px;border-radius:4px}footer a{font-size:10px;color:#b4c4bb;text-decoration:none;white-space:nowrap}footer a:hover{color:var(--lime)}.toast{position:absolute;bottom:17px;left:50%;transform:translate(-50%,8px);background:#182a2eeb;color:#eff1e1;border:1px solid #829280;padding:10px 16px;border-radius:8px;font-size:12px;max-width:85%;text-align:center;opacity:0;transition:opacity .2s,transform .2s;pointer-events:none;z-index:3}.toast.show{opacity:1;transform:translate(-50%,0)}.overlay{position:absolute;inset:0;background:#102024c9;z-index:5;display:flex;align-items:center;justify-content:center;padding:24px;backdrop-filter:blur(5px)}[hidden]{display:none!important}.modal{max-width:465px;max-height:100%;overflow:auto;width:100%;border:1px solid #657974;background:#1e3036;border-radius:16px;padding:30px;box-shadow:0 15px 70px #0005}.modal h2{font-size:30px;letter-spacing:-1px;line-height:1.1;margin:12px 0 15px}.modal p{font-size:13px;line-height:1.65;color:#c6d3cc}.modal .eyebrow{font-size:9px;color:var(--lime)}.modal .primary{margin-top:18px}.modal .secondary{margin-top:12px}.modal-actions{display:flex;flex-direction:column}.modal-list{padding-left:18px;color:#c6d3cc;font-size:12px;line-height:1.65}.modal-list li{margin-bottom:8px}.result-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:15px 0;border-top:1px solid #42534f;border-bottom:1px solid #42534f}.result-grid strong{display:block;font-size:24px;color:var(--lime);font-weight:600}.result-grid span{font-size:9px;color:#a9bcb2}.mobile-notice{display:none}.low-hp{color:#ffb191!important}@media(min-width:1450px){.app{padding-top:30px}.game-layout{grid-template-columns:minmax(0,1fr) 294px;gap:26px}.sidebar{padding:25px 23px}.sidebar-copy,.empty-state{font-size:13px}.tactical-note{font-size:12px}.dashboard{height:77px}}@media(max-width:1100px){.app{padding:18px 18px 12px}.game-layout{grid-template-columns:minmax(0,1fr) 245px;gap:17px}.sidebar{padding:17px 15px}.dashboard{gap:15px}.wave-meter,.kill-meter{padding-left:13px}.sidebar h2{font-size:21px}.controls{gap:10px}.header-actions .icon-button{padding:9px}.board-tag{top:8px;font-size:9px}}@media(max-width:840px){.game-layout{grid-template-columns:1fr}.sidebar{display:grid;grid-template-columns:1fr 1fr;gap:12px 20px;min-height:0}.phase-head,.sidebar h2,.sidebar-copy{grid-column:1/-1}.sidebar h2{margin:0}.sidebar-copy{margin:0}.wave-card{grid-column:1;grid-row:4/7}.primary{grid-column:2;margin:0;align-self:start}.salvage-card{grid-column:2;border:0;padding:0;margin:0}.tactical-note{grid-column:1/-1;margin:0}.combat-status{margin:0}.mobile-notice{display:block;padding:8px 12px;margin-bottom:18px;border:1px solid #4c6156;border-radius:7px;color:#becbb7;font-size:11px}.topbar{gap:10px}.brand-icon{display:none}h1{font-size:21px}.eyebrow{font-size:8px}.icon-button{font-size:10px}.desktop-label{display:none}footer{flex-direction:column;align-items:flex-start}.modal{padding:20px}.modal h2{font-size:25px}}@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
 
+.enemy-pip{display:inline-flex;align-items:center;justify-content:center;min-width:15px;height:15px;color:#201c19;font-size:9px;font-weight:800}
+.enemy-pip.heavy{min-width:18px;background:#d3b6d7;border:3px double #563e57}
+.enemy-pip.heavy:after{left:5px;top:-6px}
 @media(min-width:900px) and (max-height:800px){.app{max-width:1180px;padding-top:16px}.topbar{margin-bottom:18px}.dashboard{height:62px}.sidebar{padding-top:17px}.sidebar h2{margin-top:14px}.sidebar-copy{margin-bottom:15px}.tactical-note{margin-top:18px}}
 
 </style>
@@ -135,10 +138,19 @@
   const CELL = 0.25;
   const TANK_RADIUS = 0.5;
   const STEP = 1 / 60;
+  const PLAYER_WEAPON = Object.freeze({ speed: 40, damage: 20, range: 6, cooldown: 0.30 });
+  const ENEMY_PROJECTILE_SPEED = 10;
   const scenarios = typeof module !== 'undefined' && module.exports ? require('./scenarios.js') : root.TankScenarios;
   const ENEMY_TYPES = Object.freeze({
     light: Object.freeze({ hp: 20, speed: 2.6, damage: 8, range: 6, cooldown: 1.4 }),
-    medium: Object.freeze({ hp: 60, speed: 1.7, damage: 12, range: 5, cooldown: 1.2 })
+    medium: Object.freeze({
+      hp: 60, speed: 1.7, damage: 12, range: 5, cooldown: 1.2,
+      wreck: Object.freeze({ hp: 60, waves: 1, repairHp: 30 })
+    }),
+    heavy: Object.freeze({
+      hp: 120, speed: 1.1, damage: 20, range: 6, cooldown: 2,
+      wreck: Object.freeze({ hp: 120, waves: 2, repairHp: 50 })
+    })
   });
   const CLASSIC_ENEMY_TYPES = Object.freeze({
     light: Object.freeze({ ...ENEMY_TYPES.light, range: 4 }), medium: ENEMY_TYPES.medium
@@ -329,7 +341,7 @@
       this.paused = false;
       this.waveIndex = 0;
       this.player = {
-        id: 'player', x: 16.4, y: 17.2, r: 0.5, hp: 60, maxHp: 60,
+        id: 'player', x: 16.4, y: 17.2, r: TANK_RADIUS, hp: 60, maxHp: 60,
         angle: -Math.PI / 2, bodyAngle: -Math.PI / 2,
         alive: true, respawn: 0, cooldown: 0
       };
@@ -385,16 +397,23 @@
       return true;
     }
 
+    getWreckRepairHp(id) {
+      if (this.phase !== 'prep' || this.paused) return null;
+      const wreck = this.wrecks.find(item => item.id === id);
+      const spec = this.config.ENEMY_TYPES[wreck?.type]?.wreck;
+      if (!spec || wreck.hp <= 0 || wreck.expiresAfterWave < this.waveNumber) return null;
+      return Math.min(spec.repairHp, this.base.maxHp - this.base.hp);
+    }
+
     repairFromWreck(id) {
-      if (this.phase !== 'prep' || this.paused) return { ok: false, hp: 0 };
+      const hp = this.getWreckRepairHp(id);
+      if (hp === null) return { ok: false, hp: 0 };
       const index = this.wrecks.findIndex(wreck => wreck.id === id);
-      if (index < 0) return { ok: false, hp: 0 };
       const wreck = this.wrecks[index];
       this._undo.push({
         wreck: { ...wreck }, index, baseHp: this.base.hp, player: { ...this.player },
         repairs: this.stats.repairs, baseRepaired: this.stats.baseRepaired
       });
-      const hp = Math.min(30, this.base.maxHp - this.base.hp);
       this.base.hp += hp;
       this.wrecks.splice(index, 1);
       this.stats.repairs++;
@@ -481,8 +500,8 @@
       if (this.phase === 'battle' && input.fire && canAim && player.cooldown <= EPS) {
         this._shoot(player, {
           x: player.x + Math.cos(player.angle), y: player.y + Math.sin(player.angle)
-        }, 'player', 40, 20, 6);
-        player.cooldown = 0.30;
+        }, 'player', PLAYER_WEAPON.speed, PLAYER_WEAPON.damage, PLAYER_WEAPON.range);
+        player.cooldown = PLAYER_WEAPON.cooldown;
         this.stats.shots++;
       }
     }
@@ -517,7 +536,7 @@
         const spec = this.config.ENEMY_TYPES[item.type];
         const enemy = {
           id: `e${++this._serial}`, type: item.type, lane,
-          x: spawn.x, y: spawn.y, r: 0.5, hp: spec.hp, maxHp: spec.hp,
+          x: spawn.x, y: spawn.y, r: TANK_RADIUS, hp: spec.hp, maxHp: spec.hp,
           angle: Math.PI / 2, bodyAngle: Math.PI / 2, aimPoint: null,
           windup: 0, cooldown: 0, route: [], routeIndex: 0,
           routeVersion: -1, targetWreckId: null, stuck: 0, intent: 'advance'
@@ -531,7 +550,7 @@
 
     _normalizeEnemy(enemy) {
       const spec = this.config.ENEMY_TYPES[enemy.type] || this.config.ENEMY_TYPES.light;
-      if (!Number.isFinite(enemy.r)) enemy.r = 0.5;
+      if (!Number.isFinite(enemy.r)) enemy.r = TANK_RADIUS;
       if (!Number.isFinite(enemy.maxHp)) enemy.maxHp = spec.hp;
       if (!Number.isFinite(enemy.cooldown)) enemy.cooldown = 0;
       if (!Number.isFinite(enemy.windup)) enemy.windup = 0;
@@ -559,7 +578,7 @@
         if (stationary) stationaryTarget = enemy.aimKind;
         enemy.windup = Math.max(0, enemy.windup - dt);
         if (enemy.windup <= EPS) {
-          if (this.phase === 'battle' && enemy.aimPoint) this._shoot(enemy, enemy.aimPoint, 'enemy', 10, spec.damage, spec.range);
+          if (this.phase === 'battle' && enemy.aimPoint) this._shoot(enemy, enemy.aimPoint, 'enemy', ENEMY_PROJECTILE_SPEED, spec.damage, spec.range);
           enemy.windup = 0;
           enemy.aimPoint = null;
           enemy.aimKind = null;
@@ -579,7 +598,7 @@
               enemy.aimKind = target.kind;
               enemy.windup = this.config.ENEMY_WINDUP;
               enemy.angle = Math.atan2(point.y - enemy.y, point.x - enemy.x);
-            } else this._shoot(enemy, point, 'enemy', 10, spec.damage, spec.range);
+            } else this._shoot(enemy, point, 'enemy', ENEMY_PROJECTILE_SPEED, spec.damage, spec.range);
           }
         }
       }
@@ -1128,11 +1147,12 @@
       enemy.dead = true;
       this.stats.kills++;
       this._emit('kill', { x: enemy.x, y: enemy.y, enemyType: enemy.type });
-      if (enemy.type !== 'medium') return;
-      if (Object.values(this.config.SPAWNS).some(spawn => pointRectDistanceSq(enemy.x, enemy.y, centerRect(spawn)) <= EPS)) return;
+      const spec = this.config.ENEMY_TYPES[enemy.type]?.wreck;
+      if (!spec) return;
+      if (Object.values(this.config.SPAWNS).some(spawn => pointRectDistanceSq(enemy.x, enemy.y, centerRect(spawn)) === 0)) return;
       const wreck = {
-        id: `w${++this._serial}`, x: enemy.x, y: enemy.y, r: 0.5,
-        hp: 60, maxHp: 60, expiresAfterWave: this.waveNumber + 1
+        id: `w${++this._serial}`, type: enemy.type, x: enemy.x, y: enemy.y, r: enemy.r ?? TANK_RADIUS,
+        hp: spec.hp, maxHp: spec.hp, expiresAfterWave: this.waveNumber + spec.waves
       };
       this.wrecks.push(wreck);
       this.stats.wrecksCreated++;
@@ -1445,7 +1465,7 @@
 
   }
 
-  const api = { Game, CONFIG, CLASSIC_CONFIG };
+  const api = { Game, CONFIG, CLASSIC_CONFIG, PLAYER_WEAPON, TANK_RADIUS };
   root.TankCore = api;
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
 })(typeof globalThis !== 'undefined' ? globalThis : this);
@@ -1454,11 +1474,11 @@
   <script>
 (() => {
   'use strict';
-  const { Game, CONFIG } = globalThis.TankCore;
+  const { Game, CONFIG, PLAYER_WEAPON, TANK_RADIUS } = globalThis.TankCore;
   const game = new Game();
   const el = (id) => document.getElementById(id);
   const canvas = el('board'), ctx = canvas.getContext('2d');
-  const keys = new Set(), particles = [];
+  const keys = new Set(), particles = [], unitLabels = [];
   const pointer = { x: 14, y: 7, down: false, inside: false };
   let selected = null, lastFrame = 0, visualTime = 0, lastUiKey = '', endShown = false;
   let modalKind = null, pauseBeforeHelp = false, toastUntil = 0, routePreview = [];
@@ -1467,6 +1487,19 @@
   const wavePackages = CONFIG.WAVES.map(wave => wave.map(p => ({time:p.start,lane:p.lane,types:p.types})));
   const waveCount = wavePackages.length;
   const tankPlural = new Intl.PluralRules('ru');
+  const enemyLooks = {
+    light: { name: 'Лёгкий', role: 'преследует игрока', mark: 'Л', dark: '#8b453b', main: '#c76f58', top: '#e69b7d' },
+    medium: { name: 'Средний', role: 'атакует базу', mark: 'С', dark: '#815b37', main: '#be8f4f', top: '#e0b47a' },
+    heavy: { name: 'Тяжёлый', role: 'атакует базу', mark: 'Т', dark: '#553f58', main: '#85648a', top: '#e1bde5' }
+  };
+  const hitsToKill = hp => Math.ceil(hp / PLAYER_WEAPON.damage);
+  function enemyPlanPip(type) {
+    const { name, role, mark } = enemyLooks[type];
+    const spec = CONFIG.ENEMY_TYPES[type];
+    const description = `${name}: ${role} · ${spec.hp} HP · попаданий: ${hitsToKill(spec.hp)}${spec.wreck ? ' · оставляет корпус' : ''}`;
+    return `<span class="enemy-pip ${type}" title="${description}" aria-label="${description}">${mark}</span>`;
+  }
+  const breachPointRadius = .11, breachPointStroke = .045;
   const laneColors = ['#4d7469','#8b663e','#735f7f'];
   const laneColor = lane => laneColors[Object.keys(CONFIG.SPAWNS).indexOf(lane) % laneColors.length] || laneColors[0];
   let terrainSeed = 404;
@@ -1495,7 +1528,7 @@
   function help(){
     if(modalKind==='help'){closeHelp();return;}
     pauseBeforeHelp=game.paused;game.paused=true;
-    openModal('help','ТРИ НАПРАВЛЕНИЯ · ОДНА БАЗА','Как играть',`<ol class="modal-list"><li><b>Защищай базу.</b> WASD — движение, мышь — прицел, удержание ЛКМ — огонь. До старта проверь входы и время атаки в плане волны.</li><li><b>Лёгкий охотится за тобой.</b> Стреляет с дистанции 6 и ненадолго преследует видимого игрока. Знак «!» означает преследование. Уходи за укрытие и меняй позицию; лёгкий уничтожается одним попаданием.</li><li><b>Средний атакует базу.</b> Выдерживает три попадания и оставляет корпус. Перехвати его у укрытия: корпус меняет маршрут и задерживает снаряды обеих сторон.</li><li><b>Враг стреляет без предупреждения.</b> При открытой цели и готовом орудии он сразу выпускает снаряд. Меняй позицию и используй твёрдые укрытия. Воронки и следы на земле проходимы.</li><li><b>Между волнами</b> нажми на корпус: оставь его баррикадой или разбери на ремонт базы до +30 HP. Разбор можно отменить. Корпус служит до конца следующей волны.</li><li>Твой танк восстанавливается между волнами и возвращается через 4 секунды после гибели. Пока ты возвращаешься, бой продолжается.</li></ol>`,[['Понятно',closeHelp,true]]);
+    openModal('help','ТРИ НАПРАВЛЕНИЯ · ОДНА БАЗА','Как играть',`<ol class="modal-list"><li><b>Защищай базу.</b> WASD — движение, мышь — прицел, удержание ЛКМ — огонь. До старта проверь входы и время атаки в плане волны.</li><li><b>Лёгкий (Л) охотится за тобой.</b> Знак «!» означает преследование. Уходи за укрытие и меняй позицию.</li><li><b>Средний (С) и тяжёлый (Т) атакуют базу.</b> Рядом с танком указаны HP и число попаданий до уничтожения (×). Оставленные корпуса меняют маршрут и задерживают снаряды обеих сторон.</li><li><b>Враг стреляет без предупреждения.</b> При открытой цели и готовом орудии он сразу выпускает снаряд. Меняй позицию и используй твёрдые укрытия. Воронки и следы на земле проходимы.</li><li><b>Между волнами</b> нажми на корпус: оставь его баррикадой или разбери на ремонт базы до +${CONFIG.ENEMY_TYPES.medium.wreck.repairHp} HP за средний или +${CONFIG.ENEMY_TYPES.heavy.wreck.repairHp} HP за тяжёлый. Разбор можно отменить. Подпись «до N» показывает последнюю волну службы.</li><li>Твой танк восстанавливается между волнами и возвращается через 4 секунды после гибели. Пока ты возвращаешься, бой продолжается.</li></ol>`,[['Понятно',closeHelp,true]]);
   }
   function closeHelp(){game.paused=pauseBeforeHelp;closeModal();if(game.paused){game.paused=false;pause();}}
   function reset(){game.reset();selected=null;routeKey=null;routePreview=[];particles.length=0;endShown=false;lastUiKey='';closeModal();game.paused=false;toast('Новая попытка. Перед боем можно занять позицию.');}
@@ -1526,7 +1559,7 @@
   document.addEventListener('keyup',(e)=>keys.delete(e.code));
   function pointerMove(e){const r=canvas.getBoundingClientRect();pointer.x=(e.clientX-r.left)/r.width*CONFIG.W;pointer.y=(e.clientY-r.top)/r.height*CONFIG.H;}
   canvas.addEventListener('pointermove',pointerMove);canvas.addEventListener('pointerenter',()=>pointer.inside=true);canvas.addEventListener('pointerleave',()=>pointer.inside=false);
-  canvas.addEventListener('pointerdown',(e)=>{if(e.button!==0)return;pointerMove(e);focusBoard();if(game.paused)return;if(game.phase==='prep'){const w=game.wrecks.find(w=>Math.hypot(w.x-pointer.x,w.y-pointer.y)<.72);selected=w?.id??null;lastUiKey='';}else{pointer.down=true;canvas.setPointerCapture(e.pointerId);}});
+  canvas.addEventListener('pointerdown',(e)=>{if(e.button!==0)return;pointerMove(e);focusBoard();if(game.paused)return;if(game.phase==='prep'){const w=game.wrecks.find(w=>Math.hypot(w.x-pointer.x,w.y-pointer.y)<=w.r);selected=w?.id??null;lastUiKey='';}else{pointer.down=true;canvas.setPointerCapture(e.pointerId);}});
   window.addEventListener('pointerup',()=>pointer.down=false);canvas.addEventListener('pointercancel',()=>pointer.down=false);canvas.addEventListener('contextmenu',e=>e.preventDefault());
   window.addEventListener('blur',()=>{clearInput();if(['battle','settling'].includes(game.phase)&&!game.paused)pause();});
   document.addEventListener('visibilitychange',()=>{if(document.hidden){clearInput();if(['battle','settling'].includes(game.phase)&&!game.paused)pause();}});
@@ -1538,24 +1571,28 @@
     el('player-fill').style.width=clamp(playerHp/game.player.maxHp*100,0,100)+'%';el('wave-value').textContent=String(Math.min(waveCount,game.waveNumber)).padStart(2,'0');el('kill-value').textContent=game.stats.kills;
     el('start').hidden=!prep&&!finished;el('start').disabled=game.paused;el('start').innerHTML=finished?'Новая попытка <span>↵</span>':`Начать волну ${game.waveNumber} <span>↵</span>`;
     el('combat-status').hidden=!fighting;el('combat-copy').textContent=game.phase==='settling'?'Ждём последние снаряды…':`Осталось противников: ${game.remaining}`;
-    el('board-tag-text').textContent=prep?'Разведай поле · выбери позицию':game.phase==='settling'?'Последние снаряды в полёте':finished?(game.phase==='won'?'База защищена':'База уничтожена'):'Лёгкие преследуют · средние идут к базе';
+    el('board-tag-text').textContent=prep?'Разведай поле · выбери позицию':game.phase==='settling'?'Последние снаряды в полёте':finished?(game.phase==='won'?'База защищена':'База уничтожена'):'Лёгкие преследуют · остальные идут к базе';
     el('pause').disabled=finished;el('wreck-count').textContent=game.wrecks.length;el('undo').disabled=!prep||!game.canUndo||game.paused;
     const wreck=game.wrecks.find(w=>w.id===selected);if(!wreck)selected=null;
-    const stateKey=[game.phase,game.waveIndex,selected,wreck?.hp,wreck?.expiresAfterWave,game.wrecks.length,baseHp,game.player.alive].join('|');
+    const stateKey=[game.phase,game.waveIndex,selected,wreck?.hp,wreck?.expiresAfterWave,game.paused,game.wrecks.length,baseHp,game.player.alive].join('|');
     if(stateKey!==lastUiKey){
       lastUiKey=stateKey;const badge=el('phase-badge');badge.className='phase-badge'+(fighting?' battle':finished?' end':'');badge.textContent=prep?'ПОДГОТОВКА':fighting?'БОЙ':game.phase==='won'?'ПОБЕДА':'ПОРАЖЕНИЕ';
       el('phase-number').textContent=`${String(Math.min(waveCount,game.waveNumber)).padStart(2,'0')} / ${String(waveCount).padStart(2,'0')}`;
       el('phase-title').textContent=prep?(game.waveIndex===0?'Выбери позицию':'Используй корпуса'):finished?(game.phase==='won'?'База уцелела':'Попробуй ещё'):'Держи оборону';
-      el('phase-copy').textContent=prep?(game.waveIndex===0?'Лёгкие отвлекают тебя, средние прорываются к базе. Используй руины, чтобы разделить угрозы.':'Проверь направления следующей атаки. Оставь полезные корпуса или разбери их на ремонт.'):fighting?'Уводи лёгких от открытой позиции и перехватывай средних на пути к базе.':'Попробуй другую позицию и используй корпуса у укрытий.';
+      el('phase-copy').textContent=prep?(game.waveIndex===0?'Лёгкие отвлекают тебя, средние прорываются к базе. Используй руины, чтобы разделить угрозы.':'Проверь направления следующей атаки. Оставь полезные корпуса или разбери их на ремонт.'):fighting?'Уводи лёгких от открытой позиции и перехватывай атакующих базу.':'Попробуй другую позицию и используй корпуса у укрытий.';
       el('wave-card-title').textContent=prep?'СЛЕДУЮЩАЯ АТАКА':'АТАКА ЭТОЙ ВОЛНЫ';
       const plan=wavePackages[Math.min(waveCount-1,game.waveIndex)],total=plan.reduce((n,p)=>n+p.types.length,0);
       el('enemy-total').textContent=`${total} ${{one:'танк',few:'танка',many:'танков',other:'танка'}[tankPlural.select(total)]}`;
-      el('wave-plan').innerHTML=plan.map(p=>`<div class="lane-row"><span class="lane-chip ${p.lane.toLowerCase()}">${p.lane}</span><div class="lane-enemies">${p.types.map(t=>{const role=t==='medium'?'Средний: атакует базу, 3 попадания, оставляет корпус':'Лёгкий: охотится за игроком, 1 попадание';return `<span class="enemy-pip ${t==='medium'?'medium':''}" title="${role}" aria-label="${role}"></span>`;}).join('')}</div><span class="lane-time">${p.time===0?'сразу':'+'+p.time+'с'}</span></div>`).join('');
+      el('wave-plan').innerHTML=plan.map(p=>`<div class="lane-row"><span class="lane-chip ${p.lane.toLowerCase()}">${p.lane}</span><div class="lane-enemies">${p.types.map(enemyPlanPip).join('')}</div><span class="lane-time">${p.time===0?'сразу':'+'+p.time+'с'}</span></div>`).join('');
       const lanes=[...new Set(plan.map(p=>p.lane))].join(' · '),interval=String(CONFIG.SPAWN_INTERVAL??2.5).replace('.',',');
       el('wave-note').textContent=`Входы ${lanes}. На каждом входе интервал ${interval} с.`;
       el('salvage-actions').hidden=!prep||!wreck;
-      if(prep&&wreck){const heal=Math.min(30,game.base.maxHp-game.base.hp);el('salvage-content').innerHTML=`<div class="selected-wreck"><span class="wreck-symbol">×</span><div class="wreck-info"><strong>Средний корпус</strong><p>${Math.ceil(wreck.hp)} / ${wreck.maxHp} HP</p></div></div><p class="wreck-life">${wreck.expiresAfterWave===game.waveNumber?'Последняя волна службы. ':''}Исчезнет после волны ${wreck.expiresAfterWave}.</p>`;el('repair').textContent=heal>0?`Разобрать · +${heal} HP базе`:'Разобрать · +0 HP, убрать корпус';}
-      else el('salvage-content').innerHTML=`<p class="empty-state">${!game.wrecks.length?'Пока нет корпусов. Они останутся после средних танков.':prep?'Нажми на корпус на поле, чтобы выбрать действие.':'Корпуса уже работают как препятствия. Разобрать их можно между волнами.'}</p>`;
+      if(prep&&wreck){
+        const heal=game.getWreckRepairHp(wreck.id),look=enemyLooks[wreck.type];
+        el('salvage-content').innerHTML=`<div class="selected-wreck"><span class="wreck-symbol" aria-hidden="true">${look.mark}</span><div class="wreck-info"><strong>${look.name} корпус</strong><p>${Math.ceil(wreck.hp)} / ${wreck.maxHp} HP</p></div></div><p class="wreck-life">${wreck.expiresAfterWave===game.waveNumber?'Последняя волна службы. ':''}Исчезнет после волны ${wreck.expiresAfterWave}.</p>`;
+        el('repair').disabled=heal===null;
+        el('repair').textContent=heal>0?`Разобрать · +${heal} HP базе`:'Разобрать · +0 HP, убрать корпус';
+      } else el('salvage-content').innerHTML=`<p class="empty-state">${!game.wrecks.length?'Пока нет корпусов. Их оставляют средние и тяжёлые танки.':prep?'Нажми на корпус на поле, чтобы выбрать действие.':'Корпуса уже работают как препятствия. Разобрать их можно между волнами.'}</p>`;
       el('tip').textContent=!game.player.alive?'Твой танк скоро вернётся. Бой продолжается, а база остаётся уязвимой.':prep?'Маршрут ведёт к базе или до первого корпуса для пролома, отмеченного кругом. Лёгкий может свернуть к тебе.':'За тобой идёт лёгкий? Разорви видимость у руин, затем вернись к защите базы. Следи за флангами.';
     }
     if(finished&&!endShown){endShown=true;const win=game.phase==='won';openModal('end',win?'ЧЕТЫРЕ ВОЛНЫ ПРОЙДЕНЫ':'БАЗА ПОТЕРЯНА',win?'Оборона выдержала':'Ещё одна попытка',`<p>${win?'Ты защитил базу. Попробуй пройти ещё раз и оставить корпуса в других местах.':'Попробуй раньше перехватывать противников и закрывать проходы корпусами.'}</p><div class="result-grid"><div><strong>${game.stats.kills}</strong><span>ТАНКОВ УНИЧТОЖЕНО</span></div><div><strong>${game.stats.wrecksCreated}</strong><span>КОРПУСОВ СОЗДАНО</span></div><div><strong>${baseHp}</strong><span>HP БАЗЫ</span></div></div><p>Удалось ли намеренно оставить полезный корпус? Пришлось ли разобрать его ради ремонта?</p>`,[['Играть ещё раз',reset,true],['Посмотреть поле',()=>{closeModal();},false]]);}
@@ -1649,23 +1686,69 @@
     const b=game.base;ctx.fillStyle='#54674340';roundRect(b.x-1,b.y-.85,2,2,.2);ctx.fill();ctx.fillStyle='#a7ad7d';roundRect(b.x-.9,b.y-.9,1.8,1.8,.12);ctx.fill();ctx.fillStyle=b.hp>0?'#dfc36e':'#645f51';roundRect(b.x-.72,b.y-.72,1.44,1.44,.1);ctx.fill();ctx.strokeStyle='#726e3d';ctx.lineWidth=.06;roundRect(b.x-.72,b.y-.72,1.44,1.44,.1);ctx.stroke();ctx.fillStyle='#817443';ctx.beginPath();ctx.moveTo(b.x,b.y-.42);ctx.lineTo(b.x+.34,b.y-.24);ctx.lineTo(b.x+.27,b.y+.21);ctx.lineTo(b.x,b.y+.42);ctx.lineTo(b.x-.27,b.y+.21);ctx.lineTo(b.x-.34,b.y-.24);ctx.closePath();ctx.fill();ctx.strokeStyle='#f0dea0';ctx.lineWidth=.07;ctx.beginPath();ctx.moveTo(b.x-.16,b.y);ctx.lineTo(b.x-.03,b.y+.12);ctx.lineTo(b.x+.19,b.y-.16);ctx.stroke();text('БАЗА',b.x,b.y+.58,.17,'#635927','center',800);
   }
   function hpBar(o,y,color,width=.9){ctx.fillStyle='#18322a55';roundRect(o.x-width/2,y,width,.09,.03);ctx.fill();ctx.fillStyle=color;roundRect(o.x-width/2,y,width*clamp(o.hp/o.maxHp,0,1),.09,.03);ctx.fill();}
+  function drawUnitLabels(actors,breaches){
+    const height=.44,gap=.04;
+    const occupied=actors.map(({x,y,r})=>({x,y,width:2*r,height:2*r}));
+    for(const {blockedWreckId,points} of breaches){
+      if(blockedWreckId===null)continue;
+      const end=points.at(-1),size=2*breachPointRadius+breachPointStroke;
+      occupied.push({...end,width:size,height:size});
+      const hull=game.wrecks.find(w=>w.id===blockedWreckId);
+      if(hull){
+        const ringSize=2*(hull.r+.24)+.13;
+        occupied.push({x:hull.x,y:hull.y,width:ringSize,height:ringSize});
+      }
+    }
+    ctx.save();ctx.font='700 34px system-ui,"DejaVu Sans",sans-serif';
+    for(const {label,actor} of unitLabels){
+      const {x,y,r}=actor,width=ctx.measureText(label).width/100+.22;
+      const cx=clamp(x,width/2,CONFIG.W-width/2);
+      const preferred=y<1.2?1:-1;
+      // Try the nearest row first, with space for the tank and its HP bar.
+      for(let row=0;row<CONFIG.H/(height+gap);row++){
+        let placed=false;
+        for(const side of [preferred,-preferred]){
+          const cy=y+side*(r+.45+row*(height+gap));
+          if(cy<height/2||cy>CONFIG.H-height/2)continue;
+          if(occupied.some(b=>Math.abs(cx-b.x)<(width+b.width)/2+gap&&Math.abs(cy-b.y)<(height+b.height)/2+gap))continue;
+          if(row||side!==preferred){
+            ctx.strokeStyle='#23342b';ctx.lineWidth=.03;ctx.beginPath();
+            ctx.moveTo(x,y+side*r);ctx.lineTo(cx,cy-side*height/2);ctx.stroke();
+          }
+          ctx.fillStyle='#23342b';roundRect(cx-width/2,cy-height/2,width,height,.08);ctx.fill();
+          ctx.save();ctx.translate(cx,cy);ctx.scale(.01,.01);
+          ctx.fillStyle='#fff6dd';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(label,0,0);
+          ctx.restore();
+          occupied.push({x:cx,y:cy,width,height});placed=true;break;
+        }
+        if(placed)break;
+      }
+    }
+    ctx.restore();
+  }
   function drawWreck(w){
     const isSelected=w.id===selected;ctx.save();ctx.translate(w.x,w.y);ctx.rotate((Number(w.id)||0)*.8+.35);ctx.fillStyle='#253c2c25';ctx.beginPath();ctx.ellipse(.06,.11,.60,.5,0,0,Math.PI*2);ctx.fill();ctx.fillStyle='#5e6b5b';roundRect(-.43,-.43,.86,.86,.13);ctx.fill();ctx.fillStyle='#88907b';roundRect(-.27,-.34,.54,.68,.08);ctx.fill();ctx.fillStyle='#4a584c';roundRect(-.17,-.18,.34,.36,.05);ctx.fill();ctx.strokeStyle='#afb79d';ctx.lineWidth=.055;ctx.beginPath();ctx.moveTo(-.19,-.23);ctx.lineTo(.20,.20);ctx.moveTo(.17,-.21);ctx.lineTo(-.17,.22);ctx.stroke();ctx.fillStyle='#4f6250';ctx.fillRect(.08,-.43,.13,.27);ctx.restore();
     if(isSelected){ctx.strokeStyle='#f6f5d5';ctx.lineWidth=.07;ctx.beginPath();ctx.arc(w.x,w.y,.68,0,Math.PI*2);ctx.stroke();ctx.strokeStyle='#234633';ctx.lineWidth=.035;ctx.beginPath();ctx.arc(w.x,w.y,.78,0,Math.PI*2);ctx.stroke();}
-    hpBar(w,w.y-.7,'#526f55');if(game.phase==='prep'||isSelected){text(`до ${w.expiresAfterWave}`,w.x,w.y+.79,.23,'#3d5740');}
+    const heavy=w.type==='heavy',look=enemyLooks[w.type],side=w.y<1.2?1:-1;
+    if(heavy){ctx.strokeStyle='#e0cebc';ctx.lineWidth=.05;ctx.strokeRect(w.x-.36,w.y-.36,.72,.72);}
+    hpBar(w,w.y+.64*side,'#526f55');
+    unitLabels.push({actor:w,label:`${look.mark} · ${Math.ceil(w.hp)} HP · до ${w.expiresAfterWave}`});
   }
   function drawTank(t,player){
     if(player&&!t.alive)return;
-    const body=t.bodyAngle??t.angle??0,ang=t.aimPoint?Math.atan2(t.aimPoint.y-t.y,t.aimPoint.x-t.x):(t.angle??0),medium=t.type==='medium';
-    const dark=player?'#2b5670':medium?'#815b37':'#8b453b';const main=player?'#4a96bd':medium?'#be8f4f':'#c76f58';const top=player?'#8ac4da':medium?'#e0b47a':'#e69b7d';
+    const body=t.bodyAngle??t.angle??0,ang=t.aimPoint?Math.atan2(t.aimPoint.y-t.y,t.aimPoint.x-t.x):(t.angle??0),look=enemyLooks[t.type];
+    const { dark, main, top }=player?{ dark:'#2b5670', main:'#4a96bd', top:'#8ac4da' }:look;
     ctx.save();ctx.translate(t.x,t.y);ctx.fillStyle='#17332332';ctx.beginPath();ctx.ellipse(.08,.12,.58,.49,0,0,Math.PI*2);ctx.fill();ctx.rotate(body);
     ctx.fillStyle='#354a42';roundRect(-.44,-.43,.88,.23,.055);ctx.fill();roundRect(-.44,.20,.88,.23,.055);ctx.fill();ctx.strokeStyle='#91a088';ctx.lineWidth=.025;for(let x=-.34;x<.44;x+=.16){ctx.beginPath();ctx.moveTo(x,-.40);ctx.lineTo(x,-.23);ctx.moveTo(x,.23);ctx.lineTo(x,.40);ctx.stroke();}
     ctx.fillStyle=dark;roundRect(-.40,-.29,.78,.58,.07);ctx.fill();ctx.fillStyle=main;roundRect(-.36,-.27,.70,.50,.06);ctx.fill();ctx.fillStyle=top;ctx.fillRect(.20,-.22,.09,.12);
-    if(!player){ctx.strokeStyle=top;ctx.lineWidth=.045;ctx.beginPath();if(medium){ctx.moveTo(-.28,-.16);ctx.lineTo(-.28,.14);ctx.moveTo(-.20,-.16);ctx.lineTo(-.20,.14);}else{ctx.moveTo(-.28,-.13);ctx.lineTo(-.15,0);ctx.lineTo(-.28,.13);}ctx.stroke();}ctx.restore();
+    if(!player){ctx.strokeStyle=top;ctx.lineWidth=.045;ctx.beginPath();if(t.type!=='light'){const bars=t.type==='heavy'?3:2;for(let i=0;i<bars;i++){const x=-.31+.075*i;ctx.moveTo(x,-.16);ctx.lineTo(x,.14);}}else{ctx.moveTo(-.28,-.13);ctx.lineTo(-.15,0);ctx.lineTo(-.28,.13);}ctx.stroke();}ctx.restore();
     ctx.save();ctx.translate(t.x,t.y);ctx.rotate(ang);ctx.fillStyle=dark;roundRect(-.23,-.23,.46,.46,.10);ctx.fill();ctx.fillStyle=main;roundRect(-.20,-.22,.40,.36,.07);ctx.fill();ctx.fillStyle=dark;roundRect(.1,-.085,.60,.17,.03);ctx.fill();ctx.fillStyle=top;ctx.fillRect(.2,-.065,.43,.045);ctx.fillStyle=top;ctx.beginPath();ctx.arc(-.06,-.05,.07,0,Math.PI*2);ctx.fill();ctx.restore();
     if(player){const side=t.y>CONFIG.H-1.1?-1:1;ctx.strokeStyle='#366b8480';ctx.lineWidth=.035;ctx.beginPath();ctx.arc(t.x,t.y,.68,0,Math.PI*2);ctx.stroke();hpBar(t,t.y+.76*side,'#286f9b');text('ТЫ',t.x,t.y+.99*side,.20,'#235b77');}
-    else if(medium){hpBar(t,t.y-.73,'#895b2f');text(String(Math.ceil(t.hp/20)),t.x,t.y-.96,.23,'#644628', 'center',800);}
-    else if(t.intent==='press'){ctx.fillStyle='#f3d9b5';ctx.beginPath();ctx.arc(t.x,t.y-.84,.20,0,Math.PI*2);ctx.fill();text('!',t.x,t.y-.84,.29,'#9d3c30','center',800);}
+    else {
+      const side=t.y<1.2?1:-1;
+      hpBar(t,t.y+.64*side,look.dark);
+      unitLabels.push({actor:t,label:`${look.mark} · ${Math.ceil(t.hp)} HP · ×${hitsToKill(t.hp)}${t.intent==='press'?' · !':''}`});
+    }
   }
 
   function drawBreachMarkers(){
@@ -1686,11 +1769,11 @@
       if(path.blockedWreckId===null)continue;
       const end=path.points.at(-1);
       ctx.beginPath();
-      ctx.arc(end.x,end.y,.11,0,Math.PI*2);
+      ctx.arc(end.x,end.y,breachPointRadius,0,Math.PI*2);
       ctx.fillStyle=laneColor(path.lane);
       ctx.fill();
       ctx.strokeStyle='#fff1c4';
-      ctx.lineWidth=.045;
+      ctx.lineWidth=breachPointStroke;
       ctx.stroke();
     }
   }
@@ -1699,11 +1782,15 @@
     const r=canvas.getBoundingClientRect(),dpr=Math.min(devicePixelRatio||1,2),w=Math.round(r.width*dpr),h=Math.round(r.height*dpr);if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;}
     ctx.setTransform(w/CONFIG.W,0,0,h/CONFIG.H,0,0);ctx.clearRect(0,0,CONFIG.W,CONFIG.H);ctx.save();
     if(shake>0)ctx.translate(Math.sin(visualTime*75)*shake,Math.cos(visualTime*69)*shake*.6);
+    unitLabels.length=0;
     drawBoard();for(const w of game.wrecks)drawWreck(w);drawBreachMarkers();for(const e of game.enemies)drawTank(e,false);drawTank(game.player,true);
+    const actors=[...game.wrecks,...game.enemies];
+    if(game.player.alive)actors.push(game.player);
+    drawUnitLabels(actors,game.phase==='prep'&&el('routes').checked?routePreview:[]);
     for(const b of game.bullets){const own=b.team==='player';ctx.beginPath();ctx.moveTo(b.x-(b.dx||0)*.22,b.y-(b.dy||0)*.22);ctx.lineTo(b.x,b.y);ctx.strokeStyle=own?'#345868':'#843828';ctx.lineWidth=own?.14:.17;ctx.stroke();ctx.strokeStyle=own?'#f7ffd9':'#ffd49a';ctx.lineWidth=own?.07:.09;ctx.stroke();ctx.fillStyle=own?'#ffffe4':'#a24630';ctx.beginPath();ctx.arc(b.x,b.y,own?.06:.10,0,Math.PI*2);ctx.fill();}
     for(const p of particles){ctx.globalAlpha=Math.max(0,1-p.age/p.life);ctx.fillStyle=p.color;ctx.beginPath();ctx.arc(p.x,p.y,p.size,0,Math.PI*2);ctx.fill();}ctx.globalAlpha=1;
     if(pointer.inside&&!game.paused&&game.player.alive&&game.phase==='battle'){
-      const p=game.player,dist=Math.hypot(pointer.x-p.x,pointer.y-p.y),angle=Math.atan2(pointer.y-p.y,pointer.x-p.x);ctx.strokeStyle='#31596755';ctx.lineWidth=.025;ctx.setLineDash([.07,.14]);ctx.beginPath();ctx.moveTo(p.x+Math.cos(angle)*.8,p.y+Math.sin(angle)*.8);ctx.lineTo(p.x+Math.cos(angle)*Math.min(6,dist),p.y+Math.sin(angle)*Math.min(6,dist));ctx.stroke();ctx.setLineDash([]);ctx.strokeStyle=dist>6.5?'#a4775e':'#285c70';ctx.lineWidth=.04;ctx.beginPath();ctx.arc(pointer.x,pointer.y,.19,0,Math.PI*2);ctx.moveTo(pointer.x-.30,pointer.y);ctx.lineTo(pointer.x-.13,pointer.y);ctx.moveTo(pointer.x+.13,pointer.y);ctx.lineTo(pointer.x+.30,pointer.y);ctx.moveTo(pointer.x,pointer.y-.30);ctx.lineTo(pointer.x,pointer.y-.13);ctx.moveTo(pointer.x,pointer.y+.13);ctx.lineTo(pointer.x,pointer.y+.30);ctx.stroke();
+      const p=game.player,dist=Math.hypot(pointer.x-p.x,pointer.y-p.y),angle=Math.atan2(pointer.y-p.y,pointer.x-p.x);ctx.strokeStyle='#31596755';ctx.lineWidth=.025;ctx.setLineDash([.07,.14]);ctx.beginPath();ctx.moveTo(p.x+Math.cos(angle)*.8,p.y+Math.sin(angle)*.8);ctx.lineTo(p.x+Math.cos(angle)*Math.min(PLAYER_WEAPON.range,dist),p.y+Math.sin(angle)*Math.min(PLAYER_WEAPON.range,dist));ctx.stroke();ctx.setLineDash([]);ctx.strokeStyle=dist>PLAYER_WEAPON.range+TANK_RADIUS?'#a4775e':'#285c70';ctx.lineWidth=.04;ctx.beginPath();ctx.arc(pointer.x,pointer.y,.19,0,Math.PI*2);ctx.moveTo(pointer.x-.30,pointer.y);ctx.lineTo(pointer.x-.13,pointer.y);ctx.moveTo(pointer.x+.13,pointer.y);ctx.lineTo(pointer.x+.30,pointer.y);ctx.moveTo(pointer.x,pointer.y-.30);ctx.lineTo(pointer.x,pointer.y-.13);ctx.moveTo(pointer.x,pointer.y+.13);ctx.lineTo(pointer.x,pointer.y+.30);ctx.stroke();
     }
     ctx.restore();
   }

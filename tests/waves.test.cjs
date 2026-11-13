@@ -35,21 +35,24 @@ function holdPosition(game, enemy) {
 }
 
 function shootEnemy(game, from, to, damage = 12) {
-  assert.equal(game._shoot({ ...from, id: 'test-shooter' }, to, 'enemy', 10, damage, 5), true);
+  assert.equal(game._shoot({ id: 'test-shooter', ...from }, to, 'enemy', 10, damage, 5), true);
 }
 
 for (const [waveIndex, { lane, edge, outside }] of ENTRANCES.entries()) {
-  test(`entrance ${lane} excludes wreck centers inside and on the boundary`, () => {
+  test(`entrance ${lane} excludes both wreck types inside and on the boundary`, () => {
     const game = new Game();
-    for (const distance of [-0.05, 0]) {
-      game._killEnemy(mediumAt(offset(edge, outside, distance)));
-      assert.equal(game.wrecks.length, 0);
+    for (const type of ['medium', 'heavy']) {
+      for (const distance of [-0.05, 0]) {
+        game._killEnemy({ ...mediumAt(offset(edge, outside, distance)), type });
+        assert.equal(game.wrecks.length, 0, `${type} at offset ${distance}`);
+      }
+      const justOutside = offset(edge, outside, 0.0001);
+      game._killEnemy({ ...mediumAt(justOutside), type });
+      assert.equal(game.wrecks.length, 1, `${type} just outside`);
+      assert.deepEqual(position(game.wrecks.pop()), justOutside);
     }
-
-    const justOutside = offset(edge, outside, 0.05);
-    game._killEnemy(mediumAt(justOutside));
-    assert.equal(game.wrecks.length, 1);
-    assert.deepEqual(position(game.wrecks[0]), justOutside);
+    game._killEnemy({ ...mediumAt(offset(edge, outside, 2)), type: 'light' });
+    assert.equal(game.wrecks.length, 0, 'light leaves no resource outside the zone either');
   });
 
   test(`entrance ${lane} blocks the player's full contour in prep and battle but passes shots`, () => {
@@ -98,31 +101,100 @@ for (const [waveIndex, { lane, edge, outside }] of ENTRANCES.entries()) {
   });
 }
 
-test('lethal projectile is consumed and the next projectile damages the new wreck', () => {
+for (const [type, hp] of [['medium', 60], ['heavy', 120]]) {
+  test(`${type}: lethal shot is consumed, then both sides can hit and destroy the wreck`, () => {
+    const game = new Game(EMPTY_WAVES);
+    assert.equal(game.startWave(), true);
+    Object.assign(game.player, { x: 3, y: 6.5 });
+    const target = { ...mediumAt({ x: 5.13, y: 6.5 }), type, hp: 20, maxHp: hp };
+    const rear = mediumAt({ x: 7.13, y: 6.5 }, 'rear');
+    game.enemies.push(target, rear);
+    // Advance only the weapon and projectiles so route changes don't move
+    // the actors out of this deliberately aligned fixture.
+    const fire = () => {
+      game._updatePlayer(0.3, { aimX: rear.x, aimY: rear.y, fire: true });
+      game._updateBullets(0.2);
+    };
+    const rearPosition = position(rear);
+    const playerPosition = position(game.player);
+
+    fire();
+    assert.equal(game.wrecks.length, 1);
+    const [wreck] = game.wrecks;
+    assert.equal(wreck.type, type);
+    assert.deepEqual(position(wreck), position(target));
+    assert.deepEqual(position(rear), rearPosition);
+    assert.deepEqual(position(game.player), playerPosition);
+    assert.equal(wreck.r, target.r);
+    assert.equal(wreck.r * 2, 1);
+    assert.equal(wreck.hp, hp);
+    assert.equal(wreck.maxHp, hp);
+    assert.equal(game.bullets.length, 0);
+
+    fire();
+    assert.equal(wreck.hp, hp - 20);
+    assert.equal(rear.hp, 60);
+    shootEnemy(game, rear, game.player, 20);
+    game._updateBullets(0.3);
+    assert.equal(wreck.hp, hp - 40);
+    assert.equal(game.player.hp, 60);
+
+    const navVersion = game._navVersion;
+    for (let remaining = hp - 40; remaining > 0; remaining -= 20) fire();
+    assert.equal(game.wrecks.length, 0);
+    assert.ok(game._navVersion > navVersion, 'destroying the wreck invalidates routes');
+    assert.equal(rear.hp, 60, 'the shot destroying the wreck is also consumed');
+    fire();
+    assert.equal(rear.hp, 40);
+  });
+}
+
+test('heavy wreck survives the creation wave and two following waves without HP decay', () => {
   const game = new Game(EMPTY_WAVES);
-  assert.equal(game.startWave(), true);
-  const player = { x: 3, y: 6.5 };
-  const target = mediumAt({ x: 5.13, y: 6.5 });
-  Object.assign(game.player, player);
-  target.hp = 20;
-  holdPosition(game, target);
-  game.enemies.push(target);
-  const fire = { aimX: target.x, aimY: target.y, fire: true };
-
-  // Keep the phase in battle with another enemy far from this line of fire.
-  game.enemies.push(mediumAt({ x: 24, y: 2 }, 'other-medium'));
-  game.update(0.1, fire);
+  game.startWave();
+  game._killEnemy({ ...mediumAt({ x: 5.13, y: 6.5 }), type: 'heavy' });
   assert.equal(game.wrecks.length, 1);
-  const wreck = game.wrecks[0];
-  assert.deepEqual(position(wreck), position(target));
-  assert.equal(wreck.r, target.r);
-  assert.equal(wreck.hp, 60);
-  assert.equal(game.bullets.length, 0);
-
-  game.update(0.3, fire);
-  assert.equal(game.wrecks.length, 1);
-  assert.equal(wreck.hp, 40);
+  const [wreck] = game.wrecks;
+  wreck.hp = 61;
+  for (const next of [2, 3]) {
+    game.update(FRAME);
+    assert.equal(game.waveNumber, next);
+    assert.equal(game.wrecks[0], wreck);
+    assert.equal(wreck.expiresAfterWave, 3);
+    assert.equal(wreck.hp, 61);
+    assert.equal(game.startWave(), true);
+  }
+  game.update(FRAME);
+  assert.equal(game.waveNumber, 4);
+  assert.equal(game.wrecks.length, 0);
 });
+
+for (const [type, capacity] of [['medium', 30], ['heavy', 50]]) {
+  test(`${type}: repair preview and action agree at low, nearly full and full base; undo restores the hull`, () => {
+    const game = new Game();
+    game._killEnemy({ ...mediumAt({ x: 5.13, y: 6.5 }), type });
+    assert.equal(game.wrecks.length, 1);
+    Object.assign(game.player, { x: 3, y: 6.5 });
+    for (const missing of [70, 7, 0]) {
+      const [wreck] = game.wrecks;
+      wreck.hp = 23;
+      const snapshot = { ...wreck };
+      game.base.hp = 240 - missing;
+      const player = position(game.player);
+      const restored = Math.min(missing, capacity);
+      assert.equal(game.getWreckRepairHp(wreck.id), restored);
+      assert.deepEqual({ ...game.repairFromWreck(wreck.id) }, { ok: true, hp: restored });
+      assert.equal(game.base.hp, 240 - missing + restored);
+      assert.equal(game.wrecks.length, 0);
+      game.update(0.2, { x: 1 });
+      assert.notDeepEqual(position(game.player), player);
+      assert.equal(game.undo(), true);
+      assert.deepEqual({ ...game.wrecks[0] }, snapshot);
+      assert.equal(game.base.hp, 240 - missing);
+      assert.deepEqual(position(game.player), player);
+    }
+  });
+}
 
 test('settling preserves airborne shots and ages only older wrecks after the last hit', () => {
   const game = new Game(EMPTY_WAVES);

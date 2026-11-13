@@ -268,3 +268,31 @@ test('an enemy can damage the player blocking the route without pushing them', (
   assert.ok(game.player.hp < 60, 'the player should take damage from the advancing enemy');
   assert.equal(enemy.targetWreckId, null);
 });
+
+test('heavy holds for an assigned breach and resumes the shared route when the wreck is gone', () => {
+  const game = new Game(oneOpening);
+  game.phase = 'battle';
+  const enemy = { ...medium('heavy', 4, 8.5), type: 'heavy', hp: 120, cooldown: 0 };
+  game.enemies.push(enemy);
+  Object.assign(game.player, { x: 4, y: 5.5 });
+  game._killEnemy({ ...medium('fallen', 7.25, 8.5), type: 'heavy' });
+  const [wreck] = game.wrecks;
+  assert.ok(wreck);
+  game.update(0.5);
+  assert.equal(enemy.targetWreckId, wreck.id);
+  assert.equal(enemy.stationaryTarget, 'wreck');
+  assert.equal(enemy.x, 4, 'stationary during the shot and cooldown');
+  assert.equal(enemy.y, 8.5);
+  assert.equal(wreck.hp, 100, 'the designated wreck has priority over the visible player');
+  assert.equal(game.player.hp, 60);
+
+  wreck.hp = 20;
+  Object.assign(game.player, { x: 8.6, y: 8.5 });
+  game.update(0.04, { fire: true, aimX: wreck.x, aimY: wreck.y });
+  assert.equal(game.wrecks.length, 0);
+  Object.assign(game.player, { x: 16.4, y: 17.2 });
+  game.update(0.5);
+  assert.equal(enemy.targetWreckId, null);
+  assert.equal(enemy.pressure, null);
+  assert.ok(enemy.x > 4.5);
+});

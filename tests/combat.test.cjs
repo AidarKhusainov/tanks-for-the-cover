@@ -263,3 +263,62 @@ test('light stops pursuing a player killed during the chase', () => {
   assert.equal(enemy.pressure, null);
   assert.ok(enemy.reacquireDelay > 0);
 });
+
+test('heavy spawns with a diameter of 1 and immediately fires 20 HP shots at 10 units/s every 2 s', () => {
+  const spawn = { ...CONFIG.SPAWNS.A, x: 7.1, y: 13.5 };
+  const game = new Game({
+    ...OPEN_ARENA, SPAWNS: { A: spawn },
+    WAVES: [[{ start: 0, lane: 'A', types: ['heavy'] }]]
+  });
+  setPlayer(game, 7.1, 16);
+  assert.equal(game.startWave(), true);
+  const [enemy] = game.enemies;
+  assert.equal(enemy.hp, 120);
+  assert.equal(enemy.r * 2, 1);
+  assert.equal(game.player.r * 2, 1);
+  game.update(FRAME);
+  const [shot] = game.bullets;
+  assert.equal(shot.ownerId, enemy.id);
+  assert.equal(shot.speed, 10);
+  assert.equal(shot.damage, 20);
+  assert.ok(Math.abs(shot.remaining + shot.speed * FRAME - 6) < 1e-7);
+  assert.equal(enemy.windup, 0);
+  assert.equal(enemy.cooldown, 2);
+  assert.equal(enemy.stationaryTarget, 'base', 'the base contour at exactly 6 beats a closer player');
+  game.update(2 - FRAME);
+  assert.equal(game.base.hp, 220);
+  assert.equal(game.player.hp, 60);
+  assert.equal(game.bullets.length, 0);
+  assert.equal(enemy.x, spawn.x);
+  assert.equal(enemy.y, spawn.y);
+  game.update(FRAME);
+  assert.equal(game.bullets.length, 1, 'second shot after 2 s');
+});
+
+test('heavy shoots at the player while following a free route, then ignores the player behind a wall', () => {
+  const game = new Game({
+    ...OPEN_ARENA, WALLS: [{ x: 3, y: 9, w: 4, h: 0.5 }]
+  });
+  game.phase = 'battle';
+  setPlayer(game, 4, 5);
+  const enemy = addEnemy(game, 'heavy', 4, 7);
+  const start = { x: enemy.x, y: enemy.y };
+  game.update(FRAME);
+  const [shot] = game.bullets;
+  assert.equal(shot.ownerId, enemy.id);
+  assert.ok(shot.dy < 0);
+  assert.equal(enemy.targetWreckId, null);
+  assert.ok(Math.abs(Math.hypot(enemy.x - start.x, enemy.y - start.y) - 1.1 * FRAME) < 1e-7);
+  assert.equal(enemy.pressure, null);
+
+  setPlayer(game, 4, 11);
+  enemy.cooldown = 0;
+  const before = { x: enemy.x, y: enemy.y };
+  game.drainEvents();
+  game.update(0.2);
+  assert.equal(enemy.cooldown, 0, 'no cooldown spent on the hidden player');
+  assert.equal(game.drainEvents().filter(e => e.type === 'shot').length, 0);
+  assert.equal(enemy.pressure, null);
+  assert.equal(enemy.stationaryTarget, null);
+  assert.ok(enemy.x > before.x);
+});
