@@ -182,9 +182,13 @@ for (const [type, capacity] of [['medium', 30], ['heavy', 50]]) {
       game.base.hp = 240 - missing;
       const player = position(game.player);
       const restored = Math.min(missing, capacity);
+      const before = JSON.stringify(game);
+      const actions = game.getWreckActions(wreck.id);
+      assert.equal(actions.repairBaseHp, 240 - missing + restored);
+      assert.equal(JSON.stringify(game), before, 'reading repair options leaves the game unchanged');
       assert.equal(game.getWreckRepairHp(wreck.id), restored);
       assert.deepEqual({ ...game.repairFromWreck(wreck.id) }, { ok: true, hp: restored });
-      assert.equal(game.base.hp, 240 - missing + restored);
+      assert.equal(game.base.hp, actions.repairBaseHp);
       assert.equal(game.wrecks.length, 0);
       game.update(0.2, { x: 1 });
       assert.notDeepEqual(position(game.player), player);
@@ -392,6 +396,26 @@ function assertLoadout(game, module, hp, speed) {
   game.update(0.1, { x: 1 });
   assert.ok(Math.abs(game.player.x - x - speed * 0.1) < 1e-7);
 }
+
+test('module preview reports both replacements and the resulting tank stats without installing anything', () => {
+  const game = new Game();
+  Object.assign(game.player, { x: 3, y: 6.5 });
+  for (const [type, module, replacedModule, speed, maxHp] of [
+    ['medium', 'engine', null, 5, 60],
+    ['heavy', 'armor', 'engine', 4, 90],
+    ['medium', 'engine', 'armor', 5, 60]
+  ]) {
+    const wreck = createWreck(game, type, 22, 13);
+    const before = JSON.stringify(game);
+    const preview = game.getWreckActions(wreck.id);
+    assert.equal(preview.replacedModule, replacedModule);
+    assert.equal(preview.module, module);
+    assert.deepEqual({ ...preview.moduleStats }, { speed, maxHp });
+    assert.equal(JSON.stringify(game), before);
+    assert.equal(game.installModuleFromWreck(wreck.id).ok, true);
+    assertLoadout(game, module, preview.moduleStats.maxHp, preview.moduleStats.speed);
+  }
+});
 
 test('one module slot swaps engine → armor → engine, then resets on a new attempt', () => {
   const game = new Game(EMPTY_WAVES);
@@ -660,6 +684,52 @@ test('reinforced hulls remain ordinary resources and one undo restores both hull
   assert.equal(game.undo(), false);
   assert.equal(game.reinforceWreck(donor.id, target.id).ok, true);
   assert.deepEqual({ ...game.repairFromWreck(target.id) }, { ok: true, hp: 50 });
+});
+
+test('undo preview reads the next snapshot, including the previous tank position and both kinds of hull changes', () => {
+  const game = new Game();
+  Object.assign(game.player, { x: 3, y: 6.5 });
+  game.base.hp = 231;
+  const repair = createWreck(game, 'medium', 4.2, 6.5);
+  const engine = createWreck(game, 'medium', 22, 13);
+  const target = createWreck(game, 'heavy', 24, 13);
+  const donor = createWreck(game, 'medium', 26, 13);
+  target.hp = 30;
+  const steps = [
+    { action: () => game.repairFromWreck(repair.id), ids: [repair.id], move: { x: 1 }, dt: 0.65 },
+    { action: () => game.installModuleFromWreck(engine.id), ids: [engine.id], move: { y: 1 }, dt: 0.2 },
+    { action: () => game.reinforceWreck(donor.id, target.id), ids: [donor.id, target.id], move: { x: -1 }, dt: 0.2 }
+  ];
+  assert.equal(game.getUndoPreview().reason, 'no-undo');
+  const positions = [];
+  for (const { action, move, dt } of steps) {
+    positions.push(position(game.player));
+    assert.equal(action().ok, true);
+    game.update(dt, move);
+    assert.notDeepEqual(position(game.player), positions.at(-1));
+  }
+
+  game.paused = true;
+  assert.equal(game.getUndoPreview().reason, 'paused');
+  game.paused = false;
+  for (const { ids } of steps.reverse()) {
+    const before = JSON.stringify(game);
+    const preview = game.getUndoPreview();
+    const expectedPosition = positions.pop();
+    assert.equal(preview.reason, null);
+    assert.deepEqual(position(preview.player), expectedPosition);
+    assert.deepEqual(Array.from(preview.wrecks, wreck => wreck.id), ids);
+    assert.equal(JSON.stringify(game), before, 'hovering does not pop or reorder the stack');
+    assert.equal(game.undo(), true);
+    assert.deepEqual(position(game.player), expectedPosition);
+    assert.equal(game.player.module, preview.player.module);
+    assert.equal(game.player.hp, preview.player.hp);
+    assert.equal(game.base.hp, preview.baseHp);
+    for (const wreck of preview.wrecks) assert.deepEqual(game.wrecks.find(w => w.id === wreck.id), wreck);
+  }
+  assert.equal(game.getUndoPreview().reason, 'no-undo');
+  assert.equal(game.startWave(), true);
+  assert.equal(game.getUndoPreview().reason, 'not-prep');
 });
 
 test('starting a wave commits reinforcement; target expires one wave later, including the final wave rule', () => {

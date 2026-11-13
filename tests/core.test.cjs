@@ -95,6 +95,30 @@ test('route preview includes all three entrance lanes', () => {
   assert.ok(routes.every(route => route.points.length >= 2));
 });
 
+test('selecting an entrance and enemy type uses the shared route without changing combat assignments', () => {
+  const game = controlScene();
+  const { x, y } = CONFIG.SPAWNS.A;
+  const enemy = { id: 'test', x, y, r: 0.5, type: 'medium', hp: 60 };
+  game.enemies.push(enemy);
+  game._assignRoute(enemy);
+  const before = JSON.stringify(game.enemies);
+
+  for (const lane of ['A', 'B', 'C']) {
+    for (const type of ['light', 'medium', 'heavy']) {
+      const paths = game.getPreviewPaths({ lane, type });
+      assert.equal(paths.length, 1);
+      assert.equal(paths[0].lane, lane);
+      assert.deepEqual(paths[0], game.getPreviewPaths().find(path => path.lane === lane));
+    }
+  }
+  const [blocked] = game.getPreviewPaths({ lane: 'A', type: 'heavy' });
+  assert.equal(blocked.blockedWreckId, 'left');
+  assert.deepEqual(blocked.points.at(-1), enemy.route.at(-1));
+  assert.equal(game.getPreviewPaths({ lane: 'D', type: 'heavy' }).length, 0);
+  assert.equal(game.getPreviewPaths({ lane: 'A', type: 'unknown' }).length, 0);
+  assert.equal(JSON.stringify(game.enemies), before);
+});
+
 test('enemy has immediate shot at visible player when weapon is ready', () => {
   const game = new Game();
   game.phase = 'battle';
