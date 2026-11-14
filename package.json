@@ -4,7 +4,10 @@
   "private": true,
   "description": "Dependency-free browser tank game prototype",
   "scripts": {
-    "test": "node --test tests/*.test.cjs"
+    "test": "node --test tests/*.test.cjs",
+    "build:3d": "node experiments/warm-town-3d/build.cjs",
+    "test:3d": "node --test tests/warm-town-3d.test.cjs",
+    "test:3d:browser": "node experiments/warm-town-3d/tools/browser.cjs"
   },
   "engines": {
     "node": ">=20"

@@ -1,0 +1,473 @@
+{
+  "date": "2026-11-14",
+  "sanitization": "Absolute filesystem URLs and host machine metadata omitted; raw traces remain local.",
+  "repositoryTests": {
+    "command": "npm test",
+    "node": "20.12.0",
+    "passed": 100,
+    "failed": 0
+  },
+  "simulation": {
+    "pureSimulationUnchanged": true,
+    "waves": 8,
+    "enemies": 66,
+    "entranceChecks": {
+      "A": {
+        "secondsUntilBaseHit": 7.45
+      },
+      "B": {
+        "secondsUntilBaseHit": 6.33
+      },
+      "C": {
+        "secondsUntilBaseHit": 5.03
+      }
+    },
+    "verifiedWallFootprints": 11,
+    "actualPlannerChecks": 9,
+    "drives": [
+      "alley",
+      "courtyard",
+      "southeast",
+      "lowerStreet"
+    ],
+    "lowerStreetSamples": 3794,
+    "returnExits": [
+      "forward",
+      "left",
+      "right"
+    ],
+    "respawnSeconds": 4,
+    "isolatedCombatChecks": [
+      "wall",
+      "open exit",
+      "base",
+      "wreck collision and damage",
+      "repair",
+      "module",
+      "reinforcement",
+      "undo"
+    ]
+  },
+  "publicationBrowser": {
+    "artifact": {
+      "filename": "tanks-warm-town-3d.html",
+      "sha256": "386e50f9f7c939f69a6b718c15ce72109d5cdd2324041fbbf10a65101c9e31e0",
+      "bytes": 988548
+    },
+    "browserProduct": "Chrome/155.0.8059.39",
+    "viewports": [
+      {
+        "width": 1366,
+        "height": 900,
+        "predictionOffAtStart": true
+      },
+      {
+        "width": 1280,
+        "height": 720,
+        "predictionOffAtStart": true
+      }
+    ],
+    "offline": {
+      "browserOffline": true,
+      "externalRequests": 0,
+      "pageErrors": 0,
+      "resourceProtocol": "file:"
+    },
+    "aim": [
+      {
+        "target": {
+          "x": 13.2,
+          "y": 10.8
+        },
+        "pixel": {
+          "x": 502.26631441785366,
+          "y": 472.84986384146094,
+          "visible": true
+        },
+        "conversionError": 1.7763568394002505e-15,
+        "angleErrorRadians": 6.820340558988391e-08
+      },
+      {
+        "target": {
+          "x": 26.3,
+          "y": 12.5
+        },
+        "pixel": {
+          "x": 948.2179158255009,
+          "y": 521.9289028838755,
+          "visible": true
+        },
+        "conversionError": 0,
+        "angleErrorRadians": 4.859982050131606e-08
+      },
+      {
+        "target": {
+          "x": 1.9,
+          "y": 16.55
+        },
+        "pixel": {
+          "x": 117.59050557003586,
+          "y": 638.8524958966866,
+          "visible": true
+        },
+        "conversionError": 4.189529226675416e-15,
+        "angleErrorRadians": 4.2776761688401166e-08
+      }
+    ],
+    "drives": {
+      "start": {
+        "x": 16.4,
+        "y": 17.2
+      },
+      "exits": [
+        {
+          "key": "W",
+          "start": {
+            "x": 16.4,
+            "y": 17.2
+          },
+          "reached": {
+            "x": 16.4,
+            "y": 15.000000000000007
+          }
+        },
+        {
+          "key": "A",
+          "start": {
+            "x": 16.4,
+            "y": 17.2
+          },
+          "reached": {
+            "x": 14.13333333333334,
+            "y": 17.066666666666666
+          }
+        },
+        {
+          "key": "D",
+          "start": {
+            "x": 16.4,
+            "y": 17.2
+          },
+          "reached": {
+            "x": 18.666666666666657,
+            "y": 17.066666666666666
+          }
+        }
+      ],
+      "bottomStreet": {
+        "leftEnd": {
+          "x": 0.8000000000000367,
+          "y": 17.066666666666666
+        },
+        "rightEnd": {
+          "x": 27.19999999999996,
+          "y": 17.066666666666666
+        }
+      },
+      "eastCourtAndBypass": [
+        {
+          "x": 26.533333333333296,
+          "y": 11.266666666666687
+        },
+        {
+          "x": 25.853840789638305,
+          "y": 11.946159210361701
+        },
+        {
+          "x": 17.053840789638336,
+          "y": 11.946159210361701
+        }
+      ],
+      "northAlley": [
+        {
+          "x": 17.969035593728837,
+          "y": 9.69763107293784
+        },
+        {
+          "x": 3.1023689270622166,
+          "y": 9.69763107293784
+        },
+        {
+          "x": 3.1023689270622166,
+          "y": 10.297631072937838
+        },
+        {
+          "x": 12.4437902832995,
+          "y": 10.439052429175149
+        }
+      ]
+    },
+    "wallCollision": {
+      "targetWall": "townhall-1",
+      "wallX": 11.8,
+      "tankRadius": 0.5,
+      "reached": {
+        "x": 12.300000000000013,
+        "y": 15.066666666666674
+      }
+    },
+    "wreck": {
+      "id": "w14",
+      "collision": {
+        "canOccupyCenterWithTank": false,
+        "projectile": {
+          "kind": "wreck",
+          "id": "w14"
+        }
+      },
+      "projectedSelection": true,
+      "baseHpBefore": 224,
+      "baseHpAfterRepair": 240,
+      "dismantled": true,
+      "engineInstalled": true,
+      "undoRestoredWreckAndState": true,
+      "finalWrecks": [
+        {
+          "id": "w14",
+          "type": "medium",
+          "x": 8.434840508690764,
+          "y": 10.710002311834845,
+          "r": 0.5,
+          "hp": 60,
+          "maxHp": 60,
+          "expiresAfterWave": 2,
+          "reinforced": false
+        }
+      ]
+    },
+    "journal": {
+      "filename": "tanks-attempt.json",
+      "buildId": "prototype-06-map-lab-warm-town-3d-2",
+      "events": 10,
+      "waveEnds": [
+        {
+          "sequence": 4,
+          "type": "wave_end",
+          "wave": 1,
+          "preparationSeconds": 3.133333333333327,
+          "battleSeconds": 11.216666666666804,
+          "outcome": "cleared",
+          "baseHp": 224,
+          "player": {
+            "x": 12.385211639536829,
+            "y": 9.382436268847306,
+            "hp": 48,
+            "maxHp": 60,
+            "alive": true,
+            "module": null
+          },
+          "wrecks": [
+            {
+              "id": "w14",
+              "type": "medium",
+              "x": 8.434840508690764,
+              "y": 10.710002311834845,
+              "r": 0.5,
+              "hp": 60,
+              "maxHp": 60,
+              "expiresAfterWave": 2,
+              "reinforced": false
+            }
+          ]
+        }
+      ],
+      "preparationActions": [
+        {
+          "sequence": 5,
+          "type": "repair",
+          "wave": 2,
+          "preparationSeconds": 3.383333333333326,
+          "battleSeconds": 11.216666666666804,
+          "wreckId": "w14",
+          "hpRestored": 16,
+          "baseHp": 240,
+          "player": {
+            "x": 12.385211639536829,
+            "y": 9.382436268847306,
+            "hp": 60,
+            "maxHp": 60,
+            "alive": true,
+            "module": null
+          }
+        },
+        {
+          "sequence": 7,
+          "type": "undo",
+          "wave": 2,
+          "preparationSeconds": 3.4499999999999926,
+          "battleSeconds": 11.216666666666804,
+          "actionSequence": 5,
+          "baseHp": 224,
+          "player": {
+            "x": 12.385211639536829,
+            "y": 9.382436268847306,
+            "hp": 60,
+            "maxHp": 60,
+            "alive": true,
+            "module": null
+          },
+          "wrecks": [
+            {
+              "id": "w14",
+              "type": "medium",
+              "x": 8.434840508690764,
+              "y": 10.710002311834845,
+              "r": 0.5,
+              "hp": 60,
+              "maxHp": 60,
+              "expiresAfterWave": 2,
+              "reinforced": false
+            }
+          ]
+        },
+        {
+          "sequence": 8,
+          "type": "module_change",
+          "wave": 2,
+          "preparationSeconds": 3.649999999999992,
+          "battleSeconds": 11.216666666666804,
+          "wreckId": "w14",
+          "previousModule": null,
+          "baseHp": 224,
+          "player": {
+            "x": 12.385211639536829,
+            "y": 9.382436268847306,
+            "hp": 60,
+            "maxHp": 60,
+            "alive": true,
+            "module": "engine"
+          }
+        },
+        {
+          "sequence": 10,
+          "type": "undo",
+          "wave": 2,
+          "preparationSeconds": 3.683333333333325,
+          "battleSeconds": 11.216666666666804,
+          "actionSequence": 8,
+          "baseHp": 224,
+          "player": {
+            "x": 12.385211639536829,
+            "y": 9.382436268847306,
+            "hp": 60,
+            "maxHp": 60,
+            "alive": true,
+            "module": null
+          },
+          "wrecks": [
+            {
+              "id": "w14",
+              "type": "medium",
+              "x": 8.434840508690764,
+              "y": 10.710002311834845,
+              "r": 0.5,
+              "hp": 60,
+              "maxHp": 60,
+              "expiresAfterWave": 2,
+              "reinforced": false
+            }
+          ]
+        }
+      ]
+    },
+    "combat": {
+      "wave": 1,
+      "kills": 4,
+      "baseHp": 224,
+      "phaseAfter": "prep",
+      "nextWave": 2
+    }
+  },
+  "contextRecovery": {
+    "artifact": {
+      "filename": "tanks-warm-town-3d.html",
+      "sha256": "386e50f9f7c939f69a6b718c15ce72109d5cdd2324041fbbf10a65101c9e31e0",
+      "bytes": 988548
+    },
+    "browserProduct": "Chrome/155.0.8059.39",
+    "viewports": [
+      {
+        "width": 1366,
+        "height": 900,
+        "predictionOffAtStart": true
+      }
+    ],
+    "offline": {
+      "browserOffline": true,
+      "externalRequests": 0,
+      "pageErrors": 0,
+      "resourceProtocol": "file:"
+    },
+    "recovery": {
+      "contextRestored": true,
+      "unchangedStillPixelsAfterRestore": true,
+      "responsiveProjection": {
+        "screenBefore": {
+          "x": 502.26631441785366,
+          "y": 472.84986384146094,
+          "visible": true
+        },
+        "screenAfter": {
+          "x": 461.6074558100031,
+          "y": 431.39992204163354,
+          "visible": true
+        },
+        "roundTrip": {
+          "x": 13.200000000000001,
+          "y": 10.8
+        }
+      }
+    },
+    "scope": "Same byte-identical artifact before repository import"
+  },
+  "noFloatCache": {
+    "artifact": {
+      "filename": "tanks-warm-town-3d.html",
+      "sha256": "386e50f9f7c939f69a6b718c15ce72109d5cdd2324041fbbf10a65101c9e31e0",
+      "bytes": 988548
+    },
+    "browserProduct": "Chrome/155.0.8059.39",
+    "viewports": [
+      {
+        "width": 1366,
+        "height": 900,
+        "predictionOffAtStart": true
+      },
+      {
+        "width": 1280,
+        "height": 720,
+        "predictionOffAtStart": true
+      }
+    ],
+    "offline": {
+      "browserOffline": true,
+      "externalRequests": 0,
+      "pageErrors": 0,
+      "resourceProtocol": "file:"
+    },
+    "byteCache": {
+      "byteTarget": true,
+      "samples": [
+        [
+          124,
+          98,
+          62,
+          255
+        ],
+        [
+          156,
+          52,
+          13,
+          255
+        ],
+        [
+          183,
+          152,
+          104,
+          255
+        ]
+      ]
+    },
+    "scope": "Same byte-identical artifact before repository import"
+  }
+}
