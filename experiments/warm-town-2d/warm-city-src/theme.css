@@ -1,0 +1,11 @@
+/* A warm, quiet frame around the tactical map; system fonts keep it offline. */
+:root{--bg:#181c19;--panel:#252c25;--line:#4a5142;--muted:#b7b8a2;--ink:#f2e9d6;--lime:#e5cd94}
+body{background:radial-gradient(ellipse at 18% 0,#414334 0,#21271f 48%,#141b18 100%)}
+.topbar{border-color:#565744}.eyebrow{color:#cfb77f}
+.board-shell{border-color:#6d715c;border-top-color:#99977b;border-bottom-color:#444d40;outline-color:#b1aa88;border-radius:7px;background:#b3a68d}
+.sidebar{background:linear-gradient(150deg,#303a2e,#202b24);border-color:#535e4d}
+.wave-card{background:#242f26;border-color:#58634e}.route-controls{background:#202a22;border-color:#4e5b49}
+.primary{background:#e8cf96;border-color:#f6dfad;color:#2e3425;box-shadow:0 3px 0 #9d8555}
+.legend-square{background:#6c6250}.brand-icon{box-shadow:0 3px 0 #655a3c}
+@media(min-width:900px){.app{width:100%;max-width:min(1380px,calc((100dvh - 248px)*1.5556 + 340px));padding:14px 24px 10px}.game-layout{grid-template-columns:minmax(0,1fr) 258px;gap:22px}.topbar{margin-bottom:10px;padding-bottom:10px}.dashboard{height:58px;min-height:58px}.sidebar{padding:18px 17px}.sidebar h2{font-size:24px}.sidebar-copy{font-size:12px}.board-status{min-height:22px;padding-top:2px}.underboard{font-size:10px}footer{margin-top:10px;padding-top:10px}.route-controls{padding:6px 9px;margin-top:5px}.route-controls .fineprint{margin-top:4px;font-size:10px}}
+@media(min-width:900px) and (max-height:800px){.app{max-width:min(1180px,calc((100dvh - 220px)*1.5556 + 310px));padding:9px 18px}.game-layout{grid-template-columns:minmax(0,1fr) 238px;gap:17px}.topbar{margin-bottom:7px;padding-bottom:7px}.dashboard{height:56px;min-height:56px;padding-bottom:7px}.sidebar{padding:13px}.sidebar h2{font-size:21px}.sidebar-copy{font-size:11px}.tactical-note{display:none}.board-status{min-height:19px}.route-options{font-size:11px}footer{font-size:9px;margin-top:7px;padding-top:7px}.legend{gap:10px}.header-actions .icon-button{padding:8px}h1{font-size:28px}}
