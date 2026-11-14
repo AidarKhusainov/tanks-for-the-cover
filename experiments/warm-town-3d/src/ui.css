@@ -1,0 +1,106 @@
+/* Warm brass and charcoal framing leaves the city as the focal point. */
+:root {
+  --bg: #151c1b;
+  --panel: #202b28;
+  --line: #3e4c43;
+  --ink: #f5efdf;
+  --muted: #b6c0b4;
+  --lime: #e7c786;
+  --blue: #8ac8bd;
+}
+body {
+  background: radial-gradient(ellipse at 45% -30%, #3b4940 0, #1c2724 48%, #121a19 100%);
+  font-family: "Instrument Sans", system-ui, sans-serif;
+}
+.app { max-width: 1680px; }
+.topbar { border-color: #a6906138; }
+.brand-icon {
+  background: linear-gradient(145deg, #efd29e, #ad8854);
+  border-color: #f0d3a0;
+  box-shadow: 0 2px 0 #7a633f, 0 5px 16px #0003;
+}
+h1 {
+  color: #f4e6c9;
+  font-family: Georgia, serif;
+  font-size: clamp(23px, 2.5vw, 36px);
+  font-weight: 700;
+  letter-spacing: -.035em;
+}
+.title-edition {
+  margin-left: .22em;
+  color: var(--lime);
+  font: 700 .33em "Instrument Sans", system-ui, sans-serif;
+  letter-spacing: .1em;
+  vertical-align: middle;
+}
+.game-layout { gap: 18px; }
+.dashboard { gap: 22px; }
+.dashboard strong { font-variant-numeric: tabular-nums; }
+.dashboard span { color: #bdbda7; font-size: 9px; }
+.dashboard small, .muted { color: var(--muted); }
+.meter-track { height: 4px; background: #425047; border-radius: 3px; }
+.base-meter .meter-track i { background: #dcc08a; }
+.player-meter .meter-track i { background: #82bdb2; }
+.sidebar {
+  background: linear-gradient(155deg, #293730, #1c2824 90%);
+  border-color: #82947738;
+  border-radius: 12px;
+  color: var(--ink);
+  box-shadow: 0 12px 30px #0002;
+}
+.sidebar h2 { color: #f0e3c8; font-family: Georgia, serif; letter-spacing: -.025em; }
+.sidebar-copy, .empty-state, .fineprint, .lane-time { color: var(--muted); }
+.phase-badge { background: #b7a57620; color: #e7c98e; border: 1px solid #b7a57635; border-radius: 4px; }
+.phase-badge.battle { background: #57362c; color: #ffcdab; }
+.icon-button, .route-options select {
+  background: #28372f;
+  border-color: #7f92734a;
+  border-radius: 7px;
+  color: #e0e5d6;
+}
+.icon-button:hover { background: #394b3e; }
+.wave-card { background: #14221e66; border-color: #89977b38; border-radius: 8px; }
+.route-controls { background: #17231e80; border-color: #82947730; border-radius: 8px; }
+.primary {
+  background: linear-gradient(135deg, #edd49b, #d6b474);
+  border-color: #efdaad;
+  border-radius: 7px;
+  box-shadow: 0 2px #846c42, 0 4px 14px #0002;
+}
+.primary:hover { background: #f1dbac; }
+.section-label { color: #c8beaa; }
+.board-shell {
+  border: 1px solid #a99a726b;
+  border-radius: 9px;
+  background: #232e29;
+  outline: none;
+  box-shadow: 0 18px 50px #0005, 0 2px 7px #0004;
+  overflow: hidden;
+}
+#board {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1.77;
+  max-height: max(300px, calc(100dvh - 153px));
+}
+.route-controls .fineprint { margin-top: 4px; }
+.legend-dot.player { background: var(--blue); }
+.underboard { color: #b4bfae; }
+footer { border-color: #82947730; }
+.modal { background: #22332c; border-color: #74816b; }
+.overlay { background: #12231dd1; }
+@media (min-width: 900px) and (max-height: 940px) {
+  .app { max-width: 1680px; padding-top: 14px; padding-inline: 24px; }
+  .topbar { margin-bottom: 10px; }
+}
+@media (min-width: 900px) and (max-height: 800px) {
+  .app { max-width: 1340px; padding-top: 10px; }
+  .topbar { margin-bottom: 10px; padding-bottom: 8px; }
+  .dashboard { gap: 16px; }
+  footer { margin-top: 12px; padding-top: 9px; }
+}
+@media (max-width: 600px) {
+  .topbar { gap: 12px; }
+  #board { min-height: 0; }
+}

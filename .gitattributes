@@ -1,0 +1,3 @@
+# Preserve upstream shader strings and collapse third-party/generated diffs.
+experiments/warm-town-3d/vendor/** linguist-vendored -whitespace
+experiments/warm-town-3d/tanks-warm-town-3d.html linguist-generated -whitespace

@@ -1,0 +1,2640 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#17201d">
+  <meta name="description" content="Тёплый обжитой город 3D — восемь волн обороны в старом европейском городе. Работает офлайн.">
+  <title>Танчики — Тёплый город 3D</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect width='48' height='48' rx='10' fill='%23152329'/%3E%3Cpath fill='%23d4ed87' d='M11 15h6v25h-6zm20 0h6v25h-6zM18 19h12v17H18zM22 5h4v22h-4z'/%3E%3C/svg%3E">
+  <style>
+:root{color-scheme:dark;--bg:#111b20;--panel:#1b2a30;--line:#34434a;--muted:#9cacae;--ink:#edf0e7;--lime:#d4ed87;--blue:#78b8de;--orange:#e6a37d}*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 35% 0,#24343a 0,#111b20 70%);font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--ink);font-size:14px}.app{max-width:1500px;margin:auto;padding:24px 30px 16px}.topbar{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-bottom:24px}.brand{display:flex;align-items:center;gap:14px}.eyebrow{font-size:10px;letter-spacing:2px;font-weight:700;color:var(--muted);margin:0 0 5px}.eyebrow span{padding:0 8px;color:#56666b}h1{font-size:25px;letter-spacing:-.8px;font-weight:650;margin:0}.brand-icon{display:block;width:44px;height:44px;border:1px solid #526449;border-radius:12px;position:relative;background:#273831}.brand-icon:before,.brand-icon:after{content:"";position:absolute;top:13px;width:5px;height:23px;background:var(--lime);border-radius:2px}.brand-icon:before{left:9px}.brand-icon:after{right:9px}.brand-icon i{position:absolute;left:16px;top:17px;width:11px;height:15px;background:var(--lime);border-radius:3px}.brand-icon i:after{content:"";position:absolute;left:4px;top:-12px;width:3px;height:17px;background:var(--lime)}button,a,input{touch-action:manipulation}button{font:inherit;cursor:pointer}button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(--lime);outline-offset:4px}button:disabled{cursor:default;opacity:.38}.header-actions{display:flex;gap:8px}.icon-button{border:1px solid var(--line);border-radius:8px;color:#c4d0d0;background:#1d2a30;padding:9px 12px;font-size:12px}.icon-button:hover{background:#2d3d42}.icon-button span{margin-left:5px}.icon-button[aria-pressed=true]{color:var(--lime);border-color:#7d9554}.game-layout{display:grid;grid-template-columns:minmax(0,1fr) 274px;gap:22px}.play-area{min-width:0}.dashboard{height:73px;display:grid;grid-template-columns:1.35fr 1fr .7fr .7fr;align-items:center;gap:26px;padding:0 8px 18px}.meter>div:first-child{display:flex;align-items:baseline;justify-content:space-between;gap:8px}.dashboard span{font-size:10px;font-weight:700;letter-spacing:1.4px;color:var(--muted)}.dashboard strong{font-size:19px;font-weight:600;font-variant-numeric:tabular-nums}.dashboard small{font-weight:400;font-size:11px;color:#829396;margin-left:3px}.meter-track{height:4px;background:#314149;border-radius:4px;margin-top:10px;overflow:hidden}.meter-track i{display:block;height:100%;width:100%;background:var(--lime);border-radius:4px;transition:width .2s}.player-meter .meter-track i{background:var(--blue)}.wave-meter,.kill-meter{display:flex;flex-direction:column;gap:5px;border-left:1px solid var(--line);padding-left:20px}.wave-meter b{font-weight:650}.board-shell{position:relative;width:100%;border:5px solid #415154;outline:1px solid #6a7975;border-radius:12px;overflow:hidden;background:#b5b49c;box-shadow:0 20px 42px #0005,0 0 0 8px #17242a}canvas{display:block;width:100%;height:auto;aspect-ratio:28/18;cursor:crosshair;outline:none;touch-action:none}.board-tag{position:absolute;top:12px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:7px;background:#172b2ddb;border:1px solid #667c6a;border-radius:30px;padding:6px 12px;font-size:10px;font-weight:600;white-space:nowrap;pointer-events:none;backdrop-filter:blur(4px)}.pulse-dot{width:6px;height:6px;display:inline-block;background:var(--lime);border-radius:50%;flex:none}.underboard{display:flex;align-items:center;gap:17px;margin-top:17px;font-size:10px;color:#b1c0bd;flex-wrap:wrap;padding:0 5px}.underboard>span{display:flex;align-items:center;gap:6px}.legend-dot{width:7px;height:7px;border-radius:50%;display:inline-block}.legend-dot.player{background:#78b8de}.legend-dot.hunter{background:#df8764}.legend-dot.assault{background:#d4a15b;border-radius:1px;width:8px;height:8px}.legend-square{width:8px;height:8px;background:#95a59a;transform:rotate(15deg)}.route-toggle{margin-left:auto;display:flex;gap:6px;align-items:center;cursor:pointer}.route-toggle input{accent-color:var(--lime);margin:0;width:12px;height:12px}.sidebar{padding:21px 19px 18px;background:linear-gradient(145deg,#213238,#19272d);border:1px solid var(--line);border-radius:14px;align-self:start;min-height:calc(100% - 31px)}.phase-head{display:flex;align-items:center;justify-content:space-between;gap:10px}.phase-badge{border-radius:4px;background:#344639;color:var(--lime);font-size:9px;letter-spacing:1.5px;font-weight:800;padding:5px 7px}.phase-badge.battle{color:#ffc697;background:#523e30}.phase-badge.end{color:#e7e9df;background:#405056}.muted{font-size:11px;color:#829699;font-variant-numeric:tabular-nums}.sidebar h2{font-size:23px;font-weight:600;letter-spacing:-.6px;margin:18px 0 9px}.sidebar-copy{color:#c0cdca;font-size:12px;line-height:1.6;margin:0 0 21px}.wave-card{background:#142328;border:1px solid #35464a;border-radius:9px;padding:14px}.section-label{display:flex;align-items:center;justify-content:space-between;color:#9dafad;font-size:9px;letter-spacing:1.3px;font-weight:700;margin-bottom:13px}.section-label span:last-child{letter-spacing:.3px}.lane-row{display:flex;align-items:center;gap:9px;margin-top:10px;min-height:20px}.lane-chip{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:5px;font-size:10px;font-weight:800;color:#203238;background:#a6bbaf;flex:none}.lane-chip.b{background:#d2bca0}.lane-chip.c{background:#c4b4cb}.lane-enemies{display:flex;gap:6px;flex:1;align-items:center;flex-wrap:wrap}.enemy-pip{display:inline-block;height:13px;width:10px;border-radius:2px;background:#d07860;position:relative;border:1px solid #e69879}.enemy-pip:after{content:"";position:absolute;left:3px;top:-4px;background:inherit;width:2px;height:5px}.enemy-pip.medium{width:13px;background:#bd8b4e;border-color:#f1bc70}.enemy-pip.medium:after{left:5px}.lane-time{font-size:10px;color:#b0c0b7;white-space:nowrap;font-variant-numeric:tabular-nums}.fineprint{font-size:10px;line-height:1.5;color:#94a8a5;margin:13px 0 0}.primary{border:1px solid #e2f5ad;background:var(--lime);color:#233323;width:100%;font-weight:750;border-radius:8px;padding:14px 13px;margin-top:12px;text-align:left;display:flex;justify-content:space-between;align-items:center;box-shadow:0 3px 0 #93aa55;transition:background .15s,transform .15s}.primary:hover{background:#e3f7ab}.primary:active{transform:translateY(2px);box-shadow:0 1px 0 #93aa55}.primary span{font-size:19px;line-height:15px;opacity:.65}.combat-status{margin:15px 0 0;display:flex;align-items:center;gap:9px;font-size:12px;color:#e4cfb6;padding:9px 0}.combat-status .pulse-dot{background:#eaaa75}.salvage-card{border-top:1px solid #3b4b4e;margin-top:23px;padding-top:19px}.empty-state{font-size:12px;line-height:1.6;color:#91a6a4;margin:0;min-height:47px}.selected-wreck{display:flex;gap:10px;align-items:center}.wreck-symbol{font-size:24px;width:37px;height:37px;background:#34423b;border:1px dashed #89a28b;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#c5d3bf}.wreck-info strong{font-size:12px;font-weight:650;display:block}.wreck-info p{font-size:10px;color:#b2c1b7;margin:5px 0 0}.wreck-life{font-size:10px;color:#d9cfa5;margin:10px 0 0;line-height:1.45}.secondary{width:100%;border:1px solid #72927f;background:#304a40;color:#e5f1cf;border-radius:7px;font-size:11px;font-weight:650;padding:11px 8px;margin-top:12px}.secondary:hover{background:#3b5b4e}.text-button{border:0;background:none;color:#adbfb8;font-size:11px;padding:9px 0 0;width:100%}.text-button:hover{color:white}.undo-button{border:0;background:none;display:flex;width:100%;align-items:center;justify-content:space-between;color:#c3d0c7;font-size:10px;margin-top:15px;padding:0}.undo-button kbd{font-size:9px;background:#203237;border-color:#435552}.tactical-note{display:flex;gap:9px;color:#a4b7b0;font-size:11px;line-height:1.6;margin-top:24px}.tactical-note p{margin:0}.note-icon{font-size:20px;line-height:20px;color:var(--lime)}footer{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-top:23px;padding-top:17px;border-top:1px solid #2d3c41;font-size:10px;color:#8b9f9d}.controls{display:flex;gap:20px;flex-wrap:wrap}.controls>span{display:flex;align-items:center;gap:4px}kbd{font-family:inherit;font-size:10px;background:#25353b;color:#cfdbd4;border:1px solid #4d5e61;border-bottom-width:2px;padding:2px 5px;border-radius:4px}footer a{font-size:10px;color:#b4c4bb;text-decoration:none;white-space:nowrap}footer a:hover{color:var(--lime)}.toast{position:absolute;bottom:17px;left:50%;transform:translate(-50%,8px);background:#182a2eeb;color:#eff1e1;border:1px solid #829280;padding:10px 16px;border-radius:8px;font-size:12px;max-width:85%;text-align:center;opacity:0;transition:opacity .2s,transform .2s;pointer-events:none;z-index:3}.toast.show{opacity:1;transform:translate(-50%,0)}.overlay{position:absolute;inset:0;background:#102024c9;z-index:5;display:flex;align-items:center;justify-content:center;padding:24px;backdrop-filter:blur(5px)}[hidden]{display:none!important}.modal{max-width:465px;max-height:100%;overflow:auto;width:100%;border:1px solid #657974;background:#1e3036;border-radius:16px;padding:30px;box-shadow:0 15px 70px #0005}.modal h2{font-size:30px;letter-spacing:-1px;line-height:1.1;margin:12px 0 15px}.modal p{font-size:13px;line-height:1.65;color:#c6d3cc}.modal .eyebrow{font-size:9px;color:var(--lime)}.modal .primary{margin-top:18px}.modal .secondary{margin-top:12px}.modal-actions{display:flex;flex-direction:column}.modal-list{padding-left:18px;color:#c6d3cc;font-size:12px;line-height:1.65}.modal-list li{margin-bottom:8px}.result-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:15px 0;border-top:1px solid #42534f;border-bottom:1px solid #42534f}.result-grid strong{display:block;font-size:24px;color:var(--lime);font-weight:600}.result-grid span{font-size:9px;color:#a9bcb2}.mobile-notice{display:none}.low-hp{color:#ffb191!important}@media(min-width:1450px){.app{padding-top:30px}.game-layout{grid-template-columns:minmax(0,1fr) 294px;gap:26px}.sidebar{padding:25px 23px}.sidebar-copy,.empty-state{font-size:13px}.tactical-note{font-size:12px}.dashboard{height:77px}}@media(max-width:1100px){.app{padding:18px 18px 12px}.game-layout{grid-template-columns:minmax(0,1fr) 245px;gap:17px}.sidebar{padding:17px 15px}.dashboard{gap:15px}.wave-meter,.kill-meter{padding-left:13px}.sidebar h2{font-size:21px}.controls{gap:10px}.header-actions .icon-button{padding:9px}.board-tag{top:8px;font-size:9px}}@media(max-width:840px){.game-layout{grid-template-columns:1fr}.sidebar{display:grid;grid-template-columns:1fr 1fr;gap:12px 20px;min-height:0}.phase-head,.sidebar h2,.sidebar-copy{grid-column:1/-1}.sidebar h2{margin:0}.sidebar-copy{margin:0}.wave-card{grid-column:1;grid-row:4/7}.primary{grid-column:2;margin:0;align-self:start}.salvage-card{grid-column:2;border:0;padding:0;margin:0}.tactical-note{grid-column:1/-1;margin:0}.combat-status{margin:0}.mobile-notice{display:block;padding:8px 12px;margin-bottom:18px;border:1px solid #4c6156;border-radius:7px;color:#becbb7;font-size:11px}.topbar{gap:10px}.brand-icon{display:none}h1{font-size:21px}.eyebrow{font-size:8px}.icon-button{font-size:10px}.desktop-label{display:none}footer{flex-direction:column;align-items:flex-start}.modal{padding:20px}.modal h2{font-size:25px}}@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+
+.enemy-pip{display:inline-flex;align-items:center;justify-content:center;min-width:15px;height:15px;color:#201c19;font-size:9px;font-weight:800}
+.enemy-pip.heavy{min-width:18px;background:#d3b6d7;border:3px double #563e57}
+.enemy-pip.heavy:after{left:5px;top:-6px}
+.dashboard{min-height:74px}
+.player-meter .meter-track{margin-top:6px}
+.dashboard .module-status{margin:4px 0 0;color:#bdced2;font-size:10px;line-height:1.2}
+.action-detail{margin:5px 0 0}
+.footer-actions{display:flex;flex-wrap:wrap;align-items:center;gap:12px}
+.route-controls{margin:8px 0 0;padding:9px 11px;border:1px solid var(--line);border-radius:8px}
+.route-options{display:flex;align-items:center;gap:8px 16px;flex-wrap:wrap;font-size:12px}
+.route-options label{display:inline-flex;align-items:center;gap:6px;margin-left:0}
+.route-options select{padding:3px 6px;border:1px solid #607775;border-radius:4px;background:#203237;color:var(--ink);font:inherit}
+.route-controls .fineprint{margin:6px 0 0}
+.route-options :focus-visible,.salvage-card button:focus-visible{outline:2px solid var(--lime);outline-offset:3px}
+.action-preview{position:absolute;top:42px;left:50%;transform:translateX(-50%);width:max-content;max-width:68%;margin:0;padding:6px 10px;border:1px solid #819485;border-radius:6px;background:#203237;color:#eff3e3;font-size:12px;line-height:1.4;text-align:center;pointer-events:none}
+.action-preview:empty{padding:0;border:0}
+.wreck-lesson{margin:8px 0 12px;padding:8px 10px;border-left:2px solid var(--lime);background:#182a2e;color:#e8efda;font-size:12px;line-height:1.45}
+#campaign-dialog{width:calc(100% - 32px);max-height:calc(100dvh - 32px);overflow:hidden}
+#campaign-dialog[open]{display:flex;flex-direction:column}
+#campaign-dialog::backdrop{background:#102024c9;backdrop-filter:blur(5px)}
+#campaign-content{min-height:0;overflow:auto;padding:4px 8px}
+#campaign-content:focus-visible{outline:2px solid var(--lime);outline-offset:-2px}
+@media(max-width:480px){.topbar{flex-wrap:wrap}.header-actions{flex-wrap:wrap}}
+.campaign-wave{padding:12px 0;border-top:1px solid var(--line)}
+.campaign-wave h3{font-size:13px;margin:0;color:var(--ink)}
+.campaign-wave:last-child h3{color:var(--lime)}
+.campaign-wave .lane-row{margin-top:7px}
+@media(min-width:900px) and (max-height:800px){.app{max-width:1180px;padding-top:16px}.topbar{margin-bottom:18px}.dashboard{height:62px}.sidebar{padding-top:17px}.sidebar h2{margin-top:14px}.sidebar-copy{margin-bottom:15px}.tactical-note{margin-top:18px}}
+@media(min-width:900px) and (max-height:800px){
+  .sidebar h2{margin:9px 0 5px}
+  .sidebar-copy{font-size:12px;line-height:1.4;margin-bottom:10px}
+  .wave-card{padding:9px 11px}
+  .section-label{margin-bottom:7px}
+  .lane-row{margin-top:5px}
+  #wave-note{margin-top:8px}
+  #start{padding:10px 13px}
+  .salvage-card{margin-top:13px;padding-top:11px}
+  .salvage-card .secondary{padding:7px 8px;margin-top:7px}
+  .wreck-life{margin-top:6px}
+  .undo-button{margin-top:9px}
+}
+
+/* Appearance of the offline map experiment. */
+:root{--bg:#101716;--panel:#1a2522;--line:#354641;--muted:#a8b5a7;--ink:#f1eee3;--lime:#e1d08c;--blue:#85cee0;--orange:#f5a576}
+body{background:radial-gradient(ellipse at 24% -12%,#313e33 0%,#17201d 42%,#101716 84%)}
+.topbar{border-bottom:1px solid #39473f;padding-bottom:15px;margin-bottom:16px}
+.brand{gap:13px}.brand-icon{border-radius:7px;background:linear-gradient(145deg,#e9d8a0,#a28b52);border:1px solid #efdca1;box-shadow:0 3px 0 #5c5034,0 5px 12px #080c0b78}
+.brand-icon:before,.brand-icon:after,.brand-icon i,.brand-icon i:after{background:#2d3329}
+.eyebrow,.phase-badge,.dashboard span,.section-label{font-family:ui-monospace,"DejaVu Sans Mono",monospace;letter-spacing:.12em}
+.eyebrow{color:#e0ca88}.eyebrow span{color:#929b79}h1{font-size:clamp(23px,3vw,34px);font-weight:780;letter-spacing:-.055em;line-height:1.05}
+.dashboard{padding-left:4px;padding-right:4px;height:66px;min-height:66px}
+.meter-track{background:#35483e}.dashboard small,.muted{color:#b6beb0}
+.board-shell{border:6px solid #546156;outline:1px solid #9c9c80;border-top-color:#798275;border-bottom-color:#333f37;background:#b9bb9d;border-radius:10px;box-shadow:0 5px 0 2px #2a322d,0 14px 27px #080b0aa0}
+canvas:focus-visible{outline:2px solid #0e625f;outline-offset:-4px}
+.sidebar{border-color:#45564b;background:linear-gradient(155deg,#26342d,#192420 78%);border-radius:9px}
+.sidebar h2{font-weight:720}.wave-card{background:#192620;border-color:#435249;border-radius:5px}
+.primary{border-color:#fae3a7;background:#e8ce86;color:#232b21;border-radius:5px;box-shadow:0 3px 0 #9e854e}
+.primary:hover{background:#f6dfa1}.primary:active{box-shadow:0 1px 0 #9e854e}
+.icon-button{color:#dce0d0;background:#24312a;border-color:#435448;border-radius:5px}.icon-button:hover{background:#36443a}
+.phase-badge{background:#454534}.phase-badge.battle{background:#503b2d}
+.legend-dot.player{background:#64c7e0}.legend-dot.hunter{background:#ed8669}.legend-dot.assault{background:#ecb260}.legend-dot.heavy{background:#cfa9d8;border-radius:1px;width:9px;height:8px}.legend-square{background:#7e8370;border:1px solid #cac8aa;transform:rotate(15deg)}
+.route-controls{background:#171f1b;border-radius:5px}.route-options select{background:#263630}
+
+.board-status{display:grid;align-items:center;min-height:30px;padding-top:6px}
+.board-status > *{grid-area:1/1;position:static;transform:none;max-width:none;width:auto;margin:0;padding:4px 8px;text-align:left;border:0;border-radius:4px;line-height:1.35}
+.board-status .toast{justify-self:start;background:#293d32}
+.board-status .toast.show{transform:none}
+.board-status .action-preview:not(:empty){background:#293d32;color:#f4ebc5}
+.board-status:has(.action-preview:not(:empty)) .toast{opacity:0}
+.underboard{margin-top:3px}
+.route-controls{margin-top:7px;padding:7px 10px}
+@media(min-width:900px) and (max-height:940px){
+  .app{max-width:1300px;padding-top:16px}
+  .topbar{margin-bottom:12px;padding-bottom:10px}
+  .dashboard{height:59px;min-height:59px;padding-bottom:12px}
+  .sidebar{min-height:0}
+}
+@media(min-width:900px) and (max-height:800px){
+  .app{max-width:1080px;padding-top:11px}
+  .topbar{margin-bottom:8px;padding-bottom:8px}
+  .dashboard{height:52px;min-height:52px;padding-bottom:9px}
+  .board-status{min-height:24px;padding-top:3px}
+}
+.render-error{padding:24px;min-height:120px;margin:0;color:#fff0d5;font-weight:650}
+.board-unit-labels{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.board-unit-label{position:absolute;left:0;top:0;padding:1px 5px;border:1px solid #e5c09980;border-radius:3px;background:#242721ef;color:#fff1d7;font:600 9px/12px ui-monospace,"DejaVu Sans Mono",monospace;white-space:nowrap;text-align:center}
+.board-unit-label[data-kind="wreck"]{border-color:#b6b9a186;color:#ecebd8}
+.board-unit-label[data-kind="action"]{border-color:#eac67d;color:#ffdfa1}
+</style>
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand"><span class="brand-icon" aria-hidden="true"><i></i></span><h1>Тёплый город <span class="title-edition">3D</span></h1></div>
+      <div class="header-actions"><button id="sound" class="icon-button" aria-pressed="false" title="Включить звук">Звук выкл</button><button id="campaign" class="icon-button" aria-haspopup="dialog">Кампания</button><button id="help" class="icon-button" title="Правила и управление">Как играть <span>?</span></button><button id="pause" class="icon-button" title="Пауза (Esc)">Ⅱ <span class="desktop-label">Пауза</span></button></div>
+    </header>
+    <div class="mobile-notice">Для игры нужны клавиатура и мышь. Открой эту страницу на компьютере.</div>
+    <main class="game-layout">
+      <section class="play-area" aria-label="Игровое поле">
+        <div class="dashboard">
+          <div class="meter base-meter"><div><span>БАЗА</span><strong id="base-value">240 <small>/ 240</small></strong></div><div class="meter-track"><i id="base-fill"></i></div></div>
+          <div class="meter player-meter"><div><span>ТВОЙ ТАНК</span><strong id="player-value">60 <small>/ 60</small></strong></div><div class="meter-track"><i id="player-fill"></i></div><p class="module-status" id="player-module">Модуль: нет</p></div>
+          <div class="wave-meter"><span>ВОЛНА</span><strong><b id="wave-value">01</b><small id="wave-max"></small></strong></div>
+          <div class="kill-meter"><span>УНИЧТОЖЕНО</span><strong id="kill-value">0</strong></div>
+        </div>
+        <div class="board-shell" id="board-shell">
+          <canvas id="board" width="1120" height="720" tabindex="0" aria-label="Поле боя. WASD — движение, мышь — прицел, левая кнопка — огонь. В подготовке нажми на корпус, чтобы выбрать его."></canvas>
+          <div id="board-unit-labels" class="board-unit-labels" aria-hidden="true"></div>
+          <div id="overlay" class="overlay" hidden>
+            <section class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+              <p id="modal-kicker" class="eyebrow"></p><h2 id="modal-title"></h2><div id="modal-body"></div><div id="modal-actions" class="modal-actions"></div>
+            </section>
+          </div>
+        </div>
+        <div class="board-status">
+          <p id="action-preview" class="action-preview" role="status"></p>
+          <div id="toast" class="toast" role="status" aria-live="polite"></div>
+        </div>
+        <div class="underboard"><span><i class="legend-dot player" aria-hidden="true"></i>Ты</span><span><i class="legend-dot hunter" aria-hidden="true"></i>Лёгкий · за тобой</span><span><i class="legend-dot assault" aria-hidden="true"></i>Средний · к базе</span><span><i class="legend-dot heavy" aria-hidden="true"></i>Тяжёлый · к базе</span><span><i class="legend-square" aria-hidden="true"></i>Корпус</span></div>
+        <div class="route-controls" id="route-controls">
+          <div class="route-options">
+            <label class="route-toggle"><input id="routes" type="checkbox" aria-describedby="route-note"> Маршрут при текущих препятствиях</label>
+            <label>Вход <select id="route-lane"><option value="">Все</option></select></label>
+            <label>Тип противника <select id="route-type"></select></label>
+          </div>
+          <p class="fineprint" id="route-note">Пунктир ведёт к базе или к первому корпусу для пролома. Погоня и стрельба меняют движение.</p>
+        </div>
+      </section>
+      <aside class="sidebar" aria-label="Управление волной и корпусами">
+        <div class="phase-head"><span id="phase-badge" class="phase-badge">ПОДГОТОВКА</span><span id="phase-number" class="muted"></span></div>
+        <h2 id="phase-title">Выбери позицию</h2><p id="phase-copy" class="sidebar-copy">Лёгкие отвлекают тебя, средние прорываются к базе. Используй кварталы, чтобы разделить угрозы.</p>
+        <section class="wave-card"><div class="section-label"><span id="wave-card-title">СЛЕДУЮЩАЯ АТАКА</span><span id="enemy-total"></span></div><div id="wave-plan"></div><p id="wave-note" class="fineprint">Сначала займи удобную позицию, затем начни волну.</p></section>
+        <button id="start" class="primary">Начать волну 1 <span>↵</span></button>
+        <div id="combat-status" class="combat-status" hidden><span class="pulse-dot"></span><span id="combat-copy"></span></div>
+        <p id="wreck-discovery" class="wreck-lesson" role="status" hidden></p>
+        <section class="salvage-card" id="salvage-card"><div class="section-label"><span>КОРПУСА НА ПОЛЕ</span><span id="wreck-count">0</span></div><p id="wreck-prep-lesson" class="wreck-lesson" role="status" hidden>Нажми на корпус: его можно оставить, разобрать на ремонт базы или взять модуль. Метка «до N» показывает последнюю волну службы.</p><div id="salvage-content"></div><div id="salvage-actions" hidden>
+          <button id="repair" class="secondary" aria-describedby="repair-reason"></button><p id="repair-reason" class="fineprint action-detail" hidden></p>
+          <button id="install-module" class="secondary" aria-describedby="module-effect module-reason"></button>
+          <p id="module-effect" class="fineprint action-detail"></p><p id="module-reason" class="fineprint action-detail" hidden></p>
+          <button id="choose-reinforcement" class="secondary" aria-describedby="choose-reinforcement-reason">Укрепить другой корпус</button>
+          <p id="choose-reinforcement-reason" class="fineprint action-detail" hidden></p>
+          <button id="leave" class="text-button">Оставить на месте</button>
+        </div><div id="reinforcement-actions" hidden>
+          <p id="reinforcement-rule" class="wreck-life">Донор будет разобран. Каждую цель можно укрепить только один раз.</p>
+          <div aria-live="polite"><p id="reinforcement-result" class="wreck-life"></p><p id="reinforcement-note" class="fineprint action-detail" hidden></p></div>
+          <button id="confirm-reinforcement" class="secondary" aria-describedby="reinforcement-rule reinforcement-result reinforcement-note" hidden>Укрепить · потратить донора</button>
+          <button id="cancel-reinforcement" class="text-button">Отменить выбор</button>
+        </div><button id="undo" class="undo-button" aria-describedby="undo-reason" disabled>↶ Отменить действие <kbd>Ctrl Z</kbd></button><p id="undo-reason" class="fineprint action-detail"></p></section>
+        <div class="tactical-note"><span class="note-icon">↳</span><p id="tip">Маршрут ведёт к базе или до первого корпуса для пролома, отмеченного кругом. Лёгкий может свернуть к тебе.</p></div>
+      </aside>
+    </main>
+    <footer><div class="controls"><span><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> движение</span><span><kbd>Мышь</kbd> прицел</span><span><kbd>ЛКМ</kbd> огонь / выбор корпуса</span><span><kbd>Esc</kbd> пауза</span></div><div class="footer-actions"><button id="export-attempt" class="icon-button">Скачать журнал JSON</button><a id="download" href="" download="tanks-warm-town-3d.html">Скачать для игры офлайн ↓</a></div></footer>
+  </div>
+  <dialog id="campaign-dialog" class="modal" aria-labelledby="campaign-title">
+    <h2 id="campaign-title">Кампания</h2>
+    <div id="campaign-content" tabindex="0" autofocus></div>
+    <form method="dialog" class="modal-actions"><button class="primary">Закрыть</button></form>
+  </dialog>
+  <!-- THREE_RENDERER -->
+  <script>
+/* Scenario data shared by simulation, preview and presentation. Y grows down. */
+(function (root) {
+  'use strict';
+  const niche = [
+    { x:12.5, y:14.6, w:5.9, h:.4, kind:'bunker' },
+    { x:18, y:14.6, w:.4, h:3.4, kind:'bunker' },
+    { x:12.5, y:14.6, w:.4, h:1.7, kind:'bunker' },
+    { x:14.5, y:16.4, w:.4, h:1.6, kind:'bunker' }
+  ];
+  const CLASSIC = {
+    mapId:'classic', AI_MODE:'classic', SPAWN_INTERVAL:2.5,
+    WALLS:[
+      {x:0,y:7.5,w:8.1,h:1.5}, {x:9.9,y:7.5,w:8.2,h:1.5}, {x:19.9,y:7.5,w:8.1,h:1.5},
+      {x:11.8,y:10.6,w:4.4,h:1.6}, ...niche
+    ],
+    SPAWNS:{ A:{x:3,y:1.5,w:3,h:2,direction:'down'}, B:{x:25,y:1.5,w:3,h:2,direction:'down'} },
+    WAVES:[
+      [{start:0,lane:'A',types:['light','light','medium','light']}],
+      [{start:0,lane:'B',types:['light','medium','light','light']},{start:8,lane:'A',types:['medium']}],
+      [{start:0,lane:'A',types:['medium','light','light']},{start:4,lane:'B',types:['light','light','medium']}],
+      [{start:0,lane:'A',types:['medium','light','light','medium']},{start:3,lane:'B',types:['light','medium','light','light']}]
+    ], ROADS:[], AREAS:[]
+  };
+  const layout = root.TownLayout;
+  const BATTLEFIELD = {
+    mapId:'warm-town-3d', AI_MODE:'roles', SPAWN_INTERVAL:2.5,
+    WALLS: layout.walls,
+    SPAWNS: layout.spawns,
+    WAVES:[
+      [{start:0,lane:'A',types:['light','medium']},{start:5,lane:'B',types:['light','light']}],
+      [{start:0,lane:'B',types:['medium','light','light']},{start:4,lane:'C',types:['light','medium']}],
+      [{start:0,lane:'A',types:['medium','light']},{start:2,lane:'B',types:['light','medium']},{start:6,lane:'C',types:['light','light']}],
+      [{start:0,lane:'A',types:['medium','light','heavy']},{start:1,lane:'B',types:['light','medium','light']},{start:4,lane:'C',types:['light','medium']}],
+      [{start:0,lane:'A',types:['light','medium','light']},{start:1,lane:'C',types:['light','medium','light']},{start:6,lane:'B',types:['heavy','light']}],
+      [{start:0,lane:'A',types:['light','medium','light']},{start:0,lane:'B',types:['light','light','medium']},{start:5,lane:'C',types:['light','medium','light','light']}],
+      [{start:0,lane:'B',types:['light','heavy','light','medium']},{start:0,lane:'C',types:['light','light','medium']},{start:4,lane:'A',types:['medium','light','light','heavy']}],
+      [{start:0,lane:'A',types:['heavy','light','medium','light','light']},{start:2,lane:'B',types:['light','medium','light','light']},{start:5,lane:'C',types:['heavy','light','medium','light','light']}]
+    ],
+    ROADS: [], AREAS: []
+  };
+  function freeze(value) {
+    if(value && typeof value==='object' && !Object.isFrozen(value)) {
+      Object.values(value).forEach(freeze); Object.freeze(value);
+    }
+    return value;
+  }
+  const scenarios=freeze({BATTLEFIELD,CLASSIC});
+  root.TankScenarios=scenarios;
+  if(typeof module!=='undefined'&&module.exports) module.exports=scenarios;
+})(typeof globalThis!=='undefined'?globalThis:this);
+
+</script>
+  <script>
+/* Pure, deterministic game simulation. Coordinates are world units; y grows down. */
+(function (root) {
+  'use strict';
+
+  const W = 28;
+  const H = 18;
+  const EPS = 1e-7;
+  const CELL = 0.25;
+  const TANK_RADIUS = 0.5;
+  const STEP = 1 / 60;
+  const PLAYER_WEAPON = Object.freeze({ speed: 40, damage: 20, range: 6, cooldown: 0.30 });
+  const PLAYER_BASE_STATS = Object.freeze({ speed: 4, maxHp: 60 });
+  const PLAYER_MODULES = Object.freeze({
+    engine: Object.freeze({ ...PLAYER_BASE_STATS, speed: 5 }),
+    armor: Object.freeze({ ...PLAYER_BASE_STATS, maxHp: 90 })
+  });
+  const playerStatsFor = module => PLAYER_MODULES[module] ?? PLAYER_BASE_STATS;
+  const ENEMY_PROJECTILE_SPEED = 10;
+  const LIGHT_DODGE_SPEED = 3;
+  const DRIVE_ACCELERATION = 180;
+  const TURN_ACCELERATION = 64800 * Math.PI / 180;
+  const RETURN_HORIZON = 0.15;
+  const RETURN_TURN_RATE = 720 * Math.PI / 180;
+  const RETURN_STEERING_MIN_TIME = 0.35;
+  const approach = (from, to, limit) => from + clamp(to - from, -limit, limit);
+  const DODGE_TURN_RATE = 1080 * Math.PI / 180;
+  const ATTEMPT_LOG_VERSION = 1;
+  const BUILD_ID = 'prototype-06-map-lab-warm-town-3d-2';
+  const scenarios = typeof module !== 'undefined' && module.exports ? require('./scenarios.js') : root.TankScenarios;
+  const ENEMY_TYPES = Object.freeze({
+    light: Object.freeze({ hp: 20, speed: 2.6, damage: 8, range: 6, cooldown: 1.4 }),
+    medium: Object.freeze({
+      hp: 60, speed: 1.7, damage: 12, range: 5, cooldown: 1.2,
+      wreck: Object.freeze({ hp: 60, waves: 1, repairHp: 30, module: 'engine' })
+    }),
+    heavy: Object.freeze({
+      hp: 120, speed: 1.1, damage: 20, range: 6, cooldown: 2,
+      wreck: Object.freeze({ hp: 120, waves: 2, repairHp: 50, module: 'armor' })
+    })
+  });
+  const CLASSIC_ENEMY_TYPES = Object.freeze({
+    light: Object.freeze({ ...ENEMY_TYPES.light, range: 4 }), medium: ENEMY_TYPES.medium
+  });
+  const BASE_RECT = { x: 13.1, y: 12.6, w: 1.8, h: 1.8 };
+  const CONFIG = Object.freeze({ ...scenarios.BATTLEFIELD, W, H, ENEMY_TYPES, ENEMY_WINDUP: 0 });
+  const CLASSIC_CONFIG = Object.freeze({ ...scenarios.CLASSIC, W, H, ENEMY_TYPES: CLASSIC_ENEMY_TYPES, ENEMY_WINDUP: 0.35 });
+
+  const clamp = (n, lo, hi) => Math.max(lo, Math.min(hi, n));
+  const square = n => n * n;
+  const angleDelta = (to, from) => Math.atan2(Math.sin(to - from), Math.cos(to - from));
+  const distance = (a, b) => Math.hypot(a.x - b.x, a.y - b.y);
+  const shotOffset = (tank, bullet) => bullet.dx * (tank.y - bullet.y) - bullet.dy * (tank.x - bullet.x);
+
+  function clearsShot(tank, bullet, direction, startOffset) {
+    const offset = shotOffset(tank, bullet);
+    // A tank outside the shot corridor must still move sideways to dodge.
+    const minimumShift = Math.abs(startOffset) > tank.r + EPS ? tank.r * 0.15 : EPS;
+    return offset * direction > tank.r + EPS && (offset - startOffset) * direction > minimumShift;
+  }
+  const centerRect = r => ({ x: r.x - r.w / 2, y: r.y - r.h / 2, w: r.w, h: r.h });
+
+  function pointRectDistanceSq(x, y, rect) {
+    return square(x - clamp(x, rect.x, rect.x + rect.w)) +
+      square(y - clamp(y, rect.y, rect.y + rect.h));
+  }
+
+  function projectileStep(bullet, dt) {
+    const travel = Math.min(bullet.speed * dt, bullet.remaining);
+    return {
+      x: bullet.x + bullet.dx * Math.max(0, travel),
+      y: bullet.y + bullet.dy * Math.max(0, travel),
+      remaining: bullet.remaining - travel
+    };
+  }
+
+  function isInSpawnZone(config, x, y) {
+    return Object.values(config.SPAWNS).some(spawn => pointRectDistanceSq(x, y, centerRect(spawn)) === 0);
+  }
+
+  function pointSegmentDistanceSq(x, y, ax, ay, bx, by) {
+    const dx = bx - ax;
+    const dy = by - ay;
+    const lengthSq = dx * dx + dy * dy;
+    const t = lengthSq ? clamp(((x - ax) * dx + (y - ay) * dy) / lengthSq, 0, 1) : 0;
+    return square(x - ax - t * dx) + square(y - ay - t * dy);
+  }
+
+  // Return the earliest contact parameter on a finite segment, including t = 0.
+  function segmentRect(ax, ay, bx, by, rect) {
+    let near = 0;
+    let far = 1;
+    const axes = [
+      [ax, bx - ax, rect.x, rect.x + rect.w],
+      [ay, by - ay, rect.y, rect.y + rect.h]
+    ];
+    for (const [start, delta, min, max] of axes) {
+      if (Math.abs(delta) < EPS) {
+        if (start < min - EPS || start > max + EPS) return null;
+      } else {
+        let first = (min - start) / delta;
+        let last = (max - start) / delta;
+        if (first > last) [first, last] = [last, first];
+        near = Math.max(near, first);
+        far = Math.min(far, last);
+        if (near > far + EPS) return null;
+      }
+    }
+    return near >= -EPS && near <= 1 + EPS ? clamp(near, 0, 1) : null;
+  }
+
+  function segmentCircle(ax, ay, bx, by, cx, cy, radius) {
+    const ox = ax - cx;
+    const oy = ay - cy;
+    const c = ox * ox + oy * oy - radius * radius;
+    if (c <= EPS) return 0;
+    const dx = bx - ax;
+    const dy = by - ay;
+    const a = dx * dx + dy * dy;
+    if (a < EPS * EPS) return null;
+    const b = ox * dx + oy * dy;
+    const discriminant = b * b - a * c;
+    if (discriminant < -EPS) return null;
+    const t = (-b - Math.sqrt(Math.max(0, discriminant))) / a;
+    return t >= -EPS && t <= 1 + EPS ? clamp(t, 0, 1) : null;
+  }
+
+  function segmentRectDistanceSq(ax, ay, bx, by, rect) {
+    if (segmentRect(ax, ay, bx, by, rect) !== null) return 0;
+    return Math.min(
+      pointRectDistanceSq(ax, ay, rect),
+      pointRectDistanceSq(bx, by, rect),
+      pointSegmentDistanceSq(rect.x, rect.y, ax, ay, bx, by),
+      pointSegmentDistanceSq(rect.x + rect.w, rect.y, ax, ay, bx, by),
+      pointSegmentDistanceSq(rect.x, rect.y + rect.h, ax, ay, bx, by),
+      pointSegmentDistanceSq(rect.x + rect.w, rect.y + rect.h, ax, ay, bx, by)
+    );
+  }
+
+  function staticPositionFree(config, x, y, radius = TANK_RADIUS) {
+    if (x < radius - EPS || y < radius - EPS || x > config.W - radius + EPS || y > config.H - radius + EPS) return false;
+    return config.WALLS.every(rect => pointRectDistanceSq(x, y, rect) >= radius * radius - EPS) &&
+      pointRectDistanceSq(x, y, BASE_RECT) >= radius * radius - EPS;
+  }
+
+  function staticSegmentFree(config, ax, ay, bx, by, radius = TANK_RADIUS) {
+    if (!staticPositionFree(config, ax, ay, radius) || !staticPositionFree(config, bx, by, radius)) return false;
+    return config.WALLS.every(rect => segmentRectDistanceSq(ax, ay, bx, by, rect) >= radius * radius - EPS) &&
+      segmentRectDistanceSq(ax, ay, bx, by, BASE_RECT) >= radius * radius - EPS;
+  }
+
+  function hullCount(mask) {
+    let count = 0;
+    for (; mask; mask &= mask - 1n) count++;
+    return count;
+  }
+
+  class MinHeap {
+    constructor(compare = (a, b) => a.cost - b.cost) { this.items = []; this.compare = compare; }
+    push(item) {
+      let index = this.items.length;
+      this.items.push(item);
+      while (index) {
+        const parent = (index - 1) >> 1;
+        if (this.compare(this.items[parent], item) <= 0) break;
+        this.items[index] = this.items[parent];
+        index = parent;
+      }
+      this.items[index] = item;
+    }
+    pop() {
+      if (!this.items.length) return null;
+      const first = this.items[0];
+      const tail = this.items.pop();
+      if (this.items.length) {
+        let index = 0;
+        while (true) {
+          let child = index * 2 + 1;
+          if (child >= this.items.length) break;
+          if (child + 1 < this.items.length && this.compare(this.items[child + 1], this.items[child]) < 0) child++;
+          if (this.compare(this.items[child], tail) >= 0) break;
+          this.items[index] = this.items[child];
+          index = child;
+        }
+        this.items[index] = tail;
+      }
+      return first;
+    }
+  }
+
+  // Games using the same immutable configuration share its static graph.
+  // Each game reuses its searches until the geometry of the wrecks changes.
+  const sharedGrids = new WeakMap();
+  function getGrid(config) {
+    if (sharedGrids.has(config)) return sharedGrids.get(config);
+    const columns = Math.round(config.W / CELL);
+    const rows = Math.round(config.H / CELL);
+    const size = columns * rows;
+    const nodes = new Array(size);
+    const goals = new Map();
+    for (let row = 0; row < rows; row++) {
+      for (let column = 0; column < columns; column++) {
+        const id = row * columns + column;
+        const x = (column + 0.5) * CELL;
+        const y = (row + 0.5) * CELL;
+        nodes[id] = { x, y, free: staticPositionFree(config, x, y), edges: [] };
+        if (!nodes[id].free || pointRectDistanceSq(x, y, BASE_RECT) > square(TANK_RADIUS + CELL * 1.2)) continue;
+        const edgeX = clamp(x, BASE_RECT.x, BASE_RECT.x + BASE_RECT.w);
+        const edgeY = clamp(y, BASE_RECT.y, BASE_RECT.y + BASE_RECT.h);
+        const d = Math.hypot(x - edgeX, y - edgeY);
+        if (!d) continue;
+        const goal = {
+          x: edgeX + (x - edgeX) / d * (TANK_RADIUS + 0.002),
+          y: edgeY + (y - edgeY) / d * (TANK_RADIUS + 0.002)
+        };
+        if (staticSegmentFree(config, x, y, goal.x, goal.y)) goals.set(id, goal);
+      }
+    }
+    const offsets = [[0, -1], [-1, 0], [1, 0], [0, 1], [-1, -1], [1, -1], [-1, 1], [1, 1]];
+    for (let id = 0; id < size; id++) {
+      const node = nodes[id];
+      if (!node.free) continue;
+      const column = id % columns;
+      const row = Math.floor(id / columns);
+      for (const [dx, dy] of offsets) {
+        const nx = column + dx;
+        const ny = row + dy;
+        if (nx < 0 || ny < 0 || nx >= columns || ny >= rows) continue;
+        const next = ny * columns + nx;
+        const target = nodes[next];
+        if (target.free && staticSegmentFree(config, node.x, node.y, target.x, target.y)) {
+          node.edges.push({ id: next, length: Math.hypot(dx, dy) * CELL });
+        }
+      }
+    }
+    const grid = { columns, rows, size, nodes, goals };
+    sharedGrids.set(config, grid);
+    return grid;
+  }
+
+  class Game {
+    constructor(config = CONFIG) {
+      this.config = config;
+      this._grid = getGrid(config);
+      this.reset();
+    }
+
+    reset() {
+      this.phase = 'prep';
+      this.paused = false;
+      this.waveIndex = 0;
+      this.player = {
+        id: 'player', x: 16.4, y: 17.2, r: TANK_RADIUS, module: null,
+        angle: -Math.PI / 2, bodyAngle: -Math.PI / 2,
+        alive: true, respawn: 0, cooldown: 0
+      };
+      this._restorePlayerHp();
+      this.base = { x: 14, y: 13.5, w: 1.8, h: 1.8, hp: 240, maxHp: 240 };
+      this.baseLoss = null;
+      this.enemies = [];
+      this.wrecks = [];
+      this.bullets = [];
+      this.stats = { kills: 0, deaths: 0, shots: 0, wrecksCreated: 0, repairs: 0, baseRepaired: 0, time: 0 };
+      this._spawnQueue = [];
+      this._laneReadyAt = Object.fromEntries(Object.keys(this.config.SPAWNS).map(lane => [lane, 0]));
+      this._waveTime = 0;
+      this._serial = 0;
+      this._events = [];
+      this._undo = [];
+      this._navVersion = 0;
+      this._wreckSignature = '';
+      this._openField = null;
+      this._breachSearch = null;
+      this._traffic = null;
+      this.lastMessage = 'Подготовка к первой волне';
+      this._attemptNumber = (this._attemptNumber ?? 0) + 1;
+      this._preparationSeconds = 0;
+      this._attemptEvents = [];
+      this._attemptConfiguration = JSON.parse(JSON.stringify({
+        game: this.config, base: this.base, stepSeconds: STEP,
+        playerBaseStats: PLAYER_BASE_STATS, playerModules: PLAYER_MODULES,
+        playerWeapon: PLAYER_WEAPON, enemyProjectileSpeed: ENEMY_PROJECTILE_SPEED
+      }));
+      this._recordAttempt('attempt_start', this._attemptState());
+    }
+
+    get navigationVersion() {
+      this._syncNavigation();
+      return this._navVersion;
+    }
+
+    get waveNumber() { return this.waveIndex + 1; }
+    get remaining() { return this.enemies.filter(enemy => !enemy.dead && enemy.hp > 0).length + this._spawnQueue.length; }
+    get canUndo() { return this._undoReason() === null; }
+
+    get _playerStats() { return playerStatsFor(this.player.module); }
+
+    _restorePlayerHp() {
+      this.player.hp = this.player.maxHp = this._playerStats.maxHp;
+    }
+
+    drainEvents() {
+      const events = this._events;
+      this._events = [];
+      return events;
+    }
+
+    _emit(type, detail = {}) { this._events.push({ type, ...detail }); }
+
+    _attemptState() {
+      const { x, y, hp, maxHp, alive, module } = this.player;
+      return { baseHp: this.base.hp, player: { x, y, hp, maxHp, alive, module } };
+    }
+
+    _attemptWrecks() {
+      return this.wrecks.map(wreck => ({ ...wreck }));
+    }
+
+    _recordAttempt(type, detail = {}) {
+      const sequence = this._attemptEvents.length + 1;
+      this._attemptEvents.push({
+        sequence, type, wave: this.waveNumber,
+        preparationSeconds: this._preparationSeconds, battleSeconds: this.stats.time,
+        ...detail
+      });
+      return sequence;
+    }
+
+    _recordWreckRemoval(wreck, reason, detail) {
+      this._recordAttempt('wreck_removed', { wreck: { ...wreck }, reason, ...detail });
+    }
+
+    exportAttemptLog() {
+      return JSON.stringify({
+        formatVersion: ATTEMPT_LOG_VERSION, buildId: BUILD_ID, attemptNumber: this._attemptNumber,
+        configuration: this._attemptConfiguration,
+        current: {
+          phase: this.phase, wave: this.waveNumber,
+          preparationSeconds: this._preparationSeconds, battleSeconds: this.stats.time,
+          ...this._attemptState(), wrecks: this._attemptWrecks(), stats: this.stats
+        },
+        events: this._attemptEvents
+      }, null, 2);
+    }
+
+    startWave() {
+      if (this.phase !== 'prep' || this.paused) return false;
+      this._restorePlayerHp();
+      this.phase = 'battle';
+      this._waveTime = 0;
+      this._undo = [];
+      this._traffic = null;
+      this._laneReadyAt = Object.fromEntries(Object.keys(this.config.SPAWNS).map(lane => [lane, 0]));
+      this._spawnQueue = this.config.WAVES[this.waveIndex].flatMap(pkg => pkg.types.map((type, index) => ({
+        at: pkg.start + index * this.config.SPAWN_INTERVAL, lane: pkg.lane, type
+      }))).sort((a, b) => a.at - b.at || a.lane.localeCompare(b.lane));
+      this.lastMessage = `Волна ${this.waveNumber}`;
+      this._emit('wave', { wave: this.waveNumber });
+      this._recordAttempt('wave_start', { ...this._attemptState(), wrecks: this._attemptWrecks() });
+      this._spawnDue();
+      return true;
+    }
+
+    _getPreparationWreck(id) {
+      const wreck = this.wrecks.find(item => item.id === id);
+      const spec = this.config.ENEMY_TYPES[wreck?.type]?.wreck;
+      let reason = null;
+      if (this.phase !== 'prep') reason = 'not-prep';
+      else if (this.paused) reason = 'paused';
+      else if (!wreck) reason = 'missing-wreck';
+      else if (!spec || !(wreck.hp > 0 && wreck.expiresAfterWave >= this.waveNumber)) reason = 'unusable-wreck';
+      return { wreck, spec, reason };
+    }
+
+    getWreckActions(id) {
+      const { spec, reason } = this._getPreparationWreck(id);
+      const module = spec?.module ?? null;
+      const repairHp = reason ? null : Math.min(spec.repairHp, this.base.maxHp - this.base.hp);
+      const moduleReason = reason ?? (!module ? 'no-module' : module === this.player.module ? 'same-module' : null);
+      return {
+        repairHp,
+        repairBaseHp: reason ? null : this.base.hp + repairHp,
+        repairReason: reason,
+        module,
+        moduleReason,
+        replacedModule: moduleReason ? null : this.player.module,
+        moduleStats: moduleReason ? null : playerStatsFor(module)
+      };
+    }
+
+    getWreckRepairHp(id) {
+      return this.getWreckActions(id).repairHp;
+    }
+
+    // Call once, after validation and before changing any of the affected hulls.
+    _recordPreparation(wrecks) {
+      const state = {
+        wrecks: wrecks.map(wreck => ({ wreck: { ...wreck }, index: this.wrecks.indexOf(wreck) })),
+        baseHp: this.base.hp, player: { ...this.player },
+        repairs: this.stats.repairs, baseRepaired: this.stats.baseRepaired
+      };
+      this._undo.push(state);
+      return state;
+    }
+
+    repairFromWreck(id) {
+      const { repairHp: hp, repairBaseHp, repairReason } = this.getWreckActions(id);
+      if (repairReason) return { ok: false, hp: 0 };
+      const index = this.wrecks.findIndex(wreck => wreck.id === id);
+      const wreck = this.wrecks[index];
+      const before = this._recordPreparation([wreck]);
+      this.base.hp = repairBaseHp;
+      this.wrecks.splice(index, 1);
+      this.stats.repairs++;
+      this.stats.baseRepaired += hp;
+      this._invalidateNavigation();
+      this.lastMessage = hp ? `База: +${hp} HP` : 'Обломок разобран: база уже цела';
+      this._emit('repair', { x: wreck.x, y: wreck.y, hp });
+      before.actionSequence = this._recordAttempt('repair', {
+        wreckId: id, hpRestored: hp, ...this._attemptState()
+      });
+      this._recordWreckRemoval(wreck, 'salvaged', { actionSequence: before.actionSequence });
+      return { ok: true, hp };
+    }
+
+    installModuleFromWreck(id) {
+      const { module, moduleReason } = this.getWreckActions(id);
+      if (moduleReason) return { ok: false, reason: moduleReason };
+      const index = this.wrecks.findIndex(wreck => wreck.id === id);
+      const wreck = this.wrecks[index];
+      const before = this._recordPreparation([wreck]);
+      this.wrecks.splice(index, 1);
+      this.player.module = module;
+      this._restorePlayerHp();
+      this._invalidateNavigation();
+      this.lastMessage = 'Модуль установлен';
+      before.actionSequence = this._recordAttempt('module_change', {
+        wreckId: id, previousModule: before.player.module, ...this._attemptState()
+      });
+      this._recordWreckRemoval(wreck, 'salvaged', { actionSequence: before.actionSequence });
+      return { ok: true, module };
+    }
+
+    getWreckReinforcement(donorId, targetId) {
+      const donor = this._getPreparationWreck(donorId);
+      const { wreck: target, reason: targetReason } = this._getPreparationWreck(targetId);
+      const reason = donor.reason ?? (donorId === targetId ? 'same-wreck' :
+        targetReason ?? (target.reinforced ? 'already-reinforced' : null));
+      if (reason) return { reason, hp: null, expiresAfterWave: null };
+      return {
+        reason: null,
+        hp: Math.min(target.maxHp, target.hp + target.maxHp / 2),
+        expiresAfterWave: target.expiresAfterWave + 1
+      };
+    }
+
+    reinforceWreck(donorId, targetId) {
+      const { reason, hp, expiresAfterWave } = this.getWreckReinforcement(donorId, targetId);
+      if (reason) return { ok: false, reason };
+      const donorIndex = this.wrecks.findIndex(wreck => wreck.id === donorId);
+      const target = this.wrecks.find(wreck => wreck.id === targetId);
+      const donor = this.wrecks[donorIndex];
+      const before = this._recordPreparation([donor, target]);
+      this.wrecks.splice(donorIndex, 1);
+      Object.assign(target, { hp, expiresAfterWave, reinforced: true });
+      this._invalidateNavigation();
+      this.lastMessage = 'Корпус укреплён';
+      before.actionSequence = this._recordAttempt('reinforce', { donorId, target: { ...target } });
+      this._recordWreckRemoval(donor, 'salvaged', { actionSequence: before.actionSequence });
+      return { ok: true };
+    }
+
+    _undoReason() {
+      if (this.phase !== 'prep') return 'not-prep';
+      if (this.paused) return 'paused';
+      return this._undo.length === 0 ? 'no-undo' : null;
+    }
+
+    getUndoPreview() {
+      const reason = this._undoReason();
+      if (reason) return { reason };
+      const state = this._undo.at(-1);
+      const { x, y, r, module } = state.player;
+      const { maxHp } = playerStatsFor(module);
+      return {
+        reason: null,
+        wrecks: state.wrecks.map(({ wreck }) => ({ ...wreck })),
+        baseHp: state.baseHp,
+        player: { x, y, r, module, hp: maxHp, maxHp }
+      };
+    }
+
+    undo() {
+      if (!this.canUndo) return false;
+      const state = this._undo.pop();
+      const restoredIds = new Set(state.wrecks.map(({ wreck }) => wreck.id));
+      this.wrecks = this.wrecks.filter(wreck => !restoredIds.has(wreck.id));
+      for (const { wreck, index } of state.wrecks.sort((a, b) => a.index - b.index)) {
+        this.wrecks.splice(index, 0, wreck);
+      }
+      this.base.hp = state.baseHp;
+      Object.assign(this.player, state.player);
+      this._restorePlayerHp();
+      this.stats.repairs = state.repairs;
+      this.stats.baseRepaired = state.baseRepaired;
+      this._invalidateNavigation();
+      this.lastMessage = 'Операция подготовки отменена';
+      this._recordAttempt('undo', {
+        actionSequence: state.actionSequence, ...this._attemptState(),
+        wrecks: state.wrecks.map(({ wreck }) => ({ ...wreck }))
+      });
+      return true;
+    }
+
+    update(dt, input = {}) {
+      if (this.paused || this.phase === 'won' || this.phase === 'lost' || !Number.isFinite(dt) || dt <= 0) return;
+      let remaining = dt;
+      while (remaining > EPS && this.phase !== 'won' && this.phase !== 'lost') {
+        const step = Math.min(STEP, remaining);
+        this._step(step, input);
+        remaining -= step;
+      }
+    }
+
+    _step(dt, input) {
+      this._syncNavigation();
+      if (this.base.hp <= 0) { this._lose(); return; }
+      const combat = this.phase === 'battle' || this.phase === 'settling';
+      if (combat) {
+        this.stats.time += dt;
+        this._waveTime += dt;
+        this._updateRespawn(dt);
+      } else if (this.phase === 'prep') {
+        this._preparationSeconds += dt;
+      }
+      this._updatePlayer(dt, input);
+      if (this.phase === 'battle') this._spawnDue();
+      this._updateTraffic(dt);
+      const order = this._enemyUpdateOrder();
+      for (let i = 0; i < order.length; i++) {
+        const enemy = order[i];
+        if (!enemy.dead && enemy.hp > 0) this._updateEnemy(enemy, dt, order, i);
+      }
+      this._updateBullets(dt);
+      this.enemies = this.enemies.filter(enemy => !enemy.dead && enemy.hp > 0);
+      if (this.base.hp <= 0) { this._lose(); return; }
+      if (this.phase === 'battle' && this.remaining === 0) {
+        this.phase = 'settling';
+        this.lastMessage = 'Последние снаряды ещё в полёте';
+      }
+      if (this.phase === 'settling' && this.bullets.length === 0) this._completeWave();
+    }
+
+    _enemyUpdateOrder() {
+      const order = this.enemies.slice();
+      if (this._traffic) {
+        const traffic = this._traffic;
+        const priority = enemy => !traffic.members.has(enemy.id) ? 2 : enemy.id === traffic.winnerId ? 1 : 0;
+        // Retreat the tail first so a full queue can make room for its front.
+        order.sort((a, b) => priority(a) - priority(b) ||
+          (priority(a) === 0 ? distance(b, traffic.origin) - distance(a, traffic.origin) : 0));
+      }
+      return order;
+    }
+
+    _updatePlayer(dt, input) {
+      const player = this.player;
+      player.cooldown = Math.max(0, (player.cooldown || 0) - dt);
+      if (!player.alive) return;
+      let x = Number.isFinite(input.x) ? input.x : 0;
+      let y = Number.isFinite(input.y) ? input.y : 0;
+      const length = Math.hypot(x, y);
+      if (length > 1) { x /= length; y /= length; }
+      if (length > EPS) {
+        player.bodyAngle = Math.atan2(y, x);
+        const { speed } = this._playerStats;
+        this._moveCircle(player, x * speed * dt, y * speed * dt, true);
+      }
+      let canAim = true;
+      if (Number.isFinite(input.aimX) && Number.isFinite(input.aimY)) {
+        const dx = input.aimX - player.x;
+        const dy = input.aimY - player.y;
+        canAim = dx * dx + dy * dy > EPS;
+        if (canAim) player.angle = Math.atan2(dy, dx);
+      }
+      if (this.phase === 'battle' && input.fire && canAim && player.cooldown <= EPS) {
+        this._shoot(player, {
+          x: player.x + Math.cos(player.angle), y: player.y + Math.sin(player.angle)
+        }, 'player', PLAYER_WEAPON.speed, PLAYER_WEAPON.damage, PLAYER_WEAPON.range);
+        player.cooldown = PLAYER_WEAPON.cooldown;
+        this.stats.shots++;
+      }
+    }
+
+    _updateRespawn(dt) {
+      if (this.player.alive) return;
+      this.player.respawn = Math.max(0, this.player.respawn - dt);
+      if (this.player.respawn > EPS) return;
+      const spot = this._respawnPosition();
+      if (!spot) return; // Wait for a free return point, never displace a tank.
+      Object.assign(this.player, spot, { alive: true, respawn: 0, cooldown: 0 });
+      this._restorePlayerHp();
+      this.lastMessage = 'Танк восстановлен';
+      this._recordAttempt('player_return', { reason: 'respawn_timer', ...this._attemptState() });
+    }
+
+    _respawnPosition() {
+      const preferred = { x: 16.4, y: 17.2 };
+      if (this._positionFree(preferred.x, preferred.y, this.player, true)) return preferred;
+      for (let y = 17.4; y >= 15.6; y -= 0.3) {
+        for (let x = 15.5; x <= 17.5; x += 0.3) {
+          if (this._positionFree(x, y, this.player, true)) return { x, y };
+        }
+      }
+      return null;
+    }
+
+    _spawnDue() {
+      for (const [lane, spawn] of Object.entries(this.config.SPAWNS)) {
+        const index = this._spawnQueue.findIndex(item => item.lane === lane);
+        if (index < 0) continue;
+        const item = this._spawnQueue[index];
+        if (item.at > this._waveTime + EPS || this._laneReadyAt[lane] > this._waveTime + EPS) continue;
+        const spec = this.config.ENEMY_TYPES[item.type];
+        const enemy = {
+          id: `e${++this._serial}`, type: item.type, lane,
+          x: spawn.x, y: spawn.y, r: TANK_RADIUS, hp: spec.hp, maxHp: spec.hp,
+          angle: Math.PI / 2, bodyAngle: Math.PI / 2, aimPoint: null,
+          windup: 0, cooldown: 0, route: [], routeIndex: 0,
+          routeVersion: -1, targetWreckId: null, stuck: 0, intent: 'advance'
+        };
+        if (!this._positionFree(enemy.x, enemy.y, enemy, false)) continue;
+        this._spawnQueue.splice(index, 1);
+        this._laneReadyAt[lane] = this._waveTime + this.config.SPAWN_INTERVAL;
+        this.enemies.push(enemy);
+      }
+    }
+
+    _normalizeEnemy(enemy) {
+      const spec = this.config.ENEMY_TYPES[enemy.type] || this.config.ENEMY_TYPES.light;
+      if (!Number.isFinite(enemy.r)) enemy.r = TANK_RADIUS;
+      if (!Number.isFinite(enemy.maxHp)) enemy.maxHp = spec.hp;
+      if (!Number.isFinite(enemy.cooldown)) enemy.cooldown = 0;
+      if (!Number.isFinite(enemy.windup)) enemy.windup = 0;
+      if (!Number.isFinite(enemy.angle)) enemy.angle = Math.PI / 2;
+      if (!Number.isFinite(enemy.bodyAngle)) enemy.bodyAngle = Math.PI / 2;
+      if (!Number.isFinite(enemy.stuck)) enemy.stuck = 0;
+      if (!Number.isFinite(enemy.reacquireDelay)) enemy.reacquireDelay = 0;
+      if (!enemy.route) { enemy.route = []; enemy.routeIndex = 0; enemy.routeVersion = -1; }
+      if (enemy.aimPoint === undefined) enemy.aimPoint = null;
+      if (enemy.aimKind === undefined) enemy.aimKind = null;
+      if (enemy.pressure === undefined) enemy.pressure = null;
+      return spec;
+    }
+
+    _updateEnemy(enemy, dt, order = [enemy], index = 0, plannedDodge = null) {
+      const spec = this._normalizeEnemy(enemy);
+      const dodge = order && this.config.AI_MODE === 'roles' &&
+        (enemy.type === 'light' || enemy.type === 'medium') ? this._chooseDodge(enemy, spec, dt, order, index) : plannedDodge;
+      if (enemy.dodge && !dodge) {
+        if (!enemy.pressure) enemy.routeVersion = -1;
+        enemy.dodgeReturn = {};
+      }
+      if (dodge) {
+        enemy.dodgeReturn = null;
+        enemy.smoothDrive = RETURN_STEERING_MIN_TIME;
+      }
+      enemy.dodge = dodge;
+      enemy.cooldown = Math.max(0, enemy.cooldown - dt);
+      if (this.config.AI_MODE === 'roles' && enemy.type === 'light') this._updatePressure(enemy, dt);
+      if (!enemy.pressure && enemy.routeVersion !== this._navVersion) this._assignRoute(enemy);
+      let stationary = false;
+      let stationaryTarget = null;
+      let facingPoint = null;
+      if (enemy.windup > 0) {
+        stationary = enemy.aimKind !== 'player';
+        if (stationary) stationaryTarget = enemy.aimKind;
+        enemy.windup = Math.max(0, enemy.windup - dt);
+        if (enemy.windup <= EPS) {
+          if (this.phase === 'battle' && enemy.aimPoint) this._shoot(enemy, enemy.aimPoint, 'enemy', ENEMY_PROJECTILE_SPEED, spec.damage, spec.range);
+          enemy.windup = 0;
+          enemy.aimPoint = null;
+          enemy.aimKind = null;
+        }
+      } else if (this.phase === 'battle') {
+        const target = this._chooseTarget(enemy, spec.range);
+        stationary = target && target.kind !== 'player';
+        if (stationary) stationaryTarget = target.kind;
+        if (target) {
+          const point = target.point || target.object;
+          if (!(this.config.ENEMY_WINDUP > EPS)) facingPoint = point;
+          if (enemy.cooldown <= EPS && (!stationary || !dodge)) {
+            enemy.cooldown = spec.cooldown;
+            if (this.config.ENEMY_WINDUP > EPS) {
+              // Locked preparation is retained only by historical scenarios.
+              enemy.aimPoint = { x: point.x, y: point.y };
+              enemy.aimKind = target.kind;
+              enemy.windup = this.config.ENEMY_WINDUP;
+              enemy.angle = Math.atan2(point.y - enemy.y, point.x - enemy.x);
+            } else this._shoot(enemy, point, 'enemy', ENEMY_PROJECTILE_SPEED, spec.damage, spec.range);
+          }
+        }
+      }
+      enemy.stationaryTarget = stationaryTarget;
+      const beforeMove = {x: enemy.x, y: enemy.y, angle: enemy.bodyAngle};
+      enemy.arcStep = false;
+      let blocked = false;
+      if (dodge) {
+        blocked = !this._driveArc(enemy, dodge.heading, dodge.gear * dodge.speed * dt, dt);
+      } else {
+        if (!stationary) {
+          if (enemy.pressure) this._followPressure(enemy, spec.speed, dt);
+          else this._followRoute(enemy, spec.speed, dt);
+        }
+        if (enemy.smoothDrive && !enemy.arcStep) {
+          this._followSteeredMotion(enemy, enemy.x, enemy.y, dt);
+        }
+      }
+      enemy.intent = enemy.pressure ? 'press' : enemy.reacquireDelay > EPS ? 'return' :
+        stationaryTarget === 'wreck' || (!stationaryTarget && enemy.targetWreckId) ? 'breach' : 'advance';
+      if (facingPoint) enemy.angle = Math.atan2(facingPoint.y - enemy.y, facingPoint.x - enemy.x);
+      else if (!enemy.aimPoint && !stationary) enemy.angle = enemy.bodyAngle;
+      const dx = enemy.x - beforeMove.x;
+      const dy = enemy.y - beforeMove.y;
+      if (!enemy.arcStep) {
+        enemy.driveSpeed = (dx * Math.cos(enemy.bodyAngle) + dy * Math.sin(enemy.bodyAngle)) / dt;
+        enemy.driveTurn = angleDelta(enemy.bodyAngle, beforeMove.angle) / dt;
+      }
+      return blocked;
+    }
+
+    _arcDestination(enemy, heading, travel, dt, turnRate, travelLimit) {
+      const maxTurn = turnRate * dt;
+      const gap = angleDelta(heading, enemy.bodyAngle);
+      let turn = clamp(gap, -maxTurn, maxTurn);
+      const previousTurn = clamp(enemy.driveTurn ?? 0, -DODGE_TURN_RATE, DODGE_TURN_RATE);
+      turn = clamp(approach(previousTurn, turn / dt, TURN_ACCELERATION * dt) * dt, -maxTurn, maxTurn);
+      if (turn * gap > 0 && Math.abs(turn) > Math.abs(gap)) turn = gap;
+      const oldSpeed = enemy.driveSpeed ?? 0;
+      const requested = travel / dt;
+      const oldGear = Math.sign(oldSpeed) || enemy.driveGear || 0;
+      const changingGear = oldGear * requested < 0;
+      const dwell = enemy.shiftDwell ?? 0;
+      const targetSpeed = changingGear && (Math.abs(oldSpeed) > EPS || dwell > EPS) ? 0 : requested;
+      enemy.shiftDwell = Math.max(0, dwell - dt);
+      const nextSpeed = approach(oldSpeed, targetSpeed, DRIVE_ACCELERATION * dt);
+      const rampTime = Math.abs(nextSpeed - oldSpeed) / DRIVE_ACCELERATION;
+      travel = (oldSpeed + nextSpeed) / 2 * rampTime + nextSpeed * (dt - rampTime);
+      enemy.driveSpeed = nextSpeed;
+      enemy.driveGear = Math.sign(nextSpeed) || oldGear;
+      if (Math.abs(oldSpeed) > EPS && Math.abs(nextSpeed) <= EPS) enemy.shiftDwell = STEP;
+      if (Math.abs(travel) > travelLimit) {
+        travel = Math.sign(travel) * travelLimit;
+        if (Math.abs(enemy.driveSpeed) > EPS) enemy.shiftDwell = STEP;
+        enemy.driveSpeed = 0;
+      }
+      const halfTurn = turn / 2;
+      const midHeading = enemy.bodyAngle + halfTurn;
+      const chord = Math.abs(halfTurn) > EPS ? travel * Math.sin(halfTurn) / halfTurn : travel;
+      const beforeAngle = enemy.bodyAngle;
+      enemy.bodyAngle += turn;
+      enemy.driveTurn = angleDelta(enemy.bodyAngle, beforeAngle) / dt;
+      if (Math.abs(travel) <= EPS) return null;
+      return { x: enemy.x + chord * Math.cos(midHeading), y: enemy.y + chord * Math.sin(midHeading) };
+    }
+
+    _driveArc(enemy, heading, travel, dt, turnRate = DODGE_TURN_RATE, travelLimit = Infinity) {
+      enemy.arcStep = true;
+      const destination = this._arcDestination(enemy, heading, travel, dt, turnRate, travelLimit);
+      if (!destination) return true;
+
+      const { x, y } = destination;
+      const stop = () => {
+        if (Math.abs(enemy.driveSpeed) > EPS) enemy.shiftDwell = STEP;
+        enemy.driveSpeed = 0;
+        return false;
+      };
+      if (!staticSegmentFree(this.config, enemy.x, enemy.y, x, y, enemy.r)) return stop();
+      // The same circular footprints and contact tolerance as ordinary motion.
+      const clear = actor => pointSegmentDistanceSq(actor.x, actor.y, enemy.x, enemy.y, x, y) >=
+        square(enemy.r + actor.r) - EPS;
+      if (this.player.alive && !clear(this.player)) return stop();
+      if (this.wrecks.some(actor => !clear(actor))) return stop();
+      if (this.enemies.some(actor => actor !== enemy && !actor.dead && actor.hp > 0 && !clear(actor))) return stop();
+      enemy.x = x;
+      enemy.y = y;
+      return true;
+    }
+
+    _followSteeredMotion(enemy, x, y, dt, travelLimit = 0, unconstrainedTravel = 0, upcomingTurn = false) {
+      // Use the ordinary collision/shoulder solver to pick a direction, then
+      // follow it with the same hull and drivetrain used for the dodge.
+      const dx = enemy.x - x;
+      const dy = enemy.y - y;
+      const travel = Math.hypot(dx, dy);
+      enemy.x = x;
+      enemy.y = y;
+      const heading = travel > EPS ? Math.atan2(dy, dx) : enemy.bodyAngle;
+      const gap = Math.abs(angleDelta(heading, enemy.bodyAngle));
+      const requested = gap <= Math.PI / 3 ? travel : 0;
+      const clear = this._driveArc(enemy, heading, requested, dt, RETURN_TURN_RATE, travelLimit);
+      const aligned = Math.abs(angleDelta(heading, enemy.bodyAngle)) < Math.PI / 30;
+      const settled = Math.abs(enemy.driveSpeed - requested / dt) < 0.15 &&
+        (enemy.shiftDwell ?? 0) <= EPS;
+      const stable = clear && aligned && settled;
+      const returning = enemy.dodgeReturn;
+      if (returning) {
+        returning.blocked = !clear;
+        returning.clearSteps = stable ? (returning.clearSteps ?? 0) + 1 : 0;
+        if (returning.clearSteps >= 3) enemy.dodgeReturn = null;
+      }
+      // Keep steering through contact with a blocker. Let the ordinary
+      // controller take over after stable, unobstructed movement resumes.
+      enemy.smoothDrive = Math.max(EPS, enemy.smoothDrive - dt);
+      if (enemy.smoothDrive <= EPS && !enemy.dodgeReturn && stable && !upcomingTurn &&
+        travel >= unconstrainedTravel - EPS) enemy.smoothDrive = 0;
+    }
+
+    _chooseDodge(enemy, spec, dt, order, index) {
+      const speed = enemy.type === 'light' ? LIGHT_DODGE_SPEED : spec.speed;
+      for (const bullet of this.bullets) {
+        if (bullet.team !== 'player') continue;
+        // A light tank can start a forward arc on the launch tick. A gear
+        // change and medium dodges still wait for the first flight segment.
+        const justFired = bullet.remaining >= PLAYER_WEAPON.range - EPS;
+        if (justFired && enemy.type !== 'light') continue;
+        if (enemy.dodge?.bulletId === bullet.id) return enemy.dodge;
+        const timeLeft = bullet.remaining / bullet.speed;
+        const end = projectileStep(bullet, timeLeft);
+        const reach = enemy.r + speed * timeLeft;
+        if (pointSegmentDistanceSq(enemy.x, enemy.y, bullet.x, bullet.y, end.x, end.y) > square(reach) + EPS) continue;
+
+        if (this._forecastShot(enemy, bullet, dt, order, index) !== 'target') continue;
+
+        const startOffset = shotOffset(enemy, bullet);
+        const side = Math.sign(startOffset) || 1;
+        const options = [];
+        const initial = enemy.driveSpeed ?? 0;
+        for (const direction of [side, -side]) {
+          const perpendicular = Math.atan2(bullet.dx * direction, -bullet.dy * direction);
+          for (const gear of [1, -1]) {
+            if (justFired && (gear < 0 || initial < -EPS || (enemy.shiftDwell ?? 0) > EPS)) continue;
+            for (const offset of [0, Math.PI / 6, -Math.PI / 6]) {
+              const heading = perpendicular + offset + (gear < 0 ? Math.PI : 0);
+              const turn = Math.abs(angleDelta(heading, enemy.bodyAngle));
+              const reversePenalty = initial * gear < -EPS ? 1.4 : gear < 0 ? 0.3 : 0;
+              const score = turn + reversePenalty + Math.abs(offset) * 0.1;
+              options.push({ bulletId: bullet.id, heading, direction, gear, speed, score });
+            }
+          }
+        }
+        const brakeDirection = Math.sign(startOffset);
+        if (!justFired && Math.abs(initial) > EPS && brakeDirection) {
+          options.push({ bulletId: bullet.id, heading: enemy.bodyAngle,
+            direction: brakeDirection, gear: 1, speed: 0, score: 0.1 });
+        }
+        options.sort((a, b) => a.score - b.score);
+        for (const dodge of options) {
+          if (this._canReachShotClearance(enemy, bullet, dt, dodge, startOffset) &&
+            this._forecastShot(enemy, bullet, dt, order, index, dodge) === 'clear') return dodge;
+        }
+      }
+      return null;
+    }
+
+    _canReachShotClearance(enemy, bullet, dt, dodge, startOffset) {
+      // Before clearance a blocked step already disqualifies the maneuver.
+      // Only paths that can clear in open space need a full traffic forecast.
+      const tank = { ...enemy };
+      let projected = bullet;
+      let step = dt;
+      const speed = dodge.gear * dodge.speed;
+      while (projected.remaining > EPS) {
+        const destination = this._arcDestination(tank, dodge.heading, speed * step, step, DODGE_TURN_RATE, Infinity);
+        if (destination) Object.assign(tank, destination);
+        if (clearsShot(tank, bullet, dodge.direction, startOffset)) return true;
+
+        const end = projectileStep(projected, step);
+        if (segmentCircle(projected.x, projected.y, end.x, end.y, tank.x, tank.y, tank.r) !== null) return false;
+        if (end.x < 0 || end.x > this.config.W || end.y < 0 || end.y > this.config.H) return false;
+        projected = { ...projected, ...end };
+        step = Math.max(dt, STEP / 2);
+      }
+      return false;
+    }
+
+    _forecastShot(enemy, bullet, dt, order, index, dodge = null) {
+      // Advance enemies from this point in their update order. The horizon is
+      // one flight. Other tanks continue their current maneuver, if any.
+      // The player and wrecks stay at their current positions.
+      const world = Object.assign(Object.create(Game.prototype), this);
+      const copies = new Map(this.enemies.map(actor => [actor, {
+        ...actor, pressure: actor.pressure && { ...actor.pressure },
+        dodgeReturn: actor.dodgeReturn && { ...actor.dodgeReturn }
+      }]));
+      world.enemies = [...copies.values()];
+      world.bullets = [];
+      world._events = [];
+      world._traffic = this._traffic && {
+        ...this._traffic, members: new Map(this._traffic.members), released: new Set(this._traffic.released)
+      };
+      world._breachSearch = null;
+      const tank = copies.get(enemy);
+      let next = order.slice(index).map(actor => copies.get(actor));
+      let projected = bullet;
+      let step = dt;
+      const startOffset = shotOffset(tank, bullet);
+      let cleared = false;
+      const escaped = () => dodge && clearsShot(tank, bullet, dodge.direction, startOffset);
+
+      const finish = () => {
+        if (!dodge) return 'clear';
+        if (!escaped()) return 'blocked';
+        for (let elapsed = 0; elapsed < RETURN_HORIZON - EPS; elapsed += step) {
+          world._updateTraffic(step);
+          for (const actor of world._enemyUpdateOrder()) {
+            if (!actor.dead && actor.hp > 0) world._updateEnemy(actor, step, null);
+          }
+          if (tank.dodgeReturn?.blocked) return 'blocked';
+        }
+        return 'clear';
+      };
+
+      while (projected.remaining > EPS) {
+        for (const actor of next) {
+          if (actor.dead || actor.hp <= 0) continue;
+          const currentDodge = actor === tank ? dodge : actor.dodge?.bulletId === bullet.id ? actor.dodge : null;
+          const blocked = world._updateEnemy(actor, step, null, 0, currentDodge);
+          if (actor === tank && dodge) {
+            cleared ||= escaped();
+            if (blocked && !cleared) return 'blocked';
+          }
+        }
+        const end = projectileStep(projected, step);
+        const hit = world._firstCollision(projected.x, projected.y, end.x, end.y, projected.ownerId);
+        if (hit) {
+          if (hit.object === tank) return 'target';
+          // After a genuine lateral escape, a farther object may take the shot.
+          return escaped() ? finish() : 'intercepted';
+        }
+        if (end.x < 0 || end.x > this.config.W || end.y < 0 || end.y > this.config.H) break;
+        projected = { ...projected, ...end };
+        step = Math.max(dt, STEP / 2);
+        if (projected.remaining > EPS) {
+          world._updateTraffic(step);
+          next = world._enemyUpdateOrder();
+        }
+      }
+      return finish();
+    }
+
+    _canSeePlayer(enemy) {
+      return this.player.alive && distance(enemy, this.player) <= 7 + EPS &&
+        this._clearShot(enemy, this.player, 'player');
+    }
+
+    _updatePressure(enemy, dt) {
+      enemy.reacquireDelay = Math.max(0, enemy.reacquireDelay - dt);
+      const pressure = enemy.pressure;
+      if (!pressure) {
+        if (enemy.reacquireDelay > EPS || !this._canSeePlayer(enemy)) return;
+        enemy.pressure = {
+          origin: { x: enemy.x, y: enemy.y },
+          lastSeen: { x: this.player.x, y: this.player.y },
+          elapsed: dt, unseen: 0, blocked: 0
+        };
+        return;
+      }
+      pressure.elapsed += dt;
+      if (!this.player.alive || pressure.elapsed >= 3 - EPS || distance(enemy, pressure.origin) >= 4 - EPS) {
+        this._endPressure(enemy);
+        return;
+      }
+      if (this._canSeePlayer(enemy)) {
+        pressure.lastSeen = { x: this.player.x, y: this.player.y };
+        pressure.unseen = 0;
+      } else pressure.unseen += dt;
+      if (pressure.unseen >= 0.8 - EPS) this._endPressure(enemy);
+    }
+
+    _endPressure(enemy) {
+      enemy.pressure = null;
+      enemy.reacquireDelay = 2;
+      // The return route starts at the actual position reached by the pursuit.
+      enemy.routeVersion = -1;
+      enemy.stuck = 0;
+    }
+
+    _followPressure(enemy, speed, dt) {
+      const pressure = enemy.pressure;
+      const dx = pressure.lastSeen.x - enemy.x;
+      const dy = pressure.lastSeen.y - enemy.y;
+      const length = Math.hypot(dx, dy);
+      // A fixed standoff avoids repeated contact corrections around the player.
+      if (length <= 2 + EPS) { pressure.blocked = 0; return; }
+      const leashRemaining = Math.max(0, 4 - distance(enemy, pressure.origin));
+      const travel = Math.min(speed * dt, length - 2, leashRemaining);
+      const beforeX = enemy.x;
+      const beforeY = enemy.y;
+      this._moveCircle(enemy, dx / length * travel, dy / length * travel, false);
+      const steered = Boolean(enemy.smoothDrive);
+      if (steered) this._followSteeredMotion(enemy, beforeX, beforeY, dt,
+        Math.min(length - 2, leashRemaining), travel);
+      const moved = Math.hypot(enemy.x - beforeX, enemy.y - beforeY);
+      if (!steered && moved > EPS) enemy.bodyAngle = Math.atan2(enemy.y - beforeY, enemy.x - beforeX);
+      pressure.blocked = moved < travel * 0.25 ? pressure.blocked + dt : 0;
+      if (pressure.blocked >= 0.4 - EPS || distance(enemy, pressure.origin) >= 4 - EPS) this._endPressure(enemy);
+    }
+
+    _chooseTarget(enemy, range) {
+      if (this.config.AI_MODE === 'roles' && enemy.type === 'light') {
+        if (this._canSeePlayer(enemy) && distance(enemy, this.player) <= range + this.player.r + EPS) {
+          return { kind: 'player', object: this.player };
+        }
+        // Keep closing on an observed or remembered player until this pressure
+        // cycle ends. Objective fire must not silently stop pursuit movement.
+        if (enemy.pressure) return null;
+      }
+      const basePoint = this._visibleBasePoint(enemy, range);
+      if (basePoint) return { kind: 'base', object: this.base, point: basePoint };
+      const wreck = this.wrecks.find(item => item.id === enemy.targetWreckId);
+      if (wreck && distance(enemy, wreck) <= range + wreck.r + EPS && this._clearShot(enemy, wreck, 'wreck')) {
+        return { kind: 'wreck', object: wreck };
+      }
+      if (this.player.alive && distance(enemy, this.player) <= range + this.player.r + EPS &&
+          this._clearShot(enemy, this.player, 'player')) return { kind: 'player', object: this.player };
+      return null;
+    }
+
+    _clearShot(shooter, target, kind, point = target) {
+      const collision = this._firstCollision(shooter.x, shooter.y, point.x, point.y, shooter.id);
+      return collision && collision.kind === kind && collision.object === target;
+    }
+
+    _visibleBasePoint(enemy, range) {
+      const rect = centerRect(this.base);
+      const closest = {
+        x: clamp(enemy.x, rect.x, rect.x + rect.w),
+        y: clamp(enemy.y, rect.y, rect.y + rect.h)
+      };
+      if (distance(enemy, closest) > range + EPS) return null;
+      if (this._clearShot(enemy, this.base, 'base', closest)) return closest;
+      const candidates = [];
+      const add = (x, y) => {
+        if (x < rect.x - EPS || y < rect.y - EPS || x > rect.x + rect.w + EPS || y > rect.y + rect.h + EPS) return;
+        const point = { x: clamp(x, rect.x, rect.x + rect.w), y: clamp(y, rect.y, rect.y + rect.h) };
+        point.distance = distance(enemy, point);
+        if (point.distance <= range + EPS) candidates.push(point);
+      };
+      for (const x of [rect.x, rect.x + rect.w]) {
+        add(x, rect.y); add(x, rect.y + rect.h);
+        add(x, clamp(enemy.y, rect.y, rect.y + rect.h));
+      }
+      for (const y of [rect.y, rect.y + rect.h]) add(clamp(enemy.x, rect.x, rect.x + rect.w), y);
+      const addRay = angle => {
+        const dx = Math.cos(angle);
+        const dy = Math.sin(angle);
+        if (Math.abs(dx) > EPS) {
+          for (const x of [rect.x, rect.x + rect.w]) {
+            const t = (x - enemy.x) / dx;
+            if (t > 0) add(x, enemy.y + t * dy);
+          }
+        }
+        if (Math.abs(dy) > EPS) {
+          for (const y of [rect.y, rect.y + rect.h]) {
+            const t = (y - enemy.y) / dy;
+            if (t > 0) add(enemy.x + t * dx, y);
+          }
+        }
+      };
+      const silhouette = angle => {
+        // The tiny angular offset selects the visible side of an occluder edge.
+        for (const offset of [-0.00001, 0, 0.00001]) addRay(angle + offset);
+      };
+      for (const wall of this.config.WALLS) {
+        for (const x of [wall.x, wall.x + wall.w]) {
+          for (const y of [wall.y, wall.y + wall.h]) silhouette(Math.atan2(y - enemy.y, x - enemy.x));
+        }
+      }
+      const circles = this.wrecks.concat(this.enemies.filter(actor => actor !== enemy && !actor.dead && actor.hp > 0));
+      if (this.player.alive) circles.push(this.player);
+      for (const circle of circles) {
+        const d = distance(enemy, circle);
+        if (d <= circle.r + EPS) continue;
+        const angle = Math.atan2(circle.y - enemy.y, circle.x - enemy.x);
+        const tangent = Math.asin(circle.r / d);
+        silhouette(angle - tangent);
+        silhouette(angle + tangent);
+      }
+      candidates.sort((a, b) => a.distance - b.distance || a.x - b.x || a.y - b.y);
+      for (const point of candidates) {
+        if (this._clearShot(enemy, this.base, 'base', point)) return { x: point.x, y: point.y };
+      }
+      return null;
+    }
+
+    _assignRoute(enemy) {
+      const result = this.debugRoute(enemy.x, enemy.y);
+      enemy.route = this._routeUntilBreach(result);
+      enemy.routeIndex = 0;
+      enemy.targetWreckId = result.blockedWreckId || null;
+      enemy.routeVersion = this._navVersion;
+      enemy.stuck = 0;
+    }
+
+    _followRoute(enemy, speed, dt) {
+      if (this._traffic && this._traffic.members.has(enemy.id) && this._traffic.winnerId !== enemy.id) {
+        this._followRetreat(enemy, speed, dt);
+        return;
+      }
+      const waypointTolerance = enemy.targetWreckId ? EPS : 0.12;
+      while (enemy.routeIndex < enemy.route.length &&
+        distance(enemy, enemy.route[enemy.routeIndex]) < waypointTolerance) enemy.routeIndex++;
+      const waypoint = enemy.route[enemy.routeIndex];
+      if (!waypoint) return;
+      const dx = waypoint.x - enemy.x;
+      const dy = waypoint.y - enemy.y;
+      const length = Math.hypot(dx, dy);
+      if (length < EPS) return;
+      const travel = Math.min(speed * dt, length);
+      const beforeX = enemy.x;
+      const beforeY = enemy.y;
+      if (enemy.targetWreckId) {
+        // Follow the planned segments up to contact. Skipping a corner or
+        // sliding off the segment can put a different hull in the way.
+        const next = travel === length ? waypoint : {
+          x: enemy.x + dx / length * travel, y: enemy.y + dy / length * travel
+        };
+        if (this._positionFree(next.x, next.y, enemy, false)) {
+          enemy.x = next.x;
+          enemy.y = next.y;
+        }
+      } else {
+        this._moveCircle(enemy, dx / length * travel, dy / length * travel, false);
+      }
+      let moved = Math.hypot(enemy.x - beforeX, enemy.y - beforeY);
+      if (moved < travel * 0.3 && !enemy.targetWreckId) {
+        // A stopped front tank is an obstacle only locally. Try a deterministic
+        // shoulder before yielding, without pushing or changing its position.
+        const angle = Math.atan2(dy, dx);
+        const parity = String(enemy.id).charCodeAt(String(enemy.id).length - 1) % 2 ? 1 : -1;
+        const available = Math.max(0, travel - moved);
+        for (const turn of [0.65 * parity, -0.65 * parity, 1.2 * parity, -1.2 * parity]) {
+          const nx = enemy.x + Math.cos(angle + turn) * available;
+          const ny = enemy.y + Math.sin(angle + turn) * available;
+          if (!this._positionFree(nx, ny, enemy, false)) continue;
+          if (!staticSegmentFree(this.config, enemy.x, enemy.y, nx, ny, enemy.r)) continue;
+          enemy.x = nx;
+          enemy.y = ny;
+          break;
+        }
+        moved = Math.hypot(enemy.x - beforeX, enemy.y - beforeY);
+      }
+      if (enemy.smoothDrive) {
+        const nextWaypoint = enemy.route[enemy.routeIndex + 1];
+        const upcomingTurn = Boolean(nextWaypoint &&
+          length <= waypointTolerance + speed * RETURN_STEERING_MIN_TIME);
+        this._followSteeredMotion(enemy, beforeX, beforeY, dt, length, travel, upcomingTurn);
+        moved = Math.hypot(enemy.x - beforeX, enemy.y - beforeY);
+      } else if (moved > EPS) {
+        enemy.bodyAngle = Math.atan2(enemy.y - beforeY, enemy.x - beforeX);
+      }
+      enemy.stuck = moved < travel * 0.25 ? enemy.stuck + dt : Math.max(0, enemy.stuck - dt * 2);
+      // A local bypass also handles a player deliberately parked on a route.
+      // Recompute at most once per second per blocked tank.
+      if (enemy.stuck > 1 && !enemy.targetWreckId) {
+        const detour = this._routeAroundTanks(enemy);
+        if (detour) {
+          enemy.route = detour;
+          enemy.routeIndex = 0;
+        } else this._beginTraffic(enemy);
+        enemy.stuck = 0;
+      }
+    }
+
+    _routeRemaining(enemy) {
+      let previous = enemy;
+      let remaining = 0;
+      for (let i = enemy.routeIndex || 0; i < (enemy.route || []).length; i++) {
+        remaining += distance(previous, enemy.route[i]);
+        previous = enemy.route[i];
+      }
+      return remaining;
+    }
+
+    _trafficEligible(enemy) {
+      return !enemy.dead && enemy.hp > 0 && !enemy.pressure && !enemy.targetWreckId &&
+        enemy.stationaryTarget !== 'base' && enemy.stationaryTarget !== 'wreck';
+    }
+
+    _retreatTarget(enemy) {
+      const waypoint = enemy.route && enemy.route[enemy.routeIndex || 0];
+      if (!waypoint) return { x: enemy.x, y: enemy.y };
+      const reverse = Math.atan2(enemy.y - waypoint.y, enemy.x - waypoint.x);
+      // A fixed, geometrically checked target avoids oscillating left/right.
+      // Friends are deliberately omitted here: their whole contact chain yields.
+      for (const length of [2, 1.5, 1, 0.5]) {
+        for (const turn of [0, 0.4, -0.4, 0.8, -0.8, 1.2, -1.2]) {
+          const point = {
+            x: enemy.x + Math.cos(reverse + turn) * length,
+            y: enemy.y + Math.sin(reverse + turn) * length
+          };
+          if (!this._navigationSegmentFree(enemy.x, enemy.y, point.x, point.y, false)) continue;
+          if (this.player.alive && pointSegmentDistanceSq(this.player.x, this.player.y,
+            enemy.x, enemy.y, point.x, point.y) < square(enemy.r + this.player.r) - EPS) continue;
+          return point;
+        }
+      }
+      return { x: enemy.x, y: enemy.y };
+    }
+
+    _addTrafficContacts(traffic) {
+      let added = true;
+      while (added) {
+        added = false;
+        for (const enemy of this.enemies) {
+          if (traffic.members.has(enemy.id) || traffic.released.has(enemy.id) || !this._trafficEligible(enemy)) continue;
+          const touching = this.enemies.some(other => traffic.members.has(other.id) &&
+            distance(enemy, other) <= enemy.r + other.r + 0.12);
+          if (!touching) continue;
+          traffic.members.set(enemy.id, this._retreatTarget(enemy));
+          added = true;
+        }
+      }
+    }
+
+    _beginTraffic(enemy) {
+      if (this._traffic || !this._trafficEligible(enemy)) return;
+      const traffic = {
+        members: new Map([[enemy.id, this._retreatTarget(enemy)]]),
+        released: new Set(), winnerId: null, origin: { x: enemy.x, y: enemy.y },
+        clearCost: 0, checkIn: 0
+      };
+      this._addTrafficContacts(traffic);
+      if (traffic.members.size < 2) return;
+      this._traffic = traffic;
+      this._chooseTrafficWinner(traffic);
+      const winner = this.enemies.find(actor => actor.id === traffic.winnerId);
+      traffic.origin = { x: winner.x, y: winner.y };
+      // All members share this release threshold, including later leaders that
+      // start farther back. Changing leader must not release the queue at its mouth.
+      traffic.clearCost = Math.max(0, this._routeRemaining(winner) - 3);
+    }
+
+    _chooseTrafficWinner(traffic) {
+      const candidates = this.enemies.filter(enemy => traffic.members.has(enemy.id) && this._trafficEligible(enemy));
+      candidates.sort((a, b) => this._routeRemaining(a) - this._routeRemaining(b) || String(a.id).localeCompare(String(b.id)));
+      if (!candidates.length) { this._traffic = null; return; }
+      const winner = candidates[0];
+      traffic.winnerId = winner.id;
+      this._assignRoute(winner);
+    }
+
+    _updateTraffic(dt) {
+      const traffic = this._traffic;
+      if (!traffic) return;
+      traffic.checkIn -= dt;
+      if (traffic.checkIn > 0) return;
+      traffic.checkIn = 0.1;
+      for (const id of traffic.members.keys()) {
+        const enemy = this.enemies.find(actor => actor.id === id);
+        if (!enemy || !this._trafficEligible(enemy)) {
+          traffic.members.delete(id);
+          traffic.released.add(id);
+        }
+      }
+      const winner = this.enemies.find(enemy => enemy.id === traffic.winnerId && traffic.members.has(enemy.id));
+      if (winner && this._routeRemaining(winner) <= traffic.clearCost + EPS) {
+        traffic.members.delete(winner.id);
+        traffic.released.add(winner.id);
+      }
+      this._addTrafficContacts(traffic);
+      if (!traffic.members.size) { this._traffic = null; return; }
+      if (!traffic.members.has(traffic.winnerId)) this._chooseTrafficWinner(traffic);
+    }
+
+    _followRetreat(enemy, speed, dt) {
+      const target = this._traffic.members.get(enemy.id);
+      const dx = target.x - enemy.x;
+      const dy = target.y - enemy.y;
+      const length = Math.hypot(dx, dy);
+      enemy.stuck = 0;
+      if (length < 0.05) return;
+      const travel = Math.min(speed * dt, length);
+      const beforeX = enemy.x;
+      const beforeY = enemy.y;
+      this._moveCircle(enemy, dx / length * travel, dy / length * travel, false);
+      if (enemy.smoothDrive) this._followSteeredMotion(enemy, beforeX, beforeY, dt, length, travel);
+      else if (Math.hypot(enemy.x - beforeX, enemy.y - beforeY) > EPS) {
+        enemy.bodyAngle = Math.atan2(enemy.y - beforeY, enemy.x - beforeX);
+      }
+    }
+
+    _routeAroundTanks(enemy) {
+      const actors = this.enemies.filter(actor => actor !== enemy && !actor.dead && actor.hp > 0);
+      if (this.player.alive) actors.push(this.player);
+      const actorSegmentFree = (ax, ay, bx, by) => actors.every(actor =>
+        pointSegmentDistanceSq(actor.x, actor.y, ax, ay, bx, by) >= square(enemy.r + actor.r) - EPS);
+      const clear = (a, b) => this._navigationSegmentFree(a.x, a.y, b.x, b.y, false) &&
+        actorSegmentFree(a.x, a.y, b.x, b.y);
+      const { nodes, size, columns, rows, goals } = this._grid;
+      const heuristic = this._distanceField().costs;
+      const cost = new Float64Array(size);
+      cost.fill(Infinity);
+      const parent = new Int32Array(size);
+      parent.fill(-1);
+      const heap = new MinHeap();
+      const column = Math.floor(enemy.x / CELL);
+      const row = Math.floor(enemy.y / CELL);
+      for (let dy = -4; dy <= 4; dy++) {
+        for (let dx = -4; dx <= 4; dx++) {
+          const cx = column + dx;
+          const cy = row + dy;
+          if (cx < 0 || cy < 0 || cx >= columns || cy >= rows) continue;
+          const id = cy * columns + cx;
+          if (!Number.isFinite(heuristic[id]) || !clear(enemy, nodes[id])) continue;
+          cost[id] = distance(enemy, nodes[id]);
+          parent[id] = -2;
+          heap.push({ id, cost: cost[id] + heuristic[id] });
+        }
+      }
+      let goalId = -1;
+      let expanded = 0;
+      while (heap.items.length && expanded++ < 3000) {
+        const current = heap.pop();
+        if (current.cost > cost[current.id] + heuristic[current.id] + EPS) continue;
+        const node = nodes[current.id];
+        const goal = goals.get(current.id);
+        if (goal && clear(node, goal)) { goalId = current.id; break; }
+        for (const edge of node.edges) {
+          if (!Number.isFinite(heuristic[edge.id])) continue;
+          const neighbor = nodes[edge.id];
+          const candidate = cost[current.id] + edge.length;
+          if (candidate >= cost[edge.id] - EPS || !actorSegmentFree(node.x, node.y, neighbor.x, neighbor.y)) continue;
+          if (this.wrecks.some(wreck => pointSegmentDistanceSq(wreck.x, wreck.y, node.x, node.y, neighbor.x, neighbor.y) < square(TANK_RADIUS + wreck.r) - EPS)) continue;
+          cost[edge.id] = candidate;
+          parent[edge.id] = current.id;
+          heap.push({ id: edge.id, cost: candidate + heuristic[edge.id] });
+        }
+      }
+      if (goalId < 0) return null;
+      const reverse = [{ ...goals.get(goalId) }];
+      let current = goalId;
+      while (current >= 0) {
+        reverse.push({ x: nodes[current].x, y: nodes[current].y });
+        current = parent[current];
+      }
+      const raw = [{ x: enemy.x, y: enemy.y }, ...reverse.reverse()];
+      const points = [];
+      let anchor = 0;
+      while (anchor < raw.length - 1) {
+        let furthest = anchor + 1;
+        for (let i = raw.length - 1; i > anchor + 1; i--) {
+          if (clear(raw[anchor], raw[i])) { furthest = i; break; }
+        }
+        points.push(raw[furthest]);
+        anchor = furthest;
+      }
+      return points;
+    }
+
+    _positionFree(x, y, actor, isPlayer) {
+      if (!staticPositionFree(this.config, x, y, actor.r)) return false;
+      if (isPlayer && Object.values(this.config.SPAWNS).some(spawn => pointRectDistanceSq(x, y, centerRect(spawn)) < square(actor.r) - EPS)) return false;
+      for (const wreck of this.wrecks) {
+        if (square(x - wreck.x) + square(y - wreck.y) < square(actor.r + wreck.r) - EPS) return false;
+      }
+      if (this.player.alive && this.player !== actor && square(x - this.player.x) + square(y - this.player.y) < square(actor.r + this.player.r) - EPS) return false;
+      for (const enemy of this.enemies) {
+        if (enemy === actor || enemy.dead || enemy.hp <= 0) continue;
+        if (square(x - enemy.x) + square(y - enemy.y) < square(actor.r + enemy.r) - EPS) return false;
+      }
+      return true;
+    }
+
+    _moveCircle(actor, dx, dy, isPlayer) {
+      // Small integration steps plus a binary contact solve give wall sliding
+      // without overlap, displacement of other tanks, or thin-wall tunneling.
+      for (const [axis, delta] of [['x', dx], ['y', dy]]) {
+        if (Math.abs(delta) < EPS) continue;
+        const start = actor[axis];
+        const destination = start + delta;
+        if (this._positionFree(axis === 'x' ? destination : actor.x, axis === 'y' ? destination : actor.y, actor, isPlayer)) {
+          actor[axis] = destination;
+          continue;
+        }
+        let low = 0;
+        let high = 1;
+        for (let i = 0; i < 12; i++) {
+          const middle = (low + high) / 2;
+          const position = start + delta * middle;
+          if (this._positionFree(axis === 'x' ? position : actor.x, axis === 'y' ? position : actor.y, actor, isPlayer)) low = middle;
+          else high = middle;
+        }
+        actor[axis] = start + delta * low;
+      }
+    }
+
+    _shoot(shooter, target, team, speed, damage, range) {
+      const dx = target.x - shooter.x;
+      const dy = target.y - shooter.y;
+      const length = Math.hypot(dx, dy);
+      if (length < EPS) return false;
+      if (team === 'enemy') {
+        const first = this._firstCollision(shooter.x, shooter.y, target.x, target.y, shooter.id);
+        if (first && first.kind === 'enemy') return false;
+      }
+      this.bullets.push({
+        id: `b${++this._serial}`, x: shooter.x, y: shooter.y,
+        dx: dx / length, dy: dy / length, speed, damage,
+        remaining: range, team, ownerId: shooter.id
+      });
+      this._emit('shot', { x: shooter.x, y: shooter.y, side: team });
+      return true;
+    }
+
+    _firstCollision(ax, ay, bx, by, ownerId) {
+      let best = null;
+      const consider = (t, kind, object) => {
+        if (t !== null && (!best || t < best.t - EPS)) best = { t, kind, object };
+      };
+      // Static geometry wins equal-distance contacts.
+      for (const wall of this.config.WALLS) consider(segmentRect(ax, ay, bx, by, wall), 'wall', wall);
+      consider(segmentRect(ax, ay, bx, by, centerRect(this.base)), 'base', this.base);
+      for (const wreck of this.wrecks) consider(segmentCircle(ax, ay, bx, by, wreck.x, wreck.y, wreck.r), 'wreck', wreck);
+      if (this.player.alive && this.player.id !== ownerId) {
+        consider(segmentCircle(ax, ay, bx, by, this.player.x, this.player.y, this.player.r), 'player', this.player);
+      }
+      for (const enemy of this.enemies) {
+        if (enemy.dead || enemy.hp <= 0 || enemy.id === ownerId) continue;
+        consider(segmentCircle(ax, ay, bx, by, enemy.x, enemy.y, enemy.r), 'enemy', enemy);
+      }
+      return best;
+    }
+
+    _updateBullets(dt) {
+      const surviving = [];
+      for (const bullet of this.bullets) {
+        const travel = Math.min(bullet.speed * dt, bullet.remaining);
+        if (travel < -EPS || !Number.isFinite(travel)) continue;
+        const end = projectileStep(bullet, dt);
+        const hit = this._firstCollision(bullet.x, bullet.y, end.x, end.y, bullet.ownerId);
+        if (hit) {
+          const x = bullet.x + (end.x - bullet.x) * hit.t;
+          const y = bullet.y + (end.y - bullet.y) * hit.t;
+          this._emit('hit', { x, y, side: bullet.team, target: hit.kind });
+          this._applyHit(hit, bullet);
+          continue; // A lethal projectile is consumed before a new wreck exists.
+        }
+        Object.assign(bullet, end);
+        if (bullet.remaining > EPS && bullet.x >= 0 && bullet.x <= this.config.W &&
+            bullet.y >= 0 && bullet.y <= this.config.H) surviving.push(bullet);
+      }
+      this.bullets = surviving;
+    }
+
+    _applyHit(hit, bullet) {
+      const target = hit.object;
+      if (hit.kind === 'wall') return;
+      if (hit.kind === 'base') {
+        if (bullet.team === 'enemy' && this.base.hp > 0) {
+          const hpBefore = this.base.hp;
+          this.base.hp = Math.max(0, hpBefore - bullet.damage);
+          if (this.base.hp === 0) this.baseLoss = { wave: this.waveNumber, hpBefore, damage: bullet.damage };
+        }
+        return;
+      }
+      if (hit.kind === 'player') {
+        if (bullet.team !== 'enemy') return;
+        target.hp = Math.max(0, target.hp - bullet.damage);
+        if (!target.hp) {
+          target.alive = false;
+          target.respawn = 4;
+          this.stats.deaths++;
+          this.lastMessage = 'Танк уничтожен. Возвращение через 4 с';
+          this._emit('death', { x: target.x, y: target.y, side: 'player' });
+          this._recordAttempt('player_death', this._attemptState());
+        }
+        return;
+      }
+      if (hit.kind === 'wreck') {
+        target.hp = Math.max(0, target.hp - bullet.damage);
+        if (!target.hp) {
+          this.wrecks = this.wrecks.filter(wreck => wreck !== target);
+          this._invalidateNavigation();
+          this._emit('wreck', { x: target.x, y: target.y, id: target.id, removed: true });
+          this._recordWreckRemoval(target, bullet.team === 'player' ? 'destroyed_by_player' : 'destroyed_by_enemy');
+        }
+        return;
+      }
+      if (hit.kind === 'enemy' && bullet.team === 'player') {
+        target.hp = Math.max(0, target.hp - bullet.damage);
+        if (!target.hp) this._killEnemy(target);
+      }
+    }
+
+    _killEnemy(enemy) {
+      if (enemy.dead) return;
+      enemy.dead = true;
+      this.stats.kills++;
+      this._emit('kill', { x: enemy.x, y: enemy.y, enemyType: enemy.type });
+      const spec = this.config.ENEMY_TYPES[enemy.type]?.wreck;
+      if (!spec) return;
+      if (isInSpawnZone(this.config, enemy.x, enemy.y)) return;
+      const wreck = {
+        id: `w${++this._serial}`, type: enemy.type, x: enemy.x, y: enemy.y, r: enemy.r ?? TANK_RADIUS,
+        hp: spec.hp, maxHp: spec.hp, expiresAfterWave: this.waveNumber + spec.waves, reinforced: false
+      };
+      this.wrecks.push(wreck);
+      this.stats.wrecksCreated++;
+      this._invalidateNavigation();
+      this._emit('wreck', { x: wreck.x, y: wreck.y, id: wreck.id });
+      this._recordAttempt('wreck_created', { wreck: { ...wreck } });
+    }
+
+    _completeWave() {
+      if (this.base.hp <= 0) { this._lose(); return; }
+      const completed = this.waveNumber;
+      const oldCount = this.wrecks.length;
+      this.wrecks = this.wrecks.filter(wreck => {
+        if (wreck.expiresAfterWave > completed) return true;
+        this._recordWreckRemoval(wreck, 'expired');
+        return false;
+      });
+      if (oldCount !== this.wrecks.length) this._invalidateNavigation();
+      this._recordWaveEnd('cleared');
+      if (completed === this.config.WAVES.length) {
+        this.phase = 'won';
+        this.lastMessage = `Отбито волн: ${completed}`;
+        this._emit('win');
+        this._recordAttempt('attempt_end', { outcome: this.phase, ...this._attemptState() });
+        return;
+      }
+      this.waveIndex++;
+      this.phase = 'prep';
+      this._traffic = null;
+      this._undo = [];
+      const returning = !this.player.alive;
+      if (returning) {
+        const position = this._respawnPosition();
+        if (position) Object.assign(this.player, position);
+      }
+      this.player.alive = true;
+      this._restorePlayerHp();
+      this.player.respawn = 0;
+      this.player.cooldown = 0;
+      this.lastMessage = `Волна ${completed} отбита. Подготовка к волне ${this.waveNumber}`;
+      this._emit('wave', { wave: this.waveNumber, preparation: true });
+      if (returning) {
+        this._recordAttempt('player_return', { reason: 'wave_transition', ...this._attemptState() });
+      }
+    }
+
+    _recordWaveEnd(outcome) {
+      this._recordAttempt('wave_end', {
+        outcome, ...this._attemptState(), wrecks: this._attemptWrecks()
+      });
+    }
+
+    _lose() {
+      if (this.phase === 'lost') return;
+      const waveActive = this.phase === 'battle' || this.phase === 'settling';
+      this.base.hp = 0;
+      this.phase = 'lost';
+      this.lastMessage = 'База уничтожена';
+      this._emit('lose', { x: this.base.x, y: this.base.y });
+      if (waveActive) this._recordWaveEnd('lost');
+      this._recordAttempt('attempt_end', { outcome: this.phase, ...this._attemptState() });
+    }
+
+    _invalidateNavigation() {
+      this._navVersion++;
+      this._openField = null;
+      this._breachSearch = null;
+      this._traffic = null;
+      this._wreckSignature = this.wrecks.map(wreck => `${wreck.id}:${wreck.x}:${wreck.y}:${wreck.r}`).join('|');
+    }
+
+    _syncNavigation() {
+      const signature = this.wrecks.map(wreck => `${wreck.id}:${wreck.x}:${wreck.y}:${wreck.r}`).join('|');
+      if (signature !== this._wreckSignature) this._invalidateNavigation();
+    }
+
+    _navigationSegmentFree(ax, ay, bx, by, allowBreak) {
+      if (!staticSegmentFree(this.config, ax, ay, bx, by)) return false;
+      return allowBreak || this.wrecks.every(wreck =>
+        pointSegmentDistanceSq(wreck.x, wreck.y, ax, ay, bx, by) >= square(TANK_RADIUS + wreck.r) - EPS);
+    }
+
+    _distanceField() {
+      if (this._openField) return this._openField;
+      const { nodes, size, goals } = this._grid;
+      const costs = new Float64Array(size);
+      costs.fill(Infinity);
+      const next = new Int32Array(size);
+      next.fill(-1);
+      const heap = new MinHeap();
+      for (const [id, goal] of goals) {
+        const node = nodes[id];
+        if (!this._navigationSegmentFree(node.x, node.y, goal.x, goal.y, false)) continue;
+        costs[id] = distance(node, goal);
+        heap.push({ id, cost: costs[id] });
+      }
+      while (heap.items.length) {
+        const current = heap.pop();
+        if (current.cost > costs[current.id] + EPS) continue;
+        const node = nodes[current.id];
+        for (const edge of node.edges) {
+          const neighbor = nodes[edge.id];
+          const candidate = current.cost + edge.length;
+          if (candidate >= costs[edge.id] - EPS) continue;
+          if (this.wrecks.some(wreck => pointSegmentDistanceSq(wreck.x, wreck.y,
+            node.x, node.y, neighbor.x, neighbor.y) < square(TANK_RADIUS + wreck.r) - EPS)) continue;
+          costs[edge.id] = candidate;
+          next[edge.id] = current.id;
+          heap.push({ id: edge.id, cost: candidate });
+        }
+      }
+      this._openField = { costs, next };
+      return this._openField;
+    }
+
+    *_nearbyNodes(x, y) {
+      const { nodes, columns, rows } = this._grid;
+      const column = Math.floor(x / CELL);
+      const row = Math.floor(y / CELL);
+      for (let cy = Math.max(0, row - 4); cy <= Math.min(rows - 1, row + 4); cy++) {
+        for (let cx = Math.max(0, column - 4); cx <= Math.min(columns - 1, column + 4); cx++) {
+          const id = cy * columns + cx;
+          if (nodes[id].free) yield id;
+        }
+      }
+    }
+
+    _findOpenPath(x, y) {
+      const { nodes, goals } = this._grid;
+      const { costs, next } = this._distanceField();
+      let first = -1;
+      let best = Infinity;
+      for (const id of this._nearbyNodes(x, y)) {
+        const node = nodes[id];
+        const candidate = Math.hypot(x - node.x, y - node.y) + costs[id];
+        if (candidate >= best || !this._navigationSegmentFree(x, y, node.x, node.y, false)) continue;
+        first = id;
+        best = candidate;
+      }
+      if (first < 0) return null;
+      const raw = [{ x, y }];
+      let current = first;
+      while (next[current] >= 0) {
+        raw.push(nodes[current]);
+        current = next[current];
+      }
+      raw.push(nodes[current], goals.get(current));
+      return raw;
+    }
+
+    _hullMask(from, to, hulls) {
+      let mask = 0n;
+      const minX = Math.min(from.x, to.x);
+      const maxX = Math.max(from.x, to.x);
+      const minY = Math.min(from.y, to.y);
+      const maxY = Math.max(from.y, to.y);
+      for (let index = 0; index < hulls.length; index++) {
+        const hull = hulls[index];
+        const radius = TANK_RADIUS + hull.r;
+        if (hull.x < minX - radius || hull.x > maxX + radius ||
+          hull.y < minY - radius || hull.y > maxY + radius) continue;
+        if (pointSegmentDistanceSq(hull.x, hull.y, from.x, from.y, to.x, to.y) <
+          square(radius) - EPS) mask |= 1n << BigInt(index);
+      }
+      return mask;
+    }
+
+    _offerBreachLabel(search, id, mask, length, next) {
+      const labels = search.labels[id] ??= new Map();
+      // A shorter path with a subset of hulls stays at least as good after any
+      // common continuation, including a start connector that crosses a hull.
+      for (const label of labels.values()) {
+        if ((label.mask & mask) === label.mask && label.length <= length + EPS) return;
+      }
+      for (const label of labels.values()) {
+        if ((label.mask & mask) === mask && length <= label.length + EPS) labels.delete(label.mask);
+      }
+      const count = next?.mask === mask ? next.count : hullCount(mask);
+      const label = { id, mask, length, count, next, settled: false };
+      labels.set(mask, label);
+      search.heap.push(label);
+    }
+
+    _findBreachPath(x, y) {
+      const { nodes, goals } = this._grid;
+      if (!this._breachSearch) {
+        const hulls = this.wrecks.slice().sort((a, b) => a.id < b.id ? -1 : a.id > b.id ? 1 : 0);
+        this._breachSearch = {
+          hulls, labels: new Array(nodes.length), edgeMasks: new Map(),
+          heap: new MinHeap((a, b) => a.count - b.count || a.length - b.length)
+        };
+        for (const [id, goal] of goals) {
+          const node = nodes[id];
+          this._offerBreachLabel(this._breachSearch, id, this._hullMask(node, goal, hulls), distance(node, goal), null);
+        }
+      }
+      const search = this._breachSearch;
+      const start = { x, y };
+      const connectors = new Map();
+      let best = null;
+      let bestCount = Infinity;
+      let bestLength = Infinity;
+      const consider = (label, connector) => {
+        const mask = label.mask | connector.mask;
+        const count = mask === label.mask ? label.count : hullCount(mask);
+        const length = label.length + connector.length;
+        if (count > bestCount) return;
+        if (count === bestCount) {
+          if (length > bestLength + EPS) return;
+          if (Math.abs(length - bestLength) <= EPS &&
+            (label.id > best.id || (label.id === best.id && label.mask >= best.mask))) return;
+        }
+        best = label;
+        bestCount = count;
+        bestLength = length;
+      };
+      for (const id of this._nearbyNodes(x, y)) {
+        const node = nodes[id];
+        if (!this._navigationSegmentFree(x, y, node.x, node.y, true)) continue;
+        const connector = { length: distance(start, node), mask: this._hullMask(start, node, search.hulls) };
+        connectors.set(id, connector);
+        for (const label of search.labels[id]?.values() ?? []) {
+          if (label.settled) consider(label, connector);
+        }
+      }
+      if (!connectors.size) return null;
+      // Extend the shared reverse search only while its queue can match or
+      // improve the best route. The connector cannot reduce count or length.
+      while (search.heap.items.length) {
+        const label = search.heap.items[0];
+        if (label.count > bestCount || (label.count === bestCount && label.length > bestLength + EPS)) break;
+        search.heap.pop();
+        if (search.labels[label.id].get(label.mask) !== label) continue;
+        label.settled = true;
+        const connector = connectors.get(label.id);
+        if (connector) consider(label, connector);
+        const node = nodes[label.id];
+        for (const edge of node.edges) {
+          let edgeMask = search.edgeMasks.get(edge);
+          if (edgeMask === undefined) {
+            edgeMask = this._hullMask(node, nodes[edge.id], search.hulls);
+            search.edgeMasks.set(edge, edgeMask);
+          }
+          this._offerBreachLabel(search, edge.id, label.mask | edgeMask, label.length + edge.length, label);
+        }
+      }
+      if (!best) return null;
+      const raw = [start];
+      let label = best;
+      while (label.next) {
+        raw.push(nodes[label.id]);
+        label = label.next;
+      }
+      raw.push(nodes[label.id], goals.get(label.id));
+      return raw;
+    }
+
+    _smoothRoute(raw, hulls = null) {
+      const points = [];
+      const edges = hulls && raw.slice(1).map((to, i) => this._hullMask(raw[i], to, hulls));
+      let anchor = 0;
+      while (anchor < raw.length - 1) {
+        let furthest = anchor + 1;
+        const contacts = [];
+        if (edges) {
+          let mask = 0n;
+          for (let i = anchor; i < edges.length; i++) {
+            mask |= edges[i];
+            contacts.push(mask);
+          }
+        }
+        for (let i = raw.length - 1; i > furthest; i--) {
+          if (hulls && this._hullMask(raw[anchor], raw[i], hulls) !== contacts[i - anchor - 1]) continue;
+          if (this._navigationSegmentFree(raw[anchor].x, raw[anchor].y, raw[i].x, raw[i].y, Boolean(hulls))) {
+            furthest = i;
+            break;
+          }
+        }
+        const { x, y } = raw[furthest];
+        points.push({ x, y });
+        anchor = furthest;
+      }
+      return points;
+    }
+
+    _firstBreach(start, points) {
+      let from = start;
+      for (let index = 0; index < points.length; index++) {
+        const to = points[index];
+        let first = null;
+        for (const hull of this._breachSearch.hulls) {
+          const radius = TANK_RADIUS + hull.r;
+          if (pointSegmentDistanceSq(hull.x, hull.y, from.x, from.y, to.x, to.y) >= square(radius) - EPS) continue;
+          const t = segmentCircle(from.x, from.y, to.x, to.y, hull.x, hull.y, radius);
+          if (t !== null && (!first || t < first.t)) first = { id: hull.id, t };
+        }
+        if (first) {
+          return { blockedWreckId: first.id, blockedAt: {
+            index, x: from.x + (to.x - from.x) * first.t, y: from.y + (to.y - from.y) * first.t
+          } };
+        }
+        from = to;
+      }
+      return { blockedWreckId: null };
+    }
+
+    _routeUntilBreach({ points, blockedAt }) {
+      if (!blockedAt) return points;
+      const { index, x, y } = blockedAt;
+      return [...points.slice(0, index), { x, y }];
+    }
+
+    debugRoute(x, y) {
+      this._syncNavigation();
+      const open = this._findOpenPath(x, y);
+      if (open) return { points: this._smoothRoute(open), blockedWreckId: null };
+      const raw = this.wrecks.length ? this._findBreachPath(x, y) : null;
+      if (!raw) return { points: [], blockedWreckId: null };
+      const points = this._smoothRoute(raw, this._breachSearch.hulls);
+      return { points, ...this._firstBreach({ x, y }, points) };
+    }
+
+    getPreviewPaths({ lane = null, type = null } = {}) {
+      // All enemy types use the same navigation geometry. Type-specific combat behavior is outside this forecast.
+      if (type !== null && !Object.hasOwn(this.config.ENEMY_TYPES, type)) return [];
+      return Object.entries(this.config.SPAWNS).filter(([entry]) => lane === null || lane === entry).map(([lane, spawn]) => {
+        const route = this.debugRoute(spawn.x, spawn.y);
+        return { lane, points: [{ x: spawn.x, y: spawn.y }, ...this._routeUntilBreach(route)],
+          blockedWreckId: route.blockedWreckId };
+      });
+    }
+
+  }
+
+  const api = { Game, CONFIG, CLASSIC_CONFIG, PLAYER_WEAPON, PLAYER_MODULES, TANK_RADIUS, isInSpawnZone };
+  root.TankCore = api;
+  if (typeof module !== 'undefined' && module.exports) module.exports = api;
+})(typeof globalThis !== 'undefined' ? globalThis : this);
+
+</script>
+  <script>
+(() => {
+  'use strict';
+  const { Game, CONFIG, PLAYER_WEAPON, TANK_RADIUS, isInSpawnZone } = globalThis.TankCore;
+  const game = new Game();
+  const el = (id) => document.getElementById(id);
+  const canvas = el('board');
+  let renderer;
+  try {
+    renderer = window.Town3D.create({ canvas, layout: window.TownLayout });
+  } catch (error) {
+    console.error(error);
+    const message = document.createElement('p');
+    message.className = 'render-error';
+    message.setAttribute('role', 'alert');
+    message.textContent = 'Не удалось запустить 3D. Для игры нужен браузер с WebGL 2 и включённой аппаратной графикой.';
+    canvas.replaceWith(message);
+    el('start').disabled = true;
+    return;
+  }
+  // The file is already local; some browsers navigate instead of downloading it.
+  el('download').hidden = location.protocol === 'file:';
+  const keys = new Set(), effects = [];
+  const simulationStep = 1 / 60;
+  let pendingSimulation = 0;
+  const pointer = { x: 14, y: 7, down: false, inside: false, pendingShot: null };
+  let selected = null, lastFrame = 0, visualTime = 0, lastUiKey = '', endShown = false;
+  let reinforcement = null;
+  let previewAction = null, preparationPreview = null;
+  let hoveredAction = null, focusedAction = null;
+  let firstWreck = null, prepLesson = null;
+  const discoverySeconds = 4;
+  let modalKind = null, pauseBeforeHelp = false, toastUntil = 0, routePreview = [];
+  const campaignDialog = el('campaign-dialog');
+  let routeKey = null, soundOn = false, audio = null;
+  const clamp = (v,a,b) => Math.max(a,Math.min(b,v));
+  const waveCount = CONFIG.WAVES.length;
+  const waveLabel = wave => String(wave).padStart(2, '0');
+  el('wave-max').textContent = `/ ${waveLabel(waveCount)}`;
+  const tankPlural = new Intl.PluralRules('ru');
+  const enemyLooks = {
+    light: { name: 'Лёгкий', role: 'преследует игрока', mark: 'Л', dark: '#8b453b', main: '#c76f58', top: '#e69b7d' },
+    medium: { name: 'Средний', role: 'атакует базу', mark: 'С', dark: '#815b37', main: '#be8f4f', top: '#e0b47a' },
+    heavy: { name: 'Тяжёлый', role: 'атакует базу', mark: 'Т', dark: '#553f58', main: '#85648a', top: '#e1bde5' }
+  };
+  for(const lane of Object.keys(CONFIG.SPAWNS))el('route-lane').add(new Option(lane,lane));
+  for(const type of Object.keys(CONFIG.ENEMY_TYPES))el('route-type').add(new Option(enemyLooks[type].name,type));
+  const hitsToKill = hp => Math.ceil(hp / PLAYER_WEAPON.damage);
+  const moduleNames = { engine: 'Двигатель', armor: 'Броня' };
+  const preparationReasons = {
+    'not-prep': 'Доступно только в подготовке.',
+    paused: 'Сначала сними игру с паузы.',
+    'missing-wreck': 'Корпуса больше нет на поле.',
+    'unusable-wreck': 'Корпус разрушен или истёк срок его службы.',
+    'no-module': 'Этот корпус не даёт модуль.',
+    'no-undo': 'Пока нечего отменять.',
+    'no-target': 'Нужен другой пригодный корпус, который ещё не укрепляли.',
+    'same-module': 'Этот модуль уже установлен.',
+    'same-wreck': 'Выбери другой корпус: донор и цель должны различаться.',
+    'already-reinforced': 'Этот корпус уже укреплён. Повторное укрепление недоступно.'
+  };
+  function enemyPlanPip(type) {
+    const { name, role, mark } = enemyLooks[type];
+    const spec = CONFIG.ENEMY_TYPES[type];
+    const description = `${name}: ${role} · ${spec.hp} HP · попаданий: ${hitsToKill(spec.hp)}${spec.wreck ? ' · оставляет корпус' : ''}`;
+    return `<span class="enemy-pip ${type}" role="img" title="${description}" aria-label="${description}">${mark}</span>`;
+  }
+  function waveGroups(wave) {
+    return wave.map(({lane, start, types}) => `<div class="lane-row"><span class="lane-chip ${lane.toLowerCase()}">${lane}</span><div class="lane-enemies">${types.map(enemyPlanPip).join('')}</div><span class="lane-time">${start === 0 ? 'Сразу' : `+${start} с`}</span></div>`).join('');
+  }
+  const spawnInterval = CONFIG.SPAWN_INTERVAL.toLocaleString('ru');
+  function toast(text, seconds = 3.5) {
+    el('toast').textContent=text; el('toast').classList.add('show'); toastUntil=performance.now()+seconds*1000;
+  }
+  function clearInput(){keys.clear();pointer.down=false;pointer.pendingShot=null;pendingSimulation=0;}
+  function focusBoard(){canvas.focus({preventScroll:true});}
+  function openModal(kind,kicker,title,body,buttons){
+    clearInput(); modalKind=kind;el('modal-kicker').textContent=kicker;el('modal-title').textContent=title;
+    el('modal-body').innerHTML=body;el('modal-actions').replaceChildren();
+    for(const [label,fn,primary] of buttons){const b=document.createElement('button');b.className=primary?'primary':'secondary';b.textContent=label;b.onclick=fn;el('modal-actions').appendChild(b);}
+    el('overlay').hidden=false;el('modal-actions').querySelector('button')?.focus({preventScroll:true});
+  }
+  function closeModal(){el('overlay').hidden=true;modalKind=null;focusBoard();}
+  const exportLabel = 'Скачать журнал JSON';
+  function exportAttempt(){
+    const blob = new Blob([game.exportAttemptLog()], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'tanks-attempt.json';
+    link.click();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
+  function resume(){game.paused=false;closeModal();lastFrame=performance.now();}
+  function pause(){
+    if(modalKind==='help'){closeHelp();return;}
+    if(['won','lost'].includes(game.phase))return;
+    if(game.paused){resume();return;}
+    game.paused=true;
+    openModal('pause','БОЙ ОСТАНОВЛЕН','Пауза','<p>Можно выдохнуть. Поле и все снаряды ждут твоего возвращения.</p>',[['Продолжить',resume,true],[exportLabel,exportAttempt,false],['Начать попытку заново',reset,false]]);
+  }
+  function showCampaign(){
+    if(modalKind)return;
+    const waves=CONFIG.WAVES.map((wave,index)=>`
+      <section class="campaign-wave">
+        <h3>Волна ${index+1}${index+1===waveCount?' · Финал':''}</h3>
+        ${waveGroups(wave)}
+      </section>`).join('');
+    const legend=Object.values(enemyLooks).map(({mark,name})=>`${mark} — ${name.toLowerCase()}`).join(' · ');
+    const content=el('campaign-content');
+    content.innerHTML=`<p>${legend}. Группы выходят параллельно, на одном входе между появлениями не менее ${spawnInterval} с.</p>${waves}`;
+    clearInput();
+    game.paused=true;
+    campaignDialog.showModal();
+    content.scrollTop=0;
+  }
+  campaignDialog.addEventListener('pointerdown',event=>{
+    if(event.target===campaignDialog)event.preventDefault();
+  });
+  campaignDialog.addEventListener('close',()=>{
+    game.paused=false;
+    lastFrame=performance.now();
+    el('campaign').focus({preventScroll:true});
+  });
+  function help(){
+    if(modalKind==='help'){closeHelp();return;}
+    pauseBeforeHelp=game.paused;game.paused=true;
+    openModal('help','ТРИ НАПРАВЛЕНИЯ · ОДНА БАЗА','Как играть',`<ol class="modal-list"><li><b>Защищай базу.</b> WASD — движение, мышь — прицел, удержание ЛКМ — огонь. До старта проверь входы и время атаки в плане волны. Кнопка «Кампания» показывает расписание всех волн (${waveCount}).</li><li><b>Лёгкий (Л) охотится за тобой.</b> Знак «!» означает преследование. Уходи за укрытие и меняй позицию.</li><li><b>Средний (С) и тяжёлый (Т) атакуют базу.</b> Рядом с танком указаны HP и число попаданий до уничтожения (×). Оставленные корпуса меняют маршрут и задерживают снаряды обеих сторон. Перечёркнутый корпус рядом с танком означает, что в зоне появления он не оставит баррикаду.</li><li><b>Враг стреляет без предупреждения.</b> При открытой цели и готовом орудии он сразу выпускает снаряд. Меняй позицию и используй твёрдые укрытия.</li><li><b>Между волнами</b> нажми на корпус: оставь его баррикадой или разбери на ремонт базы до +${CONFIG.ENEMY_TYPES.medium.wreck.repairHp} HP за средний или +${CONFIG.ENEMY_TYPES.heavy.wreck.repairHp} HP за тяжёлый. Средний корпус также даёт двигатель, тяжёлый — броню. В слоте помещается один модуль. Последнее действие можно отменить через Ctrl+Z. Подпись «до N» показывает последнюю волну службы.</li><li>Твой танк восстанавливается между волнами и возвращается через 4 секунды после гибели. Пока ты возвращаешься, бой продолжается.</li></ol>`,[['Понятно',closeHelp,true]]);
+  }
+  function closeHelp(){game.paused=pauseBeforeHelp;closeModal();if(game.paused){game.paused=false;pause();}else lastFrame=performance.now();}
+  function reset(){
+    clearInput();
+    game.reset();selected=null;reinforcement=null;setActionPreview(null);routeKey=null;routePreview=[];effects.length=0;
+    firstWreck=null;prepLesson=null;endShown=false;lastUiKey='';
+    closeModal();game.paused=false;toast('Новая попытка. Перед боем можно занять позицию.');
+  }
+  function start(){if(['won','lost'].includes(game.phase)){reset();return;}if(game.phase!=='prep'||game.paused||reinforcement)return;if(game.startWave()){selected=null;setActionPreview(null);routeKey=null;toast(`Волна ${game.waveNumber}. Защищай базу.`,2);focusBoard();}}
+  function repair(){
+    const result=game.repairFromWreck(selected);
+    if(result.ok){leaveWreck();routeKey=null;toast(result.hp>0?`Корпус разобран. База +${result.hp} HP.`:'Корпус разобран. Проход освобождён.');}
+  }
+  function installModule(){
+    const result=game.installModuleFromWreck(selected);
+    if(result.ok){leaveWreck();routeKey=null;toast(`Модуль установлен: ${moduleNames[result.module]}.`);}
+  }
+  function chooseReinforcement(){
+    if(reinforcement||reinforcementChoiceReason(selected))return;
+    setActionPreview(null);
+    reinforcement={targetId:null};
+    updateUi();
+    focusBoard();
+  }
+  function cancelReinforcement(){reinforcement=null;setActionPreview(null);updateUi();focusBoard();}
+  function confirmReinforcement(){
+    if(!reinforcement || reinforcement.targetId===null)return;
+    const result=game.reinforceWreck(selected,reinforcement.targetId);
+    if(!result.ok){toast(preparationReasons[result.reason]);return;}
+    selected=reinforcement.targetId;
+    cancelReinforcement();
+    toast('Корпус укреплён. Донор разобран.');
+  }
+  function clearWreckSelection(){
+    selected=null;reinforcement=null;setActionPreview(null);updateUi();
+  }
+  function leaveWreck(){clearWreckSelection();focusBoard();}
+  function undo(){
+    const hadUndoFocus=document.activeElement===el('undo');
+    if(!game.undo())return;
+    clearWreckSelection();
+    if(hadUndoFocus&&!game.canUndo)el('routes').focus({preventScroll:true});
+    routeKey=null;
+    toast('Действие отменено. Позиция танка восстановлена.');
+  }
+  el('start').onclick=start;el('pause').onclick=pause;el('help').onclick=help;el('campaign').onclick=showCampaign;el('repair').onclick=repair;
+  el('install-module').onclick=installModule;el('leave').onclick=leaveWreck;el('undo').onclick=undo;
+  el('choose-reinforcement').onclick=chooseReinforcement;
+  el('confirm-reinforcement').onclick=confirmReinforcement;
+  el('export-attempt').onclick=exportAttempt;
+  el('cancel-reinforcement').onclick=cancelReinforcement;
+  el('sound').onclick=()=>{soundOn=!soundOn;el('sound').textContent=soundOn?'Звук вкл':'Звук выкл';el('sound').setAttribute('aria-pressed',String(soundOn));el('sound').title=soundOn?'Выключить звук':'Включить звук';if(soundOn){try{audio ||= new (window.AudioContext||window.webkitAudioContext)();audio.resume();beep('wave');}catch{soundOn=false;el('sound').textContent='Звук недоступен';el('sound').setAttribute('aria-pressed','false');el('sound').title='Попробовать включить звук';}}};
+  const soundCues = {
+    playerShot: [140,63,.045,.025,'triangle'],
+    enemyShot: [80,36,.045,.025,'triangle'],
+    hit: [720,370,.045,.025,'triangle'],
+    kill: [155,42,.18,.045,'triangle'],
+    // Separate the wreck cue from the simultaneous impact and tank destruction.
+    wreckAppears: [480,960,.14,.034,'sine',.085],
+    wreckBreaks: [320,105,.12,.030,'square',.05],
+    repair: [560,252,.11,.04,'sine'],
+    wave: [440,198,.11,.035,'triangle'],
+    death: [45,20,.25,.045,'triangle'],
+    win: [750,337.5,.3,.035,'sine'],
+    lose: [65,29.25,.4,.045,'triangle']
+  };
+  function beep(type) {
+    const cue = soundCues[type];
+    if (!soundOn || !audio || !cue) return;
+    const [from,to,duration,volume,waveform,delay=0] = cue;
+    const start = audio.currentTime + delay, end = start + duration;
+    const oscillator = audio.createOscillator(), gain = audio.createGain();
+    oscillator.type = waveform;
+    oscillator.frequency.setValueAtTime(from, start);
+    oscillator.frequency.exponentialRampToValueAtTime(to, end);
+    gain.gain.setValueAtTime(volume, start);
+    gain.gain.exponentialRampToValueAtTime(.0001, end);
+    oscillator.connect(gain);
+    gain.connect(audio.destination);
+    oscillator.start(start);
+    oscillator.stop(end);
+  }
+  document.addEventListener('keydown',(e)=>{
+    if(campaignDialog.open)return;
+    const interactive=e.target instanceof Element&&e.target.closest('button,a,input,select,textarea');
+    const routeSelect=e.target===el('route-lane')||e.target===el('route-type');
+    if(!routeSelect&&!modalKind&&['KeyW','KeyA','KeyS','KeyD','ArrowUp','ArrowLeft','ArrowDown','ArrowRight'].includes(e.code)){e.preventDefault();keys.add(e.code);}
+    if(e.code==='Escape'){e.preventDefault();if(!e.repeat){if(reinforcement&&!modalKind&&!game.paused)cancelReinforcement();else pause();}}
+    if(e.code==='Enter'&&!modalKind&&!interactive){e.preventDefault();if(!e.repeat)start();}
+    if(e.code==='KeyZ'&&(e.ctrlKey||e.metaKey)){e.preventDefault();if(!e.repeat)undo();}
+    if(modalKind&&e.code==='Tab'){const buttons=[...el('overlay').querySelectorAll('button')];const current=buttons.indexOf(document.activeElement);e.preventDefault();buttons[(current+(e.shiftKey?-1:1)+buttons.length)%buttons.length]?.focus();}
+  });
+  document.addEventListener('keyup',(e)=>keys.delete(e.code));
+  function pointerMove(event) {
+    const { x, y } = renderer.screenToWorld(event.clientX, event.clientY);
+    pointer.x = x;
+    pointer.y = y;
+  }
+  canvas.addEventListener('pointermove',pointerMove);canvas.addEventListener('pointerenter', event => { pointer.inside = true; pointerMove(event); });canvas.addEventListener('pointerleave',()=>pointer.inside=false);
+  canvas.addEventListener('pointerdown',(e)=>{
+    if(e.button!==0)return;
+    pointerMove(e);focusBoard();
+    if(game.paused)return;
+    if(game.phase==='prep'){
+      setActionPreview(null);
+      const id=game.wrecks.find(w=>Math.hypot(w.x-pointer.x,w.y-pointer.y)<=w.r)?.id??null;
+      if (id && firstWreck?.inPrep) firstWreck.until=visualTime;
+      if(reinforcement)reinforcement.targetId=id;
+      else selected=id;
+      updateUi();
+    }else{
+      pointer.down=true;
+      pointer.pendingShot={x:pointer.x,y:pointer.y};
+      canvas.setPointerCapture(e.pointerId);
+    }
+  });
+  window.addEventListener('pointerup',()=>pointer.down=false);canvas.addEventListener('pointercancel',()=>{pointer.down=false;pointer.pendingShot=null;});canvas.addEventListener('contextmenu',e=>e.preventDefault());
+  window.addEventListener('blur',()=>{clearInput();setActionPreview(null);if(['battle','settling'].includes(game.phase)&&!game.paused)pause();});
+  document.addEventListener('visibilitychange',()=>{if(document.hidden){clearInput();if(['battle','settling'].includes(game.phase)&&!game.paused)pause();}});
+  function showActionReason(id, message){
+    const note=el(id);
+    note.textContent=message??'';
+    note.hidden=!message;
+  }
+  function showFirstWreck() {
+    if (!firstWreck || firstWreck.wave !== game.waveNumber || visualTime >= firstWreck.until) return false;
+    return firstWreck.inPrep ? game.phase === 'prep' : game.phase === 'battle' || game.phase === 'settling';
+  }
+
+  function updateWreckLessons(prep) {
+    const discovery = el('wreck-discovery');
+    discovery.hidden = !showFirstWreck();
+    if (!discovery.hidden) {
+      const message = firstWreck.destroyed
+        ? 'Первый корпус появился, но уже успел разрушиться. Снаряды повреждают и корпуса.'
+        : firstWreck.inPrep
+          ? 'Первый корпус отмечен на поле.'
+          : 'Корпус появился и отмечен на поле. Береги его: снаряды повреждают и корпуса.';
+      if (discovery.textContent !== message) discovery.textContent = message;
+    } else if (discovery.textContent) discovery.textContent = '';
+
+    if (prep && !game.paused && firstWreck &&
+        (!prepLesson || (prepLesson.wave === game.waveNumber && !prepLesson.dismissed))) {
+      const usable = game.wrecks.some(wreck => game.getWreckActions(wreck.id).repairReason === null);
+      if (!prepLesson && usable) prepLesson = { wave:game.waveNumber, dismissed:false };
+      else if (prepLesson && !usable) prepLesson.dismissed = true;
+    }
+    el('wreck-prep-lesson').hidden = !prep || prepLesson?.wave !== game.waveNumber || prepLesson.dismissed;
+  }
+
+  function baseDefeatText() {
+    const loss = game.baseLoss;
+    if (!loss) return `База потеряла всю прочность в волне ${game.waveNumber}.`;
+    return `В волне ${loss.wave} базу уничтожил вражеский снаряд с уроном ${loss.damage} HP. До попадания у базы оставалось ${loss.hpBefore} HP.`;
+  }
+
+  function moduleEffect({ module, replacedModule, moduleStats }){
+    const replacement=replacedModule?` взамен «${moduleNames[replacedModule]}»`:'';
+    return `«${moduleNames[module]}»${replacement}. Танк получит ${moduleStats.speed} ед/с и ${moduleStats.maxHp} HP.`;
+  }
+  function reinforcementEffect(target, { hp, expiresAfterWave }){
+    return `Прочность цели ${target.hp} → ${hp} / ${target.maxHp} HP. Последняя волна службы ${expiresAfterWave}.`;
+  }
+  function reinforcementChoiceReason(id, donorReason=game.getWreckActions(id).repairReason){
+    if(donorReason)return donorReason;
+    return game.wrecks.some(w=>!game.getWreckReinforcement(id,w.id).reason)?null:'no-target';
+  }
+  function setActionPreview(action){
+    if(action===null)hoveredAction=focusedAction=null;
+    previewAction=action;
+    updateActionPreview();
+  }
+  function updateActionPreview(){
+    preparationPreview=null;
+    let message='';
+    if(previewAction&&game.phase==='prep'&&!game.paused){
+      const wreck=game.wrecks.find(w=>w.id===selected);
+      if(previewAction==='undo'){
+        const undo=game.getUndoPreview();
+        if(!undo.reason){
+          preparationPreview={undo};
+          const base=undo.baseHp!==game.base.hp?` База вернётся к ${undo.baseHp} HP.`:'';
+          const module=undo.player.module!==game.player.module?` Модуль после отмены — ${moduleNames[undo.player.module]??'пустой слот'}.`:'';
+          message=`Полевые метки показывают корпуса и позицию танка после отмены.${base}${module}`;
+        }
+      }else if(wreck){
+        const actions=game.getWreckActions(wreck.id);
+        if(previewAction==='repair'&&!actions.repairReason){
+          preparationPreview={spent:wreck,target:{...game.base,r:Math.hypot(game.base.w,game.base.h)/2}};
+          message=`Корпус исчезнет. База получит +${actions.repairHp} HP и будет иметь ${actions.repairBaseHp} / ${game.base.maxHp} HP.`;
+        }else if(previewAction==='install-module'&&!actions.moduleReason){
+          preparationPreview={spent:wreck,target:game.player};
+          message=`Корпус исчезнет. ${moduleEffect(actions)}`;
+        }else if(previewAction==='choose-reinforcement'&&!reinforcementChoiceReason(wreck.id,actions.repairReason)){
+          preparationPreview={spent:wreck};
+          message='Этот корпус станет донором. Выбери цель, чтобы увидеть её прочность и срок службы.';
+        }else if(previewAction==='confirm-reinforcement'){
+          const target=game.wrecks.find(w=>w.id===reinforcement?.targetId);
+          const result=game.getWreckReinforcement(wreck.id,target?.id);
+          if(!result.reason){
+            preparationPreview={spent:wreck,target};
+            message=`Донор исчезнет. ${reinforcementEffect(target,result)}`;
+          }
+        }
+      }
+    }
+    if(el('action-preview').textContent!==message)el('action-preview').textContent=message;
+  }
+  for(const id of ['repair','install-module','choose-reinforcement','confirm-reinforcement','undo']){
+    const button=el(id);
+    button.addEventListener('pointerenter',()=>{
+      if(!button.disabled)setActionPreview(hoveredAction=id);
+    });
+    button.addEventListener('pointerleave',()=>{
+      if(hoveredAction===id)hoveredAction=null;
+      if(previewAction===id)setActionPreview(focusedAction);
+    });
+    button.addEventListener('focus',()=>{
+      if(!button.disabled&&button.matches(':focus-visible'))setActionPreview(focusedAction=id);
+    });
+    button.addEventListener('blur',()=>{
+      if(focusedAction===id)focusedAction=null;
+      if(previewAction===id)setActionPreview(hoveredAction);
+    });
+  }
+  function updateUi(){
+    const prep=game.phase==='prep',fighting=['battle','settling'].includes(game.phase),finished=['won','lost'].includes(game.phase);
+    el('route-controls').hidden=!prep;
+    el('route-lane').disabled=el('route-type').disabled=!el('routes').checked;
+    updateWreckLessons(prep);
+    const baseHp=Math.max(0,Math.ceil(game.base.hp)),playerHp=Math.max(0,Math.ceil(game.player.hp));
+    el('base-value').innerHTML=`${baseHp} <small>/ ${game.base.maxHp}</small>`;el('base-value').classList.toggle('low-hp',baseHp<=60);el('base-fill').style.width=clamp(baseHp/game.base.maxHp*100,0,100)+'%';
+    el('player-value').innerHTML=game.player.alive?`${playerHp} <small>/ ${game.player.maxHp}</small>`:`<small>Возврат</small> ${Math.ceil(game.player.respawn)}с`;
+    el('player-fill').style.width=clamp(playerHp/game.player.maxHp*100,0,100)+'%';el('wave-value').textContent=waveLabel(game.waveNumber);el('kill-value').textContent=game.stats.kills;
+    el('start').hidden=!prep&&!finished;el('start').disabled=game.paused||!!reinforcement;el('start').innerHTML=finished?'Новая попытка <span>↵</span>':`Начать волну ${game.waveNumber} <span>↵</span>`;
+    el('combat-status').hidden=!fighting;el('combat-copy').textContent=game.phase==='settling'?'Ждём последние снаряды…':`Осталось противников: ${game.remaining}`;
+    el('pause').disabled=finished;el('wreck-count').textContent=game.wrecks.length;el('undo').disabled=!game.canUndo;
+    const wreck=game.wrecks.find(w=>w.id===selected);
+    if(!wreck || !prep){selected=null;reinforcement=null;}
+    const target=reinforcement&&game.wrecks.find(w=>w.id===reinforcement.targetId);
+    const stateKey=[game.phase,game.waveIndex,selected,wreck?.hp,wreck?.expiresAfterWave,wreck?.reinforced,!!reinforcement,reinforcement?.targetId,target?.hp,target?.expiresAfterWave,target?.reinforced,game.paused,game.navigationVersion,game.base.hp,game.player.alive,game.player.module,game.canUndo].join('|');
+    if(stateKey!==lastUiKey){
+      lastUiKey=stateKey;const badge=el('phase-badge');badge.className='phase-badge'+(fighting?' battle':finished?' end':'');badge.textContent=prep?'ПОДГОТОВКА':fighting?'БОЙ':game.phase==='won'?'ПОБЕДА':'ПОРАЖЕНИЕ';
+      el('player-module').textContent=`Модуль: ${moduleNames[game.player.module]??'нет'}`;
+      showActionReason('undo-reason',game.canUndo?null:preparationReasons[game.getUndoPreview().reason]);
+      el('phase-number').textContent=`${waveLabel(game.waveNumber)} / ${waveLabel(waveCount)}`;
+      el('phase-title').textContent=prep?(game.waveIndex===0?'Выбери позицию':'Используй корпуса'):finished?(game.phase==='won'?'База уцелела':'Попробуй ещё'):'Держи оборону';
+      el('phase-copy').textContent=prep?(game.waveIndex===0?'Лёгкие отвлекают тебя, средние прорываются к базе. Используй кварталы, чтобы разделить угрозы.':'Проверь направления следующей атаки. Оставь полезные корпуса или разбери их на ремонт либо модуль.'):fighting?'Уводи лёгких от открытой позиции и перехватывай атакующих базу.':'Попробуй другую позицию и используй корпуса у укрытий.';
+      el('wave-card-title').textContent=prep?'СЛЕДУЮЩАЯ АТАКА':'АТАКА ЭТОЙ ВОЛНЫ';
+      const plan=CONFIG.WAVES[game.waveIndex],total=plan.reduce((n,p)=>n+p.types.length,0);
+      el('enemy-total').textContent=`${total} ${{one:'танк',few:'танка',many:'танков',other:'танка'}[tankPlural.select(total)]}`;
+      el('wave-plan').innerHTML=waveGroups(plan);
+      el('wave-note').textContent=`Между появлениями на одном входе не менее ${spawnInterval} с.`;
+      el('salvage-actions').hidden=!prep||!wreck||!!reinforcement;
+      el('reinforcement-actions').hidden=!reinforcement;
+      if(reinforcement){
+        const result=game.getWreckReinforcement(selected,reinforcement.targetId);
+        const { reason }=result;
+        const wreckName=w=>enemyLooks[w.type].name;
+        el('salvage-content').innerHTML=`<p class="empty-state"><b>Донор:</b> ${wreckName(wreck)}, ${Math.ceil(wreck.hp)} HP. Будет разобран.<br><b>Цель:</b> ${target?`${wreckName(target)}, ${Math.ceil(target.hp)} HP.`:'нажми на другой корпус на поле.'}</p>`;
+        el('reinforcement-result').textContent=reason?'':reinforcementEffect(target,result);
+        const explainReason=game.paused || reinforcement.targetId!==null;
+        const finalNote=!reason&&result.expiresAfterWave>waveCount?'Прочность восстановится по обычному правилу. Продление срока за пределы финала не принесёт пользы.':null;
+        showActionReason('reinforcement-note',(explainReason?preparationReasons[reason]:null)??finalNote);
+        el('confirm-reinforcement').hidden=!target;
+        el('confirm-reinforcement').disabled=!!reason;
+      }else if(prep&&wreck){
+        const actions=game.getWreckActions(wreck.id),look=enemyLooks[wreck.type];
+        const { repairHp, repairReason, module, moduleReason }=actions;
+        el('salvage-content').innerHTML=`<div class="selected-wreck"><span class="wreck-symbol" aria-hidden="true">${look.mark}</span><div class="wreck-info"><strong>${look.name} корпус</strong><p>${Math.ceil(wreck.hp)} / ${wreck.maxHp} HP${wreck.reinforced?' · Укреплён':''}</p></div></div><p class="wreck-life">${wreck.expiresAfterWave===game.waveNumber?'Последняя волна службы. ':''}Исчезнет после волны ${wreck.expiresAfterWave}.</p>`;
+        el('repair').disabled=!!repairReason;
+        el('repair').textContent=repairReason?'Разобрать на ремонт':repairHp>0?`Разобрать · +${repairHp} HP базе`:'Разобрать · +0 HP, убрать корпус';
+        showActionReason('repair-reason',preparationReasons[repairReason]);
+        el('install-module').disabled=!!moduleReason;
+        el('install-module').textContent=module?`Взять модуль · ${moduleNames[module]}`:'Взять модуль';
+        showActionReason('module-effect',moduleReason?null:`Корпус исчезнет. ${moduleEffect(actions)}`);
+        showActionReason('module-reason',preparationReasons[moduleReason]);
+        const choiceReason=reinforcementChoiceReason(wreck.id,repairReason);
+        el('choose-reinforcement').disabled=!!choiceReason;
+        showActionReason('choose-reinforcement-reason',preparationReasons[choiceReason]);
+      } else el('salvage-content').innerHTML=`<p class="empty-state">${!game.wrecks.length?'Пока нет корпусов. Их оставляют средние и тяжёлые танки.':prep?'Нажми на корпус на поле, чтобы выбрать действие.':'Корпуса уже работают как препятствия. Разбор и установка модулей доступны между волнами.'}</p>`;
+      el('tip').textContent=!game.player.alive?'Твой танк скоро вернётся. Бой продолжается, а база остаётся уязвимой.':prep?'Наведи указатель на действие или перейди к нему клавишей Tab, чтобы увидеть результат на поле.':'За тобой идёт лёгкий? Разорви видимость за кварталом, затем вернись к защите базы. Следи за флангами.';
+      if(!prep||game.paused)setActionPreview(null);
+      else if(previewAction)updateActionPreview();
+    }
+    if(finished&&!endShown){endShown=true;const win=game.phase==='won';openModal('end',win?`ВОЛНЫ ПРОЙДЕНЫ · ${waveCount}/${waveCount}`:'БАЗА ПОТЕРЯНА',win?'Оборона выдержала':'Ещё одна попытка',`<p>${win?'Ты защитил базу. Попробуй пройти ещё раз и оставить корпуса в других местах.':baseDefeatText()}</p><div class="result-grid"><div><strong>${game.stats.kills}</strong><span>ТАНКОВ УНИЧТОЖЕНО</span></div><div><strong>${game.stats.wrecksCreated}</strong><span>КОРПУСОВ СОЗДАНО</span></div><div><strong>${baseHp}</strong><span>HP БАЗЫ</span></div></div><p>Удалось ли намеренно оставить полезный корпус? Пришлось ли разобрать его ради ремонта?</p>`,[['Играть ещё раз',reset,true],[exportLabel,exportAttempt,false],['Посмотреть поле',()=>{closeModal();},false]]);}
+  }
+  const effectStyles = {
+    hit: { life: .15 },
+    kill: { life: .28 },
+    wreckAppears: { life: .27 },
+    wreckBreaks: { life: .34 },
+    death: { life: .28 },
+    repair: { life: .26 }
+  };
+
+  const labelLayer = el('board-unit-labels');
+  const labelNodes = [];
+  const labelOffsets = [[0, -23], [0, 9], [-31, -26], [31, -26], [-31, 11], [31, 11]];
+  const noRoutes = Object.freeze([]);
+
+  function drawUnitLabels() {
+    const labels = [];
+    const add = (actor, value, kind = 'wreck', elevation = .42) =>
+      labels.push({ actor, value, kind, elevation });
+    if (!game.paused) {
+      if (preparationPreview) {
+        const { spent, target, undo } = preparationPreview;
+        if (spent) add(spent, 'Будет разобран', 'action');
+        if (target) add(target, 'Цель действия', 'action');
+        if (undo) {
+          for (const wreck of undo.wrecks) {
+            const willReturn = !game.wrecks.some(current => current.id === wreck.id);
+            add(wreck, willReturn ? 'Вернётся' : 'До укрепления', 'action');
+          }
+          add(undo.player, 'Танк после отмены', 'action', .72);
+        }
+      }
+      for (const actor of game.enemies) {
+        const { mark } = enemyLooks[actor.type];
+        const pursuit = actor.type === 'light' && actor.intent === 'press' ? ' · !' : '';
+        const noWreck = CONFIG.ENEMY_TYPES[actor.type].wreck && isInSpawnZone(CONFIG, actor.x, actor.y) ? ' · ⊘' : '';
+        add(actor, `${mark} · ${Math.ceil(actor.hp)} HP · ×${hitsToKill(actor.hp)}${pursuit}${noWreck}`, 'enemy', .72);
+      }
+      for (const actor of game.wrecks) {
+        const role = actor.id === reinforcement?.targetId ? ' · цель' :
+          actor.id === selected && reinforcement ? ' · донор' : '';
+        const kind = actor.id === selected || actor.id === reinforcement?.targetId ? 'action' : 'wreck';
+        if (labels.some(label => label.kind === 'action' && label.actor.id === actor.id)) continue;
+        add(actor, `${enemyLooks[actor.type].mark}${actor.reinforced ? ' ↑' : ''} · ${Math.ceil(actor.hp)} HP · до ${actor.expiresAfterWave}${role}`, kind);
+      }
+    }
+
+    const board = canvas.getBoundingClientRect();
+    const occupied = [];
+    let shown = 0;
+    for (const { actor, value, kind, elevation } of labels) {
+      const point = renderer.worldToScreen(actor.x, actor.y, elevation);
+      if (!point.visible) continue;
+      const width = Math.ceil(value.length * 5.6) + 12;
+      const height = 16;
+      for (const [offsetX, offsetY] of labelOffsets) {
+        const x = Math.min(board.width - width - 2, Math.max(2, Math.round(point.x - board.left + offsetX - width / 2)));
+        const y = Math.round(point.y - board.top + offsetY);
+        if (y < 2 || y + height > board.height - 2 || occupied.some(other =>
+          x < other.x + other.width + 3 && x + width + 3 > other.x &&
+          y < other.y + height + 2 && y + height + 2 > other.y)) continue;
+        let node = labelNodes[shown++];
+        if (!node) {
+          node = document.createElement('span');
+          node.className = 'board-unit-label';
+          labelNodes.push(node);
+          labelLayer.append(node);
+        }
+        if (node.textContent !== value) node.textContent = value;
+        if (node.dataset.kind !== kind) node.dataset.kind = kind;
+        node.style.width = width + 'px';
+        node.style.transform = `translate(${x}px, ${y}px)`;
+        node.hidden = false;
+        occupied.push({ x, y, width });
+        break;
+      }
+    }
+    for (const node of labelNodes.slice(shown)) node.hidden = true;
+  }
+
+  function draw() {
+    const showRoutes = game.phase === 'prep' && el('routes').checked;
+    if (showRoutes) {
+      const lane = el('route-lane').value || null;
+      const type = el('route-type').value;
+      const key = `${game.navigationVersion}|${lane ?? ''}|${type}`;
+      if (key !== routeKey) {
+        routeKey = key;
+        routePreview = game.getPreviewPaths({ lane, type });
+      }
+    }
+    renderer.render({
+      player: game.player, base: game.base, enemies: game.enemies, wrecks: game.wrecks,
+      bullets: game.bullets, phase: game.phase, paused: game.paused, selected, reinforcement,
+      preparationPreview, routePreview: showRoutes ? routePreview : noRoutes, effects, visualTime,
+      firstWreck: showFirstWreck() && !firstWreck.destroyed ? firstWreck : null,
+      pointer, weaponRange: PLAYER_WEAPON.range, tankRadius: TANK_RADIUS, enemyLooks
+    });
+    drawUnitLabels();
+  }
+  function processEvents(){
+    for (const event of game.drainEvents()) {
+      let type = event.type;
+      if (type==='shot') type = event.side==='player'?'playerShot':'enemyShot';
+      if (type==='wreck') type = event.removed?'wreckBreaks':'wreckAppears';
+      beep(type);
+      if (effectStyles[type] && Number.isFinite(event.x)) {
+        effects.push({ type, x:event.x, y:event.y, at:visualTime });
+      }
+      if (type==='death') {
+        toast('Танк потерян. Возвращение через 4 секунды.',3);
+      }
+      if (type==='wreckAppears' && !firstWreck) {
+        firstWreck = {
+          id:event.id, until:visualTime+discoverySeconds, destroyed:false,
+          wave:game.waveNumber, inPrep:game.phase==='prep'
+        };
+      }
+      if (type==='wreckBreaks' && firstWreck?.id===event.id) firstWreck.destroyed=true;
+      if (type==='repair') routeKey=null;
+    }
+  }
+  function frame(now){
+    const dt=Math.min((now-(lastFrame||now))/1000,.05);lastFrame=now;
+    if(!game.paused){
+      visualTime+=dt;
+      pendingSimulation += dt;
+      const input = {
+        x: Number(keys.has('KeyD') || keys.has('ArrowRight')) - Number(keys.has('KeyA') || keys.has('ArrowLeft')),
+        y: Number(keys.has('KeyS') || keys.has('ArrowDown')) - Number(keys.has('KeyW') || keys.has('ArrowUp')),
+        aimX: pointer.x, aimY: pointer.y, fire: pointer.down
+      };
+      while (pendingSimulation >= simulationStep - 1e-9) {
+        const shot = pointer.pendingShot;
+        game.update(simulationStep, shot ? {...input, fire:true, aimX:shot.x, aimY:shot.y} : input);
+        pointer.pendingShot = null;
+        pendingSimulation -= simulationStep;
+      }
+      processEvents();
+      for (let i=effects.length-1;i>=0;i--) {
+        const {type,at}=effects[i];
+        if (visualTime-at>=effectStyles[type].life) effects.splice(i,1);
+      }
+    } else {
+      pendingSimulation = 0;
+    }
+    if(toastUntil&&now>toastUntil){el('toast').classList.remove('show');toastUntil=0;}
+    updateUi();draw();requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+})();
+
+</script>
+</body>
+</html>
