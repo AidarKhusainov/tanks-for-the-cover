@@ -6,7 +6,7 @@ const { Game, CONFIG } = require('./load-core.cjs');
 const STEP = 1 / 60;
 
 function scene(type, { player, tank, hp, blockers = [] }) {
-  const game = new Game();
+  const game = new Game(CONFIG);
   game.phase = 'battle';
   Object.assign(game.player, { x: player[0], y: player[1] });
   const spec = CONFIG.ENEMY_TYPES[type];

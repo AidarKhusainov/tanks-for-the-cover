@@ -21,7 +21,7 @@ test('enemies have immediate fire without windup', () => {
 });
 
 test('new attempt starts in preparation, with healthy player and base', () => {
-  const game = new Game();
+  const game = new Game(CONFIG);
   assert.equal(game.phase, 'prep');
   assert.equal(game.player.hp, 60);
   assert.equal(game.base.hp, 240);
@@ -29,7 +29,7 @@ test('new attempt starts in preparation, with healthy player and base', () => {
 });
 
 test('wave starts and creates the first enemy at a scheduled entrance', () => {
-  const game = new Game();
+  const game = new Game(CONFIG);
   assert.equal(game.startWave(), true);
   assert.equal(game.phase, 'battle');
   assert.equal(game.enemies.length, 1);
@@ -38,14 +38,14 @@ test('wave starts and creates the first enemy at a scheduled entrance', () => {
 });
 
 test('player cannot cross a solid ruin or enter enemy spawn zones', () => {
-  const game = new Game();
+  const game = new Game(CONFIG);
   assert.equal(game._positionFree(6, 4, game.player, true), false);
   assert.equal(game._positionFree(3, 1.5, game.player, true), false);
   assert.equal(game._positionFree(3, 1.5, game.player, false), true);
 });
 
 test('medium death creates a wreck at the exact position', () => {
-  const game = new Game();
+  const game = new Game(CONFIG);
   const enemy = mediumAt(9.4, 12.5);
   game._killEnemy(enemy);
   assert.equal(enemy.dead, true);
@@ -56,13 +56,13 @@ test('medium death creates a wreck at the exact position', () => {
 });
 
 test('medium destroyed inside an entrance does not create a wreck', () => {
-  const game = new Game();
+  const game = new Game(CONFIG);
   game._killEnemy(mediumAt(3, 1.5));
   assert.equal(game.wrecks.length, 0);
 });
 
 test('dismantling a wreck repairs the base and supports undo', () => {
-  const game = new Game();
+  const game = new Game(CONFIG);
   game.base.hp = 197;
   game._killEnemy(mediumAt(9.4, 12.5));
   const wreckId = game.wrecks[0].id;
@@ -77,7 +77,7 @@ test('dismantling a wreck repairs the base and supports undo', () => {
 });
 
 test('medium wreck lasts through its next wave and then expires', () => {
-  const game = new Game();
+  const game = new Game(CONFIG);
   game._killEnemy(mediumAt(9.4, 12.5));
   assert.equal(game.wrecks[0].expiresAfterWave, 2);
   game._completeWave();
@@ -89,7 +89,7 @@ test('medium wreck lasts through its next wave and then expires', () => {
 });
 
 test('route preview includes all three entrance lanes', () => {
-  const game = new Game();
+  const game = new Game(CONFIG);
   const routes = game.getPreviewPaths();
   assert.deepEqual(Array.from(routes, route => route.lane).sort(), ['A', 'B', 'C']);
   assert.ok(routes.every(route => route.points.length >= 2));
@@ -121,7 +121,7 @@ test('preview uses each selected type’s estimated time without changing combat
 });
 
 test('enemy has immediate shot at visible player when weapon is ready', () => {
-  const game = new Game();
+  const game = new Game(CONFIG);
   game.phase = 'battle';
   game.player.x = 10;
   game.player.y = 8;
@@ -138,7 +138,7 @@ test('enemy has immediate shot at visible player when weapon is ready', () => {
 });
 
 test('destroyed base ends the attempt in defeat', () => {
-  const game = new Game();
+  const game = new Game(CONFIG);
   game.startWave();
   game.base.hp = 0;
   game.update(1 / 60);
