@@ -49,7 +49,12 @@ for (const kind of ['wreck', 'base', 'player']) {
 
 test('a one-tank firing corridor keeps its ray open and the next enemy takes over', () => {
   const { game, shots, front, rear } = scene('wreck', CORRIDOR);
-  game.update(1.4);
+  const start = { x: front.x, y: front.y };
+  for (let frame = 0; frame < 84; frame++) {
+    game.update(FRAME);
+    for (const enemy of game.enemies) assert.ok(game._positionFree(enemy.x, enemy.y, enemy, false));
+  }
+  assert.deepEqual({ x: front.x, y: front.y }, start, 'a true single lane stays a queue');
   assert.deepEqual(shots, [{ shooter: 'front', hit: 'wreck' }, { shooter: 'front', hit: 'wreck' }]);
   assert.ok(!rear.firingPosition);
   front.hp = 0;

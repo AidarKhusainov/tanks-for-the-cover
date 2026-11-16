@@ -371,6 +371,7 @@
   const ENEMY_PROJECTILE_SPEED = 10;
   const FIRING_POSITION_RADII = [0.75, 1.25, 1.75, 2.25];
   const FIRING_RETRY_SECONDS = 0.25;
+  const ATTACK_MEMORY = 0.6;
   const HEAVY_BASE_DUEL_RADIUS = 7;
   const HEAVY_FINISH_HORIZON = 2.75;
   const HEAVY_AIM_MEMORY = 0.2;
@@ -389,7 +390,7 @@
   const approach = (from, to, limit) => from + clamp(to - from, -limit, limit);
   const DODGE_TURN_RATE = 1080 * Math.PI / 180;
   const ATTEMPT_LOG_VERSION = 1;
-  const BUILD_ID = 'prototype-06-two-maps-1';
+  const BUILD_ID = 'prototype-06-two-maps-2';
   const scenarios = typeof module !== 'undefined' && module.exports ? require('./scenarios.js') : root.TankScenarios;
   const ENEMY_TYPES = Object.freeze({
     light: Object.freeze({ hp: 20, speed: 2.6, damage: 8, range: 6, cooldown: 1.4 }),
@@ -1111,6 +1112,13 @@
           firingManeuver = this._firingManeuver(enemy, spec.range);
         }
       }
+      if (!dodge && stationary && stationaryTarget !== 'player' && this.config.AI_MODE === 'roles') {
+        const release = this._releaseFiringExit(enemy, spec.range);
+        if (release) {
+          stationary = false;
+          firingManeuver = { position: release };
+        }
+      } else if (stationaryTarget === 'player' || dodge) enemy.exitPath = null;
       enemy.stationaryTarget = stationaryTarget;
       const beforeMove = {x: enemy.x, y: enemy.y, angle: enemy.bodyAngle};
       enemy.arcStep = false;
@@ -1303,7 +1311,8 @@
       const world = Object.assign(Object.create(Game.prototype), this);
       const copies = new Map(this.enemies.map(actor => [actor, {
         ...actor, pressure: actor.pressure && { ...actor.pressure },
-        dodgeReturn: actor.dodgeReturn && { ...actor.dodgeReturn }
+        dodgeReturn: actor.dodgeReturn && { ...actor.dodgeReturn },
+        exitPath: actor.exitPath && { ...actor.exitPath, points: actor.exitPath.points.slice() }
       }]));
       world.enemies = [...copies.values()];
       world.bullets = [];
@@ -1434,6 +1443,9 @@
         // cycle ends. Objective fire must not silently stop pursuit movement.
         if (enemy.pressure) return null;
       }
+      if (this.config.AI_MODE === 'roles' && enemy.type === 'medium' && this._observedPlayerThreat(enemy, range)) {
+        return { kind: 'player', object: this.player, hold: true };
+      }
       const basePoint = this._visibleBasePoint(enemy, range);
       if (basePoint) return { kind: 'base', object: this.base, point: basePoint };
       const wreck = this.wrecks.find(item => item.id === enemy.targetWreckId);
@@ -1443,6 +1455,47 @@
       if (this.player.alive && distance(enemy, this.player) <= range + this.player.r + EPS &&
           this._clearShot(enemy, this.player, 'player')) return { kind: 'player', object: this.player };
       return null;
+    }
+
+    _observedPlayerThreat(enemy, range) {
+      const player = this.player;
+      if (!player.alive || distance(enemy, player) > range + player.r + EPS ||
+          !this._clearShot(enemy, player, 'player')) return null;
+      const incoming = this._heavyProjectileHits(player, enemy, 'enemy');
+      if (incoming.length) enemy.lastPlayerAttackAt = this._waveTime;
+      if (this._waveTime - (enemy.lastPlayerAttackAt ?? -Infinity) > ATTACK_MEMORY + EPS) return null;
+      // Observed fire permits defense; aim alone only estimates continued damage.
+      const aim = this._firstCollision(player.x, player.y,
+        player.x + this.playerWeaponRange * Math.cos(player.angle),
+        player.y + this.playerWeaponRange * Math.sin(player.angle), player.id);
+      if (aim?.kind === 'enemy' && aim.object === enemy) {
+        const flight = this.playerWeaponRange * aim.t / PLAYER_WEAPON.speed;
+        for (let i = 0; i < Math.ceil(enemy.hp / PLAYER_WEAPON.damage); i++) {
+          incoming.push({ seconds: player.cooldown + flight + i * PLAYER_WEAPON.cooldown, damage: PLAYER_WEAPON.damage });
+        }
+      }
+      incoming.sort((a, b) => a.seconds - b.seconds);
+      let hp = enemy.hp;
+      for (const hit of incoming) {
+        hp -= hit.damage;
+        if (hp <= 0) return { deathSeconds: hit.seconds };
+      }
+      return { deathSeconds: Infinity };
+    }
+
+    _counterfiring(enemy) {
+      if (enemy.type !== 'medium' && enemy.type !== 'heavy') return false;
+      const spec = this.config.ENEMY_TYPES[enemy.type];
+      const observed = this._observedPlayerThreat(enemy, spec.range);
+      if (enemy.type === 'medium') return Boolean(observed);
+      const playerTarget = this.player.alive && distance(enemy, this.player) <= spec.range + this.player.r + EPS &&
+        this._clearShot(enemy, this.player, 'player');
+      const aimed = this._heavyPlayerThreat(enemy, playerTarget);
+      if (!observed && !aimed) return false;
+      const finish = this._heavyBaseFinish(enemy, spec, this._visibleBasePoint(enemy, spec.range));
+      const death = Math.min(observed?.deathSeconds ?? Infinity, aimed?.deathSeconds ?? Infinity);
+      const margin = enemy.heavyTarget === 'player' ? HEAVY_FINISH_MARGIN : 0;
+      return !(finish && finish.seconds <= HEAVY_FINISH_HORIZON + EPS && finish.seconds + margin < death - EPS);
     }
 
     _heavyProjectileHits(owner, target, kind) {
@@ -1529,7 +1582,10 @@
       const wreck = this.wrecks.find(item => item.id === enemy.targetWreckId);
       const wreckTarget = wreck && distance(enemy, wreck) <= spec.range + wreck.r + EPS &&
         this._clearShot(enemy, wreck, 'wreck') ? { kind: 'wreck', object: wreck } : null;
-      const threat = this._heavyPlayerThreat(enemy, playerTarget);
+      const aimedThreat = this._heavyPlayerThreat(enemy, playerTarget);
+      const observedThreat = this._observedPlayerThreat(enemy, spec.range);
+      const threat = aimedThreat || observedThreat ? { deathSeconds: Math.min(
+        aimedThreat?.deathSeconds ?? Infinity, observedThreat?.deathSeconds ?? Infinity) } : null;
       const finish = this._heavyBaseFinish(enemy, spec, basePoint);
       const deathSeconds = threat?.deathSeconds ?? Infinity;
       const margin = enemy.heavyTarget === 'player' ? HEAVY_FINISH_MARGIN : 0;
@@ -1541,12 +1597,12 @@
       if (canFinish) {
         target = baseTarget;
         reason = 'base_finish';
-      } else if (wreckTarget) {
-        target = wreckTarget;
-        reason = 'assigned_breach';
       } else if (threat) {
         target = { ...playerTarget, hold: true };
         reason = 'player_threat';
+      } else if (wreckTarget) {
+        target = wreckTarget;
+        reason = 'assigned_breach';
       } else if (baseTarget) {
         target = baseTarget;
         reason = 'base_pressure';
@@ -1724,6 +1780,50 @@
       // Yield only to a real or reserved lane for the same target. Otherwise
       // resume navigation so two tanks blocked on unrelated targets can move.
       return firingLanes.some(lane => lane.kind === kind && lane.id === object.id) ? { position: null } : null;
+    }
+
+    _releaseFiringExit(enemy, range) {
+      const target = enemy.activeFiringTarget;
+      if (!target || target.kind === 'player') { enemy.exitPath = null; return null; }
+      const allies = this.enemies.filter(actor => actor !== enemy && actor.hp > 0 && !actor.dead);
+      const bodies = this.player.alive ? [...allies, this.player] : allies;
+      const clear = (a, b) => this._navigationSegmentFree(a.x, a.y, b.x, b.y, false) &&
+        !bodies.some(body => pointSegmentDistanceSq(body.x, body.y, a.x, a.y, b.x, b.y) < square(enemy.r + body.r) - EPS);
+      const previous = enemy.exitPath;
+      if (previous?.kind === target.kind && previous.id === target.object.id) {
+        while (previous.points.length && distance(enemy, previous.points[0]) < EPS) previous.points.shift();
+        if (previous.points.length && clear(enemy, previous.points[0])) return previous.points[0];
+      }
+      enemy.exitPath = null;
+      if (this._waveTime < (enemy.exitRetryAt ?? 0)) return null;
+      enemy.exitRetryAt = this._waveTime + ROUTE_RECHECK;
+      // A stopped gun only yields when a nearby follower actually cannot move.
+      const waiting = allies.some(actor => !actor.stationaryTarget && !actor.dodge &&
+        distance(actor, enemy) < 2.5 && actor.stuck > 0.15);
+      if (!waiting) return null;
+      const origin = { x: enemy.x, y: enemy.y };
+      const queue = [{ point: origin, path: [] }];
+      const seen = new Set(['0,0']);
+      // Bounded local search handles a bent exit. It never runs the world solver.
+      for (let i = 0; i < queue.length && i < 169; i++) {
+        const { point, path } = queue[i];
+        if (path.length && distance(origin, point) >= 1.1 &&
+            distance(point, target.object) < distance(origin, target.object) - 0.25 &&
+            this._firingPoint({ ...point, id: enemy.id }, range, target.kind, target.object) &&
+            pointSegmentDistanceSq(point.x, point.y, origin.x, origin.y, target.point.x, target.point.y) >= square(enemy.r + 0.05)) {
+          enemy.exitPath = { kind: target.kind, id: target.object.id, points: path };
+          return path[0];
+        }
+        if (path.length >= 6) continue;
+        for (const [dx, dy] of [[0,1],[1,0],[-1,0],[0,-1],[1,1],[-1,1],[1,-1],[-1,-1]]) {
+          const next = { x: point.x + dx * 0.5, y: point.y + dy * 0.5 };
+          const key = `${Math.round((next.x-origin.x)*2)},${Math.round((next.y-origin.y)*2)}`;
+          if (seen.has(key) || distance(next, origin) > 3 || !clear(point, next)) continue;
+          seen.add(key);
+          queue.push({ point: next, path: [...path, next] });
+        }
+      }
+      return null;
     }
 
     _moveToFiringPosition(enemy, position, speed, dt) {
@@ -2165,6 +2265,7 @@
         return;
       }
       if (hit.kind === 'enemy' && bullet.team === 'player') {
+        target.lastPlayerAttackAt = this._waveTime;
         target.hp = Math.max(0, target.hp - bullet.damage);
         if (!target.hp) this._killEnemy(target);
       }
@@ -2627,7 +2728,7 @@
 
     _routeCohort(enemy) {
       return this.enemies.filter(actor => actor.id !== enemy.id && actor.hp > 0 && !actor.dead &&
-        !actor.dodge && !actor.pressure && enemy.lane != null && actor.lane === enemy.lane &&
+        !actor.dodge && !actor.pressure && !this._counterfiring(actor) && enemy.lane != null && actor.lane === enemy.lane &&
         distance(enemy, actor) <= BREACH_GROUP_RADIUS &&
         staticSegmentFree(this.config, enemy.x, enemy.y, actor.x, actor.y));
     }
@@ -2860,7 +2961,8 @@
         }
         if (!wreck) wreck = this._obstacleOnRay(from, route.basePoint, remaining);
         if (!wreck) {
-          const ownPath = this._baseShotApproach(enemy, spec, start, points, remaining, movingBlockers);
+          const ownPath = this._baseShotApproach(enemy, spec, start, points, remaining, movingBlockers) ??
+            (points.length ? points : null);
           let time = Infinity;
           if (ownPath) {
             const arrival = elapsed + this._travelSeconds([start, ...ownPath], spec.speed, heading);
@@ -2879,7 +2981,7 @@
           }
           if (!Number.isFinite(time)) return null;
           return {
-            points: firstStop?.points ?? ownPath ?? [],
+            points: firstStop?.points ?? ownPath ?? points,
             blockedWreckId: breachIds[0] ?? null,
             breachIds, time, shooters: firstStop?.shooters ?? [],
             supportPositions: firstStop?.supportPositions
@@ -2891,7 +2993,7 @@
         // Nearby teammates can use separate rays, reserved below.
         const approach = this._breachApproach(prefix, wreck, blockers, spec, heading, movingBlockers);
         const shooters = [];
-        if (approach) {
+        if (approach && !this._counterfiring(enemy)) {
           const fireAt = Math.max(readyAt, elapsed + approach.travel);
           shooters.push({ ...approach, actor: enemy, r: enemy.r, fireAt, hitAt: fireAt + approach.flight, spec });
         }
