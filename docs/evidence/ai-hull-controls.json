@@ -1,0 +1,521 @@
+{
+  "htmlSha256": "2f7cae35c7b499aa4fb9df4bf3547b0c5f6b7f897be323a15a0533f1fe6fcb6c",
+  "ordinaryWreckHistory": {
+    "magnetic": {
+      "preparation": [
+        {
+          "wave": 6,
+          "baseHp": 240,
+          "wrecks": [
+            {
+              "id": "w204",
+              "sourceWave": 5,
+              "type": "heavy",
+              "expiresAfterWave": 7
+            },
+            {
+              "id": "w216",
+              "sourceWave": 5,
+              "type": "medium",
+              "expiresAfterWave": 6
+            }
+          ]
+        },
+        {
+          "wave": 7,
+          "baseHp": 240,
+          "wrecks": [
+            {
+              "id": "w204",
+              "sourceWave": 5,
+              "type": "heavy",
+              "expiresAfterWave": 7
+            },
+            {
+              "id": "w232",
+              "sourceWave": 6,
+              "type": "medium",
+              "expiresAfterWave": 7
+            },
+            {
+              "id": "w243",
+              "sourceWave": 6,
+              "type": "medium",
+              "expiresAfterWave": 7
+            },
+            {
+              "id": "w289",
+              "sourceWave": 6,
+              "type": "medium",
+              "expiresAfterWave": 7
+            }
+          ]
+        },
+        {
+          "wave": 8,
+          "baseHp": 240,
+          "wrecks": [
+            {
+              "id": "w316",
+              "sourceWave": 7,
+              "type": "heavy",
+              "expiresAfterWave": 9
+            },
+            {
+              "id": "w321",
+              "sourceWave": 7,
+              "type": "medium",
+              "expiresAfterWave": 8
+            },
+            {
+              "id": "w330",
+              "sourceWave": 7,
+              "type": "medium",
+              "expiresAfterWave": 8
+            },
+            {
+              "id": "w464",
+              "sourceWave": 7,
+              "type": "heavy",
+              "expiresAfterWave": 9
+            }
+          ]
+        }
+      ],
+      "expiry": [
+        {
+          "wave": 5,
+          "id": "w179",
+          "sourceWave": 4,
+          "type": "medium",
+          "expiresAfterWave": 5
+        },
+        {
+          "wave": 7,
+          "id": "w204",
+          "sourceWave": 5,
+          "type": "heavy",
+          "expiresAfterWave": 7
+        },
+        {
+          "wave": 7,
+          "id": "w243",
+          "sourceWave": 6,
+          "type": "medium",
+          "expiresAfterWave": 7
+        },
+        {
+          "wave": 8,
+          "id": "w321",
+          "sourceWave": 7,
+          "type": "medium",
+          "expiresAfterWave": 8
+        },
+        {
+          "wave": 8,
+          "id": "w330",
+          "sourceWave": 7,
+          "type": "medium",
+          "expiresAfterWave": 8
+        }
+      ]
+    },
+    "city": {
+      "preparation": [
+        {
+          "wave": 6,
+          "baseHp": 156,
+          "wrecks": [
+            {
+              "id": "w113",
+              "sourceWave": 4,
+              "type": "heavy",
+              "expiresAfterWave": 6
+            },
+            {
+              "id": "w203",
+              "sourceWave": 5,
+              "type": "medium",
+              "expiresAfterWave": 6
+            }
+          ]
+        },
+        {
+          "wave": 7,
+          "baseHp": 202,
+          "wrecks": [
+            {
+              "id": "w209",
+              "sourceWave": 6,
+              "type": "medium",
+              "expiresAfterWave": 7
+            },
+            {
+              "id": "w245",
+              "sourceWave": 6,
+              "type": "medium",
+              "expiresAfterWave": 7
+            },
+            {
+              "id": "w255",
+              "sourceWave": 6,
+              "type": "medium",
+              "expiresAfterWave": 7
+            }
+          ]
+        },
+        {
+          "wave": 8,
+          "baseHp": 168,
+          "wrecks": [
+            {
+              "id": "w276",
+              "sourceWave": 7,
+              "type": "medium",
+              "expiresAfterWave": 8
+            },
+            {
+              "id": "w287",
+              "sourceWave": 7,
+              "type": "heavy",
+              "expiresAfterWave": 9
+            },
+            {
+              "id": "w318",
+              "sourceWave": 7,
+              "type": "heavy",
+              "expiresAfterWave": 9
+            },
+            {
+              "id": "w323",
+              "sourceWave": 7,
+              "type": "medium",
+              "expiresAfterWave": 8
+            }
+          ]
+        }
+      ],
+      "expiry": [
+        {
+          "wave": 5,
+          "id": "w144",
+          "sourceWave": 4,
+          "type": "medium",
+          "expiresAfterWave": 5
+        },
+        {
+          "wave": 7,
+          "id": "w255",
+          "sourceWave": 6,
+          "type": "medium",
+          "expiresAfterWave": 7
+        }
+      ]
+    }
+  },
+  "calibrationScenes": {
+    "magnetic": {
+      "A": {
+        "delay": {
+          "baseline": 374,
+          "blocked": 609,
+          "exactTicks": 235,
+          "lowerBoundTicks": null,
+          "requiredTicks": 90,
+          "passed": true
+        },
+        "removedMatchesEmpty": true,
+        "serialClearance": null
+      },
+      "C": {
+        "delay": {
+          "baseline": 224,
+          "blocked": 361,
+          "exactTicks": 137,
+          "lowerBoundTicks": null,
+          "requiredTicks": 90,
+          "passed": true
+        },
+        "removedMatchesEmpty": true,
+        "serialClearance": null
+      },
+      "B": {
+        "delay": {
+          "baseline": 390,
+          "blocked": 688,
+          "exactTicks": 298,
+          "lowerBoundTicks": null,
+          "requiredTicks": 90,
+          "passed": true
+        },
+        "removedMatchesEmpty": true,
+        "serialClearance": null
+      }
+    },
+    "city": {
+      "A": {
+        "delay": {
+          "baseline": 168,
+          "blocked": 284,
+          "exactTicks": 116,
+          "lowerBoundTicks": null,
+          "requiredTicks": 90,
+          "passed": true
+        },
+        "removedMatchesEmpty": true,
+        "serialClearance": null
+      },
+      "C": {
+        "delay": {
+          "baseline": 626,
+          "blocked": 885,
+          "exactTicks": 259,
+          "lowerBoundTicks": null,
+          "requiredTicks": 90,
+          "passed": true
+        },
+        "removedMatchesEmpty": true,
+        "serialClearance": null
+      },
+      "B": {
+        "delay": {
+          "baseline": 610,
+          "blocked": 896,
+          "exactTicks": 286,
+          "lowerBoundTicks": null,
+          "requiredTicks": 90,
+          "passed": true
+        },
+        "removedMatchesEmpty": true,
+        "serialClearance": true
+      }
+    }
+  },
+  "recordedReplays": [
+    {
+      "mapId": "magnetic",
+      "wave": 7,
+      "mode": "recorded-preparation-replay",
+      "branches": {
+        "keepRecorded": {
+          "count": 4,
+          "firstBaseShot": 443,
+          "firstDamage": 478,
+          "phase": "lost"
+        },
+        "spentOneUseful": {
+          "reason": "required-recorded-wreck-missing"
+        },
+        "noWrecks": {
+          "count": 0,
+          "firstBaseShot": 355,
+          "firstDamage": 390,
+          "phase": "lost"
+        }
+      }
+    },
+    {
+      "mapId": "magnetic",
+      "wave": 8,
+      "mode": "recorded-preparation-replay",
+      "branches": {
+        "keepRecorded": {
+          "count": 4,
+          "firstBaseShot": 735,
+          "firstDamage": 770,
+          "phase": "lost"
+        },
+        "spentOneUseful": {
+          "reason": "required-recorded-wreck-missing"
+        },
+        "noWrecks": {
+          "count": 0,
+          "firstBaseShot": 530,
+          "firstDamage": 565,
+          "phase": "lost"
+        }
+      }
+    },
+    {
+      "mapId": "city",
+      "wave": 7,
+      "mode": "recorded-preparation-replay",
+      "branches": {
+        "keepRecorded": {
+          "count": 3,
+          "firstBaseShot": 567,
+          "firstDamage": 602,
+          "phase": "lost"
+        },
+        "spentOneUseful": {
+          "reason": "required-recorded-wreck-missing"
+        },
+        "noWrecks": {
+          "count": 0,
+          "firstBaseShot": 376,
+          "firstDamage": 411,
+          "phase": "lost"
+        }
+      }
+    },
+    {
+      "mapId": "city",
+      "wave": 8,
+      "mode": "recorded-preparation-replay",
+      "branches": {
+        "keepRecorded": {
+          "count": 4,
+          "firstBaseShot": 803,
+          "firstDamage": 838,
+          "phase": "lost"
+        },
+        "spentOneUseful": {
+          "count": 3,
+          "firstBaseShot": 803,
+          "firstDamage": 838,
+          "phase": "lost"
+        },
+        "noWrecks": {
+          "count": 0,
+          "firstBaseShot": 803,
+          "firstDamage": 838,
+          "phase": "lost"
+        }
+      }
+    }
+  ],
+  "artificialCalendarControls": [
+    {
+      "mapId": "magnetic",
+      "wave": 7,
+      "mode": "artificial-calendar-controls",
+      "branches": {
+        "maximum": {
+          "count": 4,
+          "firstBaseShot": 682,
+          "firstDamage": 711,
+          "phase": "lost"
+        },
+        "oneUsefulSpent": {
+          "count": 3,
+          "firstBaseShot": 682,
+          "firstDamage": 711,
+          "phase": "lost"
+        },
+        "oneOlderExpired": {
+          "count": 3,
+          "firstBaseShot": 545,
+          "firstDamage": 574,
+          "phase": "lost",
+          "sourceWave": 5,
+          "removedAfterWave": 6
+        },
+        "noWrecks": {
+          "count": 0,
+          "firstBaseShot": 355,
+          "firstDamage": 390,
+          "phase": "lost"
+        }
+      }
+    },
+    {
+      "mapId": "magnetic",
+      "wave": 8,
+      "mode": "artificial-calendar-controls",
+      "branches": {
+        "maximum": {
+          "count": 5,
+          "firstBaseShot": 893,
+          "firstDamage": 928,
+          "phase": "lost"
+        },
+        "oneUsefulSpent": {
+          "count": 4,
+          "firstBaseShot": 709,
+          "firstDamage": 744,
+          "phase": "lost"
+        },
+        "oneOlderExpired": {
+          "count": 4,
+          "firstBaseShot": 893,
+          "firstDamage": 928,
+          "phase": "lost",
+          "sourceWave": 6,
+          "removedAfterWave": 7
+        },
+        "noWrecks": {
+          "count": 0,
+          "firstBaseShot": 530,
+          "firstDamage": 565,
+          "phase": "lost"
+        }
+      }
+    },
+    {
+      "mapId": "city",
+      "wave": 7,
+      "mode": "artificial-calendar-controls",
+      "branches": {
+        "maximum": {
+          "count": 4,
+          "firstBaseShot": 794,
+          "firstDamage": 823,
+          "phase": "lost"
+        },
+        "oneUsefulSpent": {
+          "count": 3,
+          "firstBaseShot": 678,
+          "firstDamage": 707,
+          "phase": "lost"
+        },
+        "oneOlderExpired": {
+          "count": 3,
+          "firstBaseShot": 567,
+          "firstDamage": 602,
+          "phase": "lost",
+          "sourceWave": 5,
+          "removedAfterWave": 6
+        },
+        "noWrecks": {
+          "count": 0,
+          "firstBaseShot": 376,
+          "firstDamage": 411,
+          "phase": "lost"
+        }
+      }
+    },
+    {
+      "mapId": "city",
+      "wave": 8,
+      "mode": "artificial-calendar-controls",
+      "branches": {
+        "maximum": {
+          "count": 5,
+          "firstBaseShot": 1059,
+          "firstDamage": 1094,
+          "phase": "lost"
+        },
+        "oneUsefulSpent": {
+          "count": 4,
+          "firstBaseShot": 1059,
+          "firstDamage": 1094,
+          "phase": "lost"
+        },
+        "oneOlderExpired": {
+          "count": 4,
+          "firstBaseShot": 992,
+          "firstDamage": 1027,
+          "phase": "lost",
+          "sourceWave": 6,
+          "removedAfterWave": 7
+        },
+        "noWrecks": {
+          "count": 0,
+          "firstBaseShot": 803,
+          "firstDamage": 838,
+          "phase": "lost"
+        }
+      }
+    }
+  ]
+}

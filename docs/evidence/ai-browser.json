@@ -1,0 +1,14 @@
+{
+  "mode": "browser-diagnostic-and-map-smoke",
+  "sourceHtmlSha256": "526990f7aa003ee2158a1589e048480583844c508bdc5c2fd9cd1851d641ba55",
+  "finalHtmlSha256": "2f7cae35c7b499aa4fb9df4bf3547b0c5f6b7f897be323a15a0533f1fe6fcb6c",
+  "carryForward": "Final HTML differs only in city wave 6 B start: 1026 to 1101 ticks; exercised code and wave 1 unchanged.",
+  "baselineWide": {"seconds":8.02,"shotsByActor":[7,0],"frontStart":[14,9.01],"frontEnd":[14,9.01]},
+  "fixedWide": {"seconds":8.02,"shotsByActor":[7,6],"frontStart":[14,9.01],"frontEnd":[15,9.51],"rearFirstShotSeconds":0.867},
+  "magneticColumn": {"seconds":8.02,"shotsByActor":[5,5,3],"firstShotSeconds":[0.017,1.433,5.183],"frontStart":[7.375,11.375],"frontEnd":[8.875,14.375]},
+  "medium": {"firstPlayerShotSeconds":0.2,"nextWreckShotSeconds":1.4,"playerHpAfter":48,"heldPosition":true},
+  "heavy": {"firstPlayerShotSeconds":0.2,"nextWreckShotSeconds":2.2,"playerHpAfter":40,"heldPosition":true},
+  "mapSelectionAndWaveOne": {"magnetic":true,"city":true},
+  "consoleWarningsAndErrors":[],
+  "offlineFileUrl": "Not repeated: browser policy disallows file: navigation; no bypass attempted. Historical offline verification is documented separately for ffdd60f1."
+}

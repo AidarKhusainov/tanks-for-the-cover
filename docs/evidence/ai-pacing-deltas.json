@@ -1,0 +1,71 @@
+{
+  "candidateSha256": "2f7cae35c7b499aa4fb9df4bf3547b0c5f6b7f897be323a15a0533f1fe6fcb6c",
+  "baselineSha256": "ffdd60f1155686d14cedc57c49157eef076a530d1e8f16f196c1967d9c33a83c",
+  "maps": {
+    "magnetic": [],
+    "city": [
+      {
+        "wave": 4,
+        "lane": "B",
+        "firstShot": [
+          1512,
+          1513
+        ],
+        "firstHit": [
+          1547,
+          1548
+        ]
+      },
+      {
+        "wave": 6,
+        "lane": "B",
+        "firstShot": [
+          1711,
+          1715
+        ],
+        "firstHit": [
+          1740,
+          1744
+        ],
+        "spawnTicks": [
+          [
+            1026,
+            1176,
+            1326
+          ],
+          [
+            1101,
+            1251,
+            1401
+          ]
+        ]
+      },
+      {
+        "wave": 8,
+        "lane": "B",
+        "firstShot": [
+          1112,
+          1111
+        ],
+        "firstHit": [
+          1141,
+          1140
+        ],
+        "spawnTicks": [
+          [
+            503,
+            653,
+            803,
+            953
+          ],
+          [
+            458,
+            608,
+            758,
+            908
+          ]
+        ]
+      }
+    ]
+  }
+}

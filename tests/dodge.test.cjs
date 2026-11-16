@@ -85,8 +85,10 @@ for (const type of ['light', 'medium']) {
     const moved = Math.hypot(enemy.x - before.x, enemy.y - before.y);
     if (isLight) assert.ok(Math.abs(moved - 2.6 * STEP) < 1e-6);
     else {
-      assert.equal(enemy.stationaryTarget, 'base');
+      assert.equal(enemy.stationaryTarget, 'player', 'observed attack holds brief self-defense after the dodge');
       assert.equal(moved, 0);
+      game.update(.7);
+      assert.equal(enemy.stationaryTarget, 'base', 'after attack memory expires, resume base pressure');
     }
   });
 }
@@ -164,6 +166,8 @@ test('medium predicts when a moving tank will leave the line before the shot rea
     blockers: [{kind: 'enemy', x: 6.2, y: 12.61}] });
   const blocker = fixture.game.enemies[1];
   Object.assign(blocker, {
+    // A light in protected return keeps moving; an attacked heavy now holds to counterfire.
+    type: 'light', reacquireDelay: 2,
     route: [{ x: 6.2, y: 13.5 }], routeIndex: 0, routeVersion: fixture.game.navigationVersion
   });
   const shot = fire(fixture, 20, 12.15, 1.7);

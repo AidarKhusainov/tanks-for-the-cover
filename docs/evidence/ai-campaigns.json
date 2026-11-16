@@ -1,0 +1,184 @@
+{
+  "schemaVersion": 1,
+  "mode": "ordinary-input-campaigns",
+  "htmlSha256": "2f7cae35c7b499aa4fb9df4bf3547b0c5f6b7f897be323a15a0533f1fe6fcb6c",
+  "policySha256": "9a7a1c75d4cc3e3374c62173ac6f8798452719550f4fdf458e2b171e0a80458f",
+  "campaigns": [
+    {
+      "kind": "terminal",
+      "mapId": "magnetic",
+      "mode": "engine",
+      "phase": "won",
+      "wave": 8,
+      "baseHp": 88,
+      "player": {
+        "id": "player",
+        "x": 14.325557788620843,
+        "y": 11.946617731690694,
+        "r": 0.5,
+        "module": "engine",
+        "angle": -0.12005898500904834,
+        "bodyAngle": -0.7853981633974483,
+        "alive": true,
+        "respawn": 0,
+        "cooldown": 0,
+        "maxHp": 60,
+        "hp": 60
+      },
+      "stats": {
+        "kills": 66,
+        "deaths": 0,
+        "shots": 207,
+        "wrecksCreated": 25,
+        "repairs": 0,
+        "baseRepaired": 0,
+        "time": 156.08333333334969
+      },
+      "ticks": 10065,
+      "maxStepMs": 598.5851420000108,
+      "meanStepMs": 2.2553137074019123,
+      "sha256": "2f7cae35c7b499aa4fb9df4bf3547b0c5f6b7f897be323a15a0533f1fe6fcb6c",
+      "artifacts": {
+        "commands.ndjson": "c3c07c435ce8f137b06f540f2b7378e30882c7e46d741f1dc9f25476ddf8c689",
+        "attempt.json": "ad96b85f6089892510890ee2d38014065f3d0de111a75b22cbf7d9e98bd5a4b7",
+        "observations.ndjson": "fae567f774d863d15f48193154d400f8b194bed29e34389cfd84f4d91d36548f",
+        "result.json": "301b15f8b807a61a82f58a693ee984983e1544bbde7d0d43e7798d7b7346d1b4",
+        "prep-6.json": "4a3cfe685f3c112f0a5e53f7163163abd90b517d770600a4ecd0f2d1cdec5487",
+        "prep-7.json": "7fc09f4ddf44c92031fee50ac9c1d0f2549c27b61a73d3c744ebb72251ce7bd7",
+        "prep-8.json": "661e54907b9f7b201b2f6a2d7089bb89fcf8ebd7bd0d40d9736672561ce947c6"
+      }
+    },
+    {
+      "kind": "terminal",
+      "mapId": "magnetic",
+      "mode": "barrel",
+      "phase": "won",
+      "wave": 8,
+      "baseHp": 4,
+      "player": {
+        "id": "player",
+        "x": 17.34701498516243,
+        "y": 14.135052687520078,
+        "r": 0.5,
+        "module": "barrel",
+        "angle": -0.8508015732531636,
+        "bodyAngle": 0,
+        "alive": true,
+        "respawn": 0,
+        "cooldown": 0.2,
+        "maxHp": 60,
+        "hp": 48
+      },
+      "stats": {
+        "kills": 66,
+        "deaths": 0,
+        "shots": 277,
+        "wrecksCreated": 25,
+        "repairs": 4,
+        "baseRepaired": 116,
+        "time": 161.6333333333541
+      },
+      "ticks": 10359,
+      "maxStepMs": 655.5620309999995,
+      "meanStepMs": 2.705600861666195,
+      "sha256": "2f7cae35c7b499aa4fb9df4bf3547b0c5f6b7f897be323a15a0533f1fe6fcb6c",
+      "artifacts": {
+        "commands.ndjson": "3c0f326d3f40adb2af0023b4406c8318df604f4cf5e77e1f994af837e296230e",
+        "attempt.json": "cb824f5ee4ed062d966c91e03a93d9e484c0515a3565f4ea4d7a302d95e74ddf",
+        "observations.ndjson": "0cabfb99ed7395520f05b139c8ecb0dfee4fb995365ae210b85688432454a649",
+        "result.json": "bac795a81f093ab280b01ce1dd7f2a6e9025c94fc486be24c50db1271f1c1307",
+        "prep-6.json": "4dae738022e1d6cc114f13a634b21293edd43cfcfacd29d7c5ca61b69c4091d6",
+        "prep-7.json": "cac77adcb0d9576d934b47f64954fb3b34aa310268b60d2b24106ad31b97c95b",
+        "prep-8.json": "1f65abfc57f33af3bce13b413a14a49017800020dc6df598bca8b0ab802da00b"
+      }
+    },
+    {
+      "kind": "terminal",
+      "mapId": "city",
+      "mode": "engine",
+      "phase": "won",
+      "wave": 8,
+      "baseHp": 200,
+      "player": {
+        "id": "player",
+        "x": 2.1329750527396145,
+        "y": 0.6918678862690485,
+        "r": 0.5,
+        "module": "engine",
+        "angle": 0.04439912853250251,
+        "bodyAngle": -1.5707963267948966,
+        "alive": true,
+        "respawn": 0,
+        "cooldown": 0.26666666666666666,
+        "maxHp": 60,
+        "hp": 40
+      },
+      "stats": {
+        "kills": 66,
+        "deaths": 0,
+        "shots": 225,
+        "wrecksCreated": 25,
+        "repairs": 8,
+        "baseRepaired": 192,
+        "time": 171.16666666669502
+      },
+      "ticks": 13277,
+      "maxStepMs": 433.99079699999857,
+      "meanStepMs": 1.800551932062965,
+      "sha256": "2f7cae35c7b499aa4fb9df4bf3547b0c5f6b7f897be323a15a0533f1fe6fcb6c",
+      "artifacts": {
+        "commands.ndjson": "6e5e4dc3e7f2bb4a36fdadd10242f8de1e691e3b8d593960a5f5768fa7266942",
+        "attempt.json": "9fb49abb40160fd14ceeb0723314fecc8b472c4de587d86c61c089cde9cc5365",
+        "observations.ndjson": "560feebb6abd6940ac80528ef1e0f0f7ffcaa0e3ce9c6e055860eb8b34f8184e",
+        "result.json": "efbf3811fb0aa881c5b075ef79a1e7e888556c2cfd1dfc48c139fbc3984df525",
+        "prep-6.json": "5c247efd0523aa133ad2c56074c06dbf077dc0480fdd193be8f6b2db98933fb7",
+        "prep-7.json": "5b5b21ed48236d5f2205d26eaa5d26379bec03139de3201ddd90f3e844db0e29",
+        "prep-8.json": "b6e541cb436b228a70683afaabe1c0cf3a65ef4091deabd57b697e97fd986f62"
+      }
+    },
+    {
+      "kind": "terminal",
+      "mapId": "city",
+      "mode": "barrel",
+      "phase": "won",
+      "wave": 8,
+      "baseHp": 47,
+      "player": {
+        "id": "player",
+        "x": 2.8927938871107433,
+        "y": 9.66104101008209,
+        "r": 0.5,
+        "module": "barrel",
+        "angle": -2.1048577522417222,
+        "bodyAngle": 3.141592653589793,
+        "alive": true,
+        "respawn": 0,
+        "cooldown": 0.2,
+        "maxHp": 60,
+        "hp": 52
+      },
+      "stats": {
+        "kills": 66,
+        "deaths": 0,
+        "shots": 257,
+        "wrecksCreated": 25,
+        "repairs": 6,
+        "baseRepaired": 163,
+        "time": 189.25000000004275
+      },
+      "ticks": 13024,
+      "maxStepMs": 461.5143739999985,
+      "meanStepMs": 2.6209860766277435,
+      "sha256": "2f7cae35c7b499aa4fb9df4bf3547b0c5f6b7f897be323a15a0533f1fe6fcb6c",
+      "artifacts": {
+        "commands.ndjson": "2aaf1f8ed92e90c24510e7b7fe483a5798cb87179b2b8cb8c8a4ae8ce5cf8f52",
+        "attempt.json": "9390ed120eab57803872cbc776a9783beaa5ef3f61d9c07643ba36bb576528bc",
+        "observations.ndjson": "38dd3eb545a700c00e9fa198a9b90ce85069e3716ae7033756fdac24ddef0517",
+        "result.json": "812d715dc44cf6c61f08a6fcf3a0bb48e51b98a614e5168d76fcca10bb5e0a35",
+        "prep-6.json": "21b5a7e41dfc7e006eb342ff93e881e854d02990bdee00d0b33037d30883561c",
+        "prep-7.json": "bd096404ebd7a5a7f114d20e17decf200908640fd230fd540fbd14311b23b52d",
+        "prep-8.json": "f6d1ba480a68cb44982c579a0a247d6c761cf8b1ffa82bb85ad82489fe04e933"
+      }
+    }
+  ]
+}

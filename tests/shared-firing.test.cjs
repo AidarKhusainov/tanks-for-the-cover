@@ -49,7 +49,12 @@ for (const kind of ['wreck', 'base', 'player']) {
 
 test('a one-tank firing corridor keeps its ray open and the next enemy takes over', () => {
   const { game, shots, front, rear } = scene('wreck', CORRIDOR);
-  game.update(1.4);
+  const start = { x: front.x, y: front.y };
+  for (let frame = 0; frame < 84; frame++) {
+    game.update(FRAME);
+    for (const enemy of game.enemies) assert.ok(game._positionFree(enemy.x, enemy.y, enemy, false));
+  }
+  assert.deepEqual({ x: front.x, y: front.y }, start, 'a true single lane stays a queue');
   assert.deepEqual(shots, [{ shooter: 'front', hit: 'wreck' }, { shooter: 'front', hit: 'wreck' }]);
   assert.ok(!rear.firingPosition);
   front.hp = 0;
@@ -78,4 +83,34 @@ test('a dodge releases a reserved position before tactical movement resumes', ()
   game._updateEnemy(rear, FRAME, null);
   assert.equal(rear.dodge, null);
   assert.ok(rear.dodgeReturn || rear.smoothDrive);
+});
+
+test('a front gun releases a widening exit when its follower yields without route collision', () => {
+  const game = new Game({ ...OPEN, WALLS: [
+    { x: 0, y: 0, w: 13.2, h: 9 },
+    { x: 14.8, y: 0, w: 13.2, h: 9 }
+  ] });
+  game.phase = 'battle';
+  Object.assign(game.player, { alive: false, respawn: 100 });
+  const front = { id: 'front', type: 'medium', hp: 60, r: .5, x: 14, y: 9.01 };
+  const rear = { id: 'rear', type: 'medium', hp: 60, r: .5, x: 14, y: 7.76 };
+  game.enemies = [front, rear];
+  const shots = new Set();
+  const shoot = game._shoot;
+  game._shoot = function (actor, ...args) {
+    const fired = shoot.call(this, actor, ...args);
+    if (fired) shots.add(actor.id);
+    return fired;
+  };
+  game.update(FRAME);
+  assert.equal(rear.stuck, 0, 'yielding for a firing lane has not collided with its route');
+  assert.equal(rear.y, 7.76);
+  for (let frame = 1; frame < 480; frame++) {
+    game.update(FRAME);
+    for (const enemy of game.enemies) assert.ok(game._positionFree(enemy.x, enemy.y, enemy, false),
+      'releasing the exit must respect wall and tank contours');
+  }
+  assert.ok(Math.hypot(front.x - 14, front.y - 9.01) > .5, 'front releases the usable exit');
+  assert.ok(game.base.hp < 156, 'the opened rear ray contributes damage beyond seven front rounds');
+  assert.deepEqual([...shots].sort(), ['front', 'rear'], 'both guns actually fire');
 });

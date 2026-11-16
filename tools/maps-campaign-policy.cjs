@@ -53,9 +53,9 @@ function positionFree(p, actors, radius = .5) {
   for (const a of actors) if ((p.x-a.x)**2+(p.y-a.y)**2 < (radius+a.r)**2-1e-7) return false;
   return true;
 }
-function predict(p, vx, vy, seconds, actors) {
+function predict(p, vx, vy, seconds, actors, maxStep = .05) {
   const out = {x: p.x, y: p.y};
-  const steps = Math.ceil(seconds/.05);
+  const steps = Math.ceil(seconds/maxStep);
   for (let i=0; i<steps; i++) {
     const x = out.x + vx*seconds/steps;
     if (positionFree({x, y: out.y}, actors)) out.x = x;
@@ -229,10 +229,12 @@ function plan(s, actors, destination) {
   return {point, goal, enemy: bestEnemy?.id};
 }
 
-function direction(s, waypoint, aim, actors) {
+const nearbyEnemyBullet = (b, p) => b.team === 'enemy' && dist(b,p) < b.remaining + 2.5;
+
+function direction(s, waypoint, aim, actors, maxStep) {
   const p = s.player;
   const speed = p.module === 'engine' ? 5 : 4;
-  const risky = s.bullets.filter(b => b.team === 'enemy' && dist(b,p) < b.remaining + 2.5);
+  const risky = s.bullets.filter(b => nearbyEnemyBullet(b, p));
   const bullets = risky.map(b => {
     const endpoint = {x:b.x+b.dx*b.remaining, y:b.y+b.dy*b.remaining};
     const collide = firstBlock(b,endpoint,actors,b.ownerId);
@@ -246,7 +248,7 @@ function direction(s, waypoint, aim, actors) {
     const length = Math.max(1, Math.hypot(x,y));
     const vx = x*speed/length, vy = y*speed/length;
     const horizon = clamp(dist(p,waypoint)/speed,.018,.14);
-    const end = predict(p,vx,vy,horizon,actors);
+    const end = predict(p,vx,vy,horizon,actors,maxStep);
     const avx = (end.x-p.x)/horizon, avy = (end.y-p.y)/horizon;
     let score = dist(end,waypoint) + i*.0005 + (i ? .005 : 0);
     if (aim) {
@@ -270,9 +272,34 @@ function direction(s, waypoint, aim, actors) {
   return bestMove;
 }
 
-module.exports = { setup(c) { config=c; walls=[...c.WALLS,c.BASE_RECT]; spawns=Object.values(c.SPAWNS).map(s=>({x:s.x-s.w/2,y:s.y-s.h/2,w:s.w,h:s.h})); specs=c.ENEMY_TYPES; base={x:c.BASE_RECT.x+c.BASE_RECT.w/2,y:c.BASE_RECT.y+c.BASE_RECT.h/2}; }, decide(s,previous,destination) { playerRange=s.player.module==='barrel'?6.75:6; const actors=[...s.wrecks,...s.enemies]; let aim=destination?null:target(s.player,s,actors,previous); const chosen=aim?{point:s.player}:plan(s,actors,destination);
- if(!destination&&!aim&&s.enemies.length&&dist(s.player,chosen.point)<.3) {
-  const choices=s.wrecks.map(w=>({w,shot:shotAt(s.player,w,actors)})).filter(x=>x.shot);
-  choices.sort((a,b)=>Math.min(...s.enemies.map(e=>dist(a.w,e)))-Math.min(...s.enemies.map(e=>dist(b.w,e))));
-  if(choices[0])aim=choices[0].shot;
- } const held=direction(s,chosen.point,aim,actors); return {x:(held.includes('d')?1:0)-(held.includes('a')?1:0),y:(held.includes('s')?1:0)-(held.includes('w')?1:0),fire:!!aim,aimX:aim?.x,aimY:aim?.y}; }, dist };
+module.exports = {
+  setup(c) {
+    config = c;
+    walls = [...c.WALLS, c.BASE_RECT];
+    spawns = Object.values(c.SPAWNS).map(s => ({x:s.x-s.w/2, y:s.y-s.h/2, w:s.w, h:s.h}));
+    specs = c.ENEMY_TYPES;
+    base = {x:c.BASE_RECT.x+c.BASE_RECT.w/2, y:c.BASE_RECT.y+c.BASE_RECT.h/2};
+  },
+  decide(s, previous, destination) {
+    const p = s.player;
+    playerRange = p.module === 'barrel' ? 6.75 : 6;
+    const actors = [...s.wrecks, ...s.enemies];
+    let aim = destination ? null : target(p, s, actors, previous);
+    const chosen = aim ? {point:p} : plan(s, actors, destination);
+    if (!destination && !aim && s.enemies.length && dist(p, chosen.point) < .3) {
+      const choices = s.wrecks.map(w => ({w, shot:shotAt(p, w, actors)})).filter(x => x.shot);
+      choices.sort((a,b) => Math.min(...s.enemies.map(e => dist(a.w,e))) - Math.min(...s.enemies.map(e => dist(b.w,e))));
+      if (choices[0]) aim = choices[0].shot;
+    }
+    let held = direction(s, chosen.point, aim, actors);
+    if (!held.length && !aim && !destination && s.enemies.length && dist(p, chosen.point) > 0 &&
+      !s.bullets.some(b => nearbyEnemyBullet(b, p))) {
+      // A coarse axis step can miss a passable corner between a wall and
+      // another hull. Retry the same waypoint with steps no larger than a game tick.
+      held = direction(s, chosen.point, null, actors, 1 / 60);
+    }
+    return {x:Number(held.includes('d'))-Number(held.includes('a')),
+      y:Number(held.includes('s'))-Number(held.includes('w')), fire:!!aim, aimX:aim?.x, aimY:aim?.y};
+  },
+  dist
+};
