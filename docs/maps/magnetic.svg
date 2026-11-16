@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 896 684" role="img" aria-labelledby="title description"><title id="title">Магнитная доска: пути и позиции</title><desc id="description">Координатная схема magnetic версии 1. Сплошные линии — короткие пути, пунктир — обходы, круги — опорные корпуса, P — позиции измерения, R — возвращение. Это схема возможных путей, не обещание маршрута ИИ.</desc><style>text{font-family:DejaVu Sans,sans-serif;fill:#163438} .map-label{font-size:.42px;font-weight:bold;paint-order:stroke;stroke:#fffaf1;stroke-width:.08px;stroke-linejoin:round}</style><rect width="896" height="684" fill="#faf7ed"/>
+<text x="28" y="32" font-size="22" font-weight="bold">Магнитная доска</text>
+<text x="28" y="55" font-size="13">magnetic · версия 1 · координаты игрового поля</text>
+<g transform="translate(28 75) scale(30)">
+<rect width="28" height="18" fill="#e1eeea" stroke="#73918a" stroke-width=".03"/>
+<path d="M1,0V18" stroke="#adc1b9" stroke-width=".015"/>
+<path d="M2,0V18" stroke="#adc1b9" stroke-width=".015"/>
+<path d="M3,0V18" stroke="#adc1b9" stroke-width=".015"/>
+<path d="M4,0V18" stroke="#adc1b9" stroke-width=".015"/>
+<path d="M5,0V18" stroke="#adc1b9" stroke-width=".015"/>
+<path d="M6,0V18" stroke="#adc1b9" stroke-width=".015"/>
+<path d="M7,0V18" stroke="#adc1b9" stroke-width=".015"/>
+<path d="M8,0V18" stroke="#adc1b9" stroke-width=".015"/>
+<path d="M9,0V18" stroke="#adc1b9" stroke-width=".015"/>
+<path d="M10,0V18" stroke="#adc1b9" stroke-width=".015"/>
+<path d="M11,0V18" stroke="#adc1b9" stroke-width=".015"/>
+<path d="M12,0V18" stroke="#adc1b9" stroke-width=".015"/>
+<path d="M13,0V18" stroke="#adc1b9" stroke-width=".015"/>
+<path d="M14,0V18" stroke="#adc1b9" stroke-width=".015"/>
+<path d="M15,0V18" stroke="#adc1b9" stroke-width=".015"/>
+<path d="M16,0V18" stroke="#adc1b9" stroke-width=".015"/>
+<path d="M17,0V18" stroke="#adc1b9" stroke-width=".015"/>
+<path d="M18,0V18" stroke="#adc1b9" stroke-width=".015"/>
+<path d="M19,0V18" stroke="#adc1b9" stroke-width=".015"/>
+<path d="M20,0V18" stroke="#adc1b9" stroke-width=".015"/>
+<path d="M21,0V18" stroke="#adc1b9" stroke-width=".015"/>
+<path d="M22,0V18" stroke="#adc1b9" stroke-width=".015"/>
+<path d="M23,0V18" stroke="#adc1b9" stroke-width=".015"/>
+<path d="M24,0V18" stroke="#adc1b9" stroke-width=".015"/>
+<path d="M25,0V18" stroke="#adc1b9" stroke-width=".015"/>
+<path d="M26,0V18" stroke="#adc1b9" stroke-width=".015"/>
+<path d="M27,0V18" stroke="#adc1b9" stroke-width=".015"/>
+<path d="M0,1H28" stroke="#adc1b9" stroke-width=".015"/>
+<path d="M0,2H28" stroke="#adc1b9" stroke-width=".015"/>
+<path d="M0,3H28" stroke="#adc1b9" stroke-width=".015"/>
+<path d="M0,4H28" stroke="#adc1b9" stroke-width=".015"/>
+<path d="M0,5H28" stroke="#adc1b9" stroke-width=".015"/>
+<path d="M0,6H28" stroke="#adc1b9" stroke-width=".015"/>
+<path d="M0,7H28" stroke="#adc1b9" stroke-width=".015"/>
+<path d="M0,8H28" stroke="#adc1b9" stroke-width=".015"/>
+<path d="M0,9H28" stroke="#adc1b9" stroke-width=".015"/>
+<path d="M0,10H28" stroke="#adc1b9" stroke-width=".015"/>
+<path d="M0,11H28" stroke="#adc1b9" stroke-width=".015"/>
+<path d="M0,12H28" stroke="#adc1b9" stroke-width=".015"/>
+<path d="M0,13H28" stroke="#adc1b9" stroke-width=".015"/>
+<path d="M0,14H28" stroke="#adc1b9" stroke-width=".015"/>
+<path d="M0,15H28" stroke="#adc1b9" stroke-width=".015"/>
+<path d="M0,16H28" stroke="#adc1b9" stroke-width=".015"/>
+<path d="M0,17H28" stroke="#adc1b9" stroke-width=".015"/>
+<rect x="8.4" y="0" width="0.8" height="11.5" fill="#699d9a" stroke="#45656b" stroke-width=".04"/>
+<rect x="18.8" y="0" width="0.8" height="11.5" fill="#699d9a" stroke="#45656b" stroke-width=".04"/>
+<rect x="2.8" y="4" width="4" height="5" fill="#699d9a" stroke="#45656b" stroke-width=".04"/>
+<rect x="11" y="2.05" width="2.2" height="3.1" fill="#699d9a" stroke="#45656b" stroke-width=".04"/>
+<rect x="14.8" y="2.05" width="4" height="3.1" fill="#699d9a" stroke="#45656b" stroke-width=".04"/>
+<rect x="19.6" y="4" width="0.4" height="5" fill="#699d9a" stroke="#45656b" stroke-width=".04"/>
+<rect x="23.2" y="4" width="2.8" height="5" fill="#699d9a" stroke="#45656b" stroke-width=".04"/>
+<rect x="12.5" y="14.8" width="5.9" height="0.4" fill="#45656b" stroke="#45656b" stroke-width=".04"/>
+<rect x="18" y="14.8" width="0.4" height="3.2" fill="#45656b" stroke="#45656b" stroke-width=".04"/>
+<rect x="12.5" y="14.8" width="0.4" height="1.7" fill="#45656b" stroke="#45656b" stroke-width=".04"/>
+<rect x="14.5" y="16.6" width="0.4" height="1.4" fill="#45656b" stroke="#45656b" stroke-width=".04"/>
+<polyline points="7.6,2.8 1.6,2.8 1.6,10.2 7.6,10.2" fill="none" stroke="#a75124" stroke-width=".075" stroke-dasharray=".23 .16"/>
+<polyline points="7.6,2.8 7.6,9.8" fill="none" stroke="#a75124" stroke-width=".10"/>
+<rect x="7.3" y="6" width="0.6" height="1" fill="#a75124" fill-opacity=".17" stroke="#a75124" stroke-width=".05"/>
+<circle cx="7.6" cy="6.5" r=".5" fill="#707b7d" fill-opacity=".8" stroke="#fffaf1" stroke-width=".05"/>
+<circle cx="7.6" cy="10.2" r=".18" fill="#a75124"/>
+<text x="7.85" y="9.95" class="map-label">P_A</text>
+<polyline points="21.6,2.8 27,2.8 27,10.2 21.6,10.2" fill="none" stroke="#146f67" stroke-width=".075" stroke-dasharray=".23 .16"/>
+<polyline points="21.6,2.8 21.6,9.8" fill="none" stroke="#146f67" stroke-width=".10"/>
+<rect x="20.5" y="6" width="2.2" height="1.5" fill="#146f67" fill-opacity=".17" stroke="#146f67" stroke-width=".05"/>
+<circle cx="20.8" cy="6.5" r=".5" fill="#707b7d" fill-opacity=".8" stroke="#fffaf1" stroke-width=".05"/>
+<circle cx="22.4" cy="6.5" r=".5" fill="#707b7d" fill-opacity=".8" stroke="#fffaf1" stroke-width=".05"/>
+<circle cx="21.6" cy="10.2" r=".18" fill="#146f67"/>
+<text x="21.85" y="9.95" class="map-label">P_B</text>
+<polyline points="14,1.5 10.1,1.5 10.1,7 14,7" fill="none" stroke="#7542a3" stroke-width=".075" stroke-dasharray=".23 .16"/>
+<polyline points="14,1.5 14,7" fill="none" stroke="#7542a3" stroke-width=".10"/>
+<rect x="13.7" y="3.15" width="0.6" height="1" fill="#7542a3" fill-opacity=".17" stroke="#7542a3" stroke-width=".05"/>
+<circle cx="14" cy="3.65" r=".5" fill="#707b7d" fill-opacity=".8" stroke="#fffaf1" stroke-width=".05"/>
+<circle cx="14" cy="9.45" r=".18" fill="#7542a3"/>
+<text x="14.25" y="9.2" class="map-label">P_C</text>
+<rect x="6.4" y="0.5" width="1.6" height="2" fill="#a75124" fill-opacity=".18" stroke="#a75124" stroke-dasharray=".15 .10" stroke-width=".05"/>
+<text x="7.2" y="1.66" class="map-label" text-anchor="middle">A</text>
+<rect x="20.1" y="0.5" width="3" height="2" fill="#146f67" fill-opacity=".18" stroke="#146f67" stroke-dasharray=".15 .10" stroke-width=".05"/>
+<text x="21.6" y="1.66" class="map-label" text-anchor="middle">B</text>
+<rect x="12.5" y="0.5" width="3" height="2" fill="#7542a3" fill-opacity=".18" stroke="#7542a3" stroke-dasharray=".15 .10" stroke-width=".05"/>
+<text x="14" y="1.66" class="map-label" text-anchor="middle">C</text>
+<rect x="13.1" y="12.8" width="1.8" height="1.8" fill="#e8bf4e" stroke="#725b27" stroke-width=".07"/>
+<text x="14" y="13.850000000000001" class="map-label" text-anchor="middle">БАЗА</text>
+<circle cx="16.4" cy="17.2" r=".25" fill="#fffaf1"/>
+<text x="16.4" y="17.33" class="map-label" text-anchor="middle">R</text>
+</g>
+<text x="28" y="636" font-size="13">Сплошная линия: короткий путь · Пунктир: обход · Серый круг: корпус</text>
+<text x="28" y="660" font-size="13">P: позиция измерения · R: возвращение · Противник выбирает обход или пролом по ситуации</text>
+</svg>

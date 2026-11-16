@@ -40,7 +40,7 @@ function shootEnemy(game, from, to, damage = 12) {
 
 for (const [waveIndex, { lane, edge, outside }] of ENTRANCES.entries()) {
   test(`entrance ${lane} excludes both wreck types inside and on the boundary`, () => {
-    const game = new Game();
+    const game = new Game(CONFIG);
     for (const type of ['medium', 'heavy']) {
       for (const distance of [-0.05, 0]) {
         game._killEnemy({ ...mediumAt(offset(edge, outside, distance)), type });
@@ -173,7 +173,7 @@ test('heavy wreck survives the creation wave and two following waves without HP 
 
 for (const [type, capacity] of [['medium', 25], ['heavy', 45]]) {
   test(`${type}: repair preview and action agree at low, nearly full and full base; undo restores the hull`, () => {
-    const game = new Game();
+    const game = new Game(CONFIG);
     game._killEnemy({ ...mediumAt({ x: 5.13, y: 6.5 }), type });
     assert.equal(game.wrecks.length, 1);
     Object.assign(game.player, { x: 3, y: 6.5 });
@@ -336,7 +336,7 @@ test('next preparation revives the player immediately and restores an injured su
 });
 
 test('repair caps at max HP, full base permits dismantling, and undo restores each position', () => {
-  const game = new Game();
+  const game = new Game(CONFIG);
   game.base.hp = 228;
   Object.assign(game.player, { x: 3, y: 6 });
   game._killEnemy(mediumAt({ x: 4.1, y: 6 }));
@@ -400,7 +400,7 @@ function assertLoadout(game, module, hp, speed) {
 }
 
 test('module preview reports both replacements and the resulting tank stats without installing anything', () => {
-  const game = new Game();
+  const game = new Game(CONFIG);
   Object.assign(game.player, { x: 3, y: 6.5 });
   for (const [type, module, replacedModule, speed, maxHp] of [
     ['medium', 'engine', null, 5, 60],
@@ -707,7 +707,7 @@ test('reinforced hulls remain ordinary resources and one undo restores both hull
 });
 
 test('undo preview reads the next snapshot, including the previous tank position and both kinds of hull changes', () => {
-  const game = new Game();
+  const game = new Game(CONFIG);
   Object.assign(game.player, { x: 3, y: 6.5 });
   game.base.hp = 231;
   const repair = createWreck(game, 'medium', 4.2, 6.5);
@@ -811,7 +811,7 @@ test('battlefield packages and totals match the approved eight-wave table', () =
 });
 
 test('the approved campaign advances through eight waves, settles and resets', () => {
-  const game = new Game();
+  const game = new Game(CONFIG);
   // The fixture clears enemies immediately after observing each real spawn.
   // Queue, clock, wreck expiry and completion still run through Game.update.
   const spawnTimes = [];
@@ -889,7 +889,7 @@ test('the approved campaign advances through eight waves, settles and resets', (
   }
 
   game.reset();
-  const fresh = new Game();
+  const fresh = new Game(CONFIG);
   assert.equal(game.phase, 'prep');
   assert.equal(game.waveNumber, 1);
   assert.deepEqual(game.player, fresh.player);

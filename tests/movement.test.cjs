@@ -35,7 +35,7 @@ const oneOpening = {
 };
 
 test('diagonal movement covers the same distance as cardinal movement', () => {
-  const game = new Game();
+  const game = new Game(CONFIG);
   const start = { x: 2, y: 7 };
 
   Object.assign(game.player, start);
@@ -49,7 +49,7 @@ test('diagonal movement covers the same distance as cardinal movement', () => {
 });
 
 test('player stops at the contour of walls, the base, wrecks and live tanks', () => {
-  const game = new Game();
+  const game = new Game(CONFIG);
   const wreckPosition = { x: 6, y: 13 };
   game._killEnemy(medium('fallen', wreckPosition.x, wreckPosition.y));
   const wreck = game.wrecks[0];
@@ -79,7 +79,7 @@ test('player stops at the contour of walls, the base, wrecks and live tanks', ()
 });
 
 test('player leaves the respawn niche through its bent exit using movement input', () => {
-  const game = new Game();
+  const game = new Game(CONFIG);
 
   // Go around the divider, then around the bottom of the left wall.
   game.update(0.375, { y: -1 });

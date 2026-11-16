@@ -1,0 +1,302 @@
+{
+  "schemaVersion": 1,
+  "label": "Controlled replay of recorded ordinary preparation 7, followed by separately labelled matched artificial-hull diagnostics. Not an uninterrupted campaign or human playtest.",
+  "helper": "tools/verify-map-b-acquisition.cjs",
+  "usage": "node tools/verify-map-b-acquisition.cjs <index.html> <exact-prep7.json> <new-output-directory>",
+  "verification": {
+    "selectedCasesPassed": true,
+    "wrongHtmlHashRejectedBeforeOutputCreation": true
+  },
+  "cases": [
+    {
+      "mapId": "city",
+      "mode": "engine",
+      "sourceOrdinaryRun": "accepted-city-engine",
+      "passed": true,
+      "htmlSha256": "ffdd60f1155686d14cedc57c49157eef076a530d1e8f16f196c1967d9c33a83c",
+      "initialPreparation": 7,
+      "initialCumulativeKills": 41,
+      "allWave7GroupsUnchanged": true,
+      "actualWave8Start": true,
+      "cumulativeKills": 52,
+      "deaths": 0,
+      "baseHpAtWave8Start": 124,
+      "legalPreparationCosts": [
+        {
+          "tick": 0,
+          "kind": "repairFromWreck",
+          "id": "w478",
+          "type": "heavy",
+          "result": {
+            "ok": true,
+            "hp": 0
+          }
+        }
+      ],
+      "b7Kills": [
+        {
+          "time": 11.916666666666838,
+          "id": "e538",
+          "type": "medium",
+          "x": 18.626750361662072,
+          "y": 13.92202494103526
+        },
+        {
+          "time": 15.10000000000033,
+          "id": "e535",
+          "type": "heavy",
+          "x": 13.742128489515867,
+          "y": 11.431728310530403
+        }
+      ],
+      "retainedPair": [
+        {
+          "id": "w556",
+          "type": "medium",
+          "x": 18.626750361662072,
+          "y": 13.92202494103526,
+          "r": 0.5,
+          "hp": 40,
+          "maxHp": 60,
+          "expiresAfterWave": 8,
+          "reinforced": false
+        },
+        {
+          "id": "w569",
+          "type": "heavy",
+          "x": 13.742128489515867,
+          "y": 11.431728310530403,
+          "r": 0.5,
+          "hp": 120,
+          "maxHp": 120,
+          "expiresAfterWave": 9,
+          "reinforced": false
+        }
+      ],
+      "usefulRegionsPassed": true,
+      "closure": {
+        "mode": "diagnostic-short-corridor-search",
+        "resolution": 0.1,
+        "bounds": {
+          "x0": 11.9,
+          "x1": 24.5,
+          "y0": 10.9,
+          "y1": 14.5
+        },
+        "start": {
+          "x": 24.5,
+          "y": 14.2
+        },
+        "end": {
+          "x": 11.9,
+          "y": 11.2
+        },
+        "open": {
+          "empty": true,
+          "medium": false,
+          "heavy": false,
+          "pair": false
+        },
+        "passed": true
+      },
+      "matchedPayoff": {
+        "mode": "diagnostic-matched-actual-hulls",
+        "packet": {
+          "lane": "B",
+          "types": [
+            "medium",
+            "heavy",
+            "light",
+            "light"
+          ],
+          "start": 0
+        },
+        "player": "alive at map return; identical idle input; normal respawn",
+        "empty": {
+          "seconds": 10.166666666666751,
+          "actorId": "e1",
+          "type": "medium",
+          "x": 9.988452478014324,
+          "y": 11.376322874808201
+        },
+        "blocked": {
+          "seconds": 14.933333333333655,
+          "actorId": "e1",
+          "type": "medium",
+          "x": 2.2367872484443585,
+          "y": 16.87466046758237
+        },
+        "delaySeconds": 4.766666666666904,
+        "delayBasis": "two observed first-base-shot events",
+        "passed": true
+      },
+      "artifacts": {
+        "starting-preparation.json": {
+          "sha256": "ed78d1e862656ee510fc924c866c81b8fba444acc6154c4c5123c3423e1b94dc"
+        },
+        "commands.ndjson": {
+          "sha256": "c7b254fead7bff9c8d37d072b6df54634af4aa1ccb22a6a6213338ed85b68be6"
+        },
+        "attempt.json": {
+          "sha256": "7455045fb633c8b9b4820670d823b6e4d499ddd19a24ea5c96c357e6f0d2937e"
+        },
+        "prep-8.json": {
+          "sha256": "2bc72231bb356c47cc3b828d71fba55cf06263468dd5bdf45623efe7e5392a8f"
+        },
+        "report.json": {
+          "sha256": "72c911b3e4d64510820c87414e7eae5faa216c8ec3a31c5bba364edfb24ef5b8"
+        }
+      }
+    },
+    {
+      "mapId": "magnetic",
+      "mode": "barrel",
+      "sourceOrdinaryRun": "accepted-magnetic-barrel",
+      "passed": true,
+      "htmlSha256": "ffdd60f1155686d14cedc57c49157eef076a530d1e8f16f196c1967d9c33a83c",
+      "initialPreparation": 7,
+      "initialCumulativeKills": 41,
+      "allWave7GroupsUnchanged": true,
+      "actualWave8Start": true,
+      "cumulativeKills": 52,
+      "deaths": 0,
+      "baseHpAtWave8Start": 208,
+      "legalPreparationCosts": [
+        {
+          "tick": 0,
+          "kind": "repairFromWreck",
+          "id": "w164",
+          "type": "heavy",
+          "result": {
+            "ok": true,
+            "hp": 0
+          }
+        },
+        {
+          "tick": 0,
+          "kind": "repairFromWreck",
+          "id": "w235",
+          "type": "medium",
+          "result": {
+            "ok": true,
+            "hp": 0
+          }
+        }
+      ],
+      "b7Kills": [
+        {
+          "time": 7.0833333333333135,
+          "id": "e246",
+          "type": "heavy",
+          "x": 21.102822537701535,
+          "y": 6.535515323279496
+        },
+        {
+          "time": 8.71666666666668,
+          "id": "e248",
+          "type": "medium",
+          "x": 22.077423300422545,
+          "y": 7.121081174770592
+        }
+      ],
+      "retainedPair": [
+        {
+          "id": "w266",
+          "type": "medium",
+          "x": 22.077423300422545,
+          "y": 7.121081174770592,
+          "r": 0.5,
+          "hp": 60,
+          "maxHp": 60,
+          "expiresAfterWave": 8,
+          "reinforced": false
+        },
+        {
+          "id": "w258",
+          "type": "heavy",
+          "x": 21.102822537701535,
+          "y": 6.535515323279496,
+          "r": 0.5,
+          "hp": 120,
+          "maxHp": 120,
+          "expiresAfterWave": 9,
+          "reinforced": false
+        }
+      ],
+      "usefulRegionsPassed": true,
+      "closure": {
+        "mode": "diagnostic-short-corridor-search",
+        "resolution": 0.1,
+        "bounds": {
+          "x0": 20.5,
+          "x1": 22.7,
+          "y0": 3.3,
+          "y1": 9.7
+        },
+        "start": {
+          "x": 21.6,
+          "y": 3.3
+        },
+        "end": {
+          "x": 21.6,
+          "y": 9.7
+        },
+        "open": {
+          "empty": true,
+          "medium": true,
+          "heavy": true,
+          "pair": false
+        },
+        "passed": true
+      },
+      "matchedPayoff": {
+        "mode": "diagnostic-matched-actual-hulls",
+        "packet": {
+          "lane": "B",
+          "types": [
+            "medium",
+            "heavy",
+            "light",
+            "light"
+          ],
+          "start": 0
+        },
+        "player": "alive at map return; identical idle input; normal respawn",
+        "empty": {
+          "seconds": 6.499999999999982,
+          "actorId": "e1",
+          "type": "medium",
+          "x": 19.879777547467544,
+          "y": 12.364050444745484
+        },
+        "blocked": {
+          "seconds": 11.500000000000151,
+          "actorId": "e1",
+          "type": "medium",
+          "x": 19.879299905298126,
+          "y": 12.364761009536807
+        },
+        "delaySeconds": 5.000000000000169,
+        "delayBasis": "two observed first-base-shot events",
+        "passed": true
+      },
+      "artifacts": {
+        "starting-preparation.json": {
+          "sha256": "253f2748b019552d3c99af64df46bde34a8b7e7f02c5ba617e43889daab18f33"
+        },
+        "commands.ndjson": {
+          "sha256": "97d45fc30aaa5f827c5650ab8f465d695ef04aeaf55508c228d8e969290ba7f4"
+        },
+        "attempt.json": {
+          "sha256": "d0f4cf6f7e4468683aced0eb3f777a8071d0f77d3570896f02eb28bcec64cd9c"
+        },
+        "prep-8.json": {
+          "sha256": "77f9c90cca13b95a9d7ae19851dbc8337beb8b14b4329f3d37bc1aaea398a71d"
+        },
+        "report.json": {
+          "sha256": "c7172012184cac5a41234d759d755f9340aee8b3e1f1888390c68e156e4ace67"
+        }
+      }
+    }
+  ]
+}

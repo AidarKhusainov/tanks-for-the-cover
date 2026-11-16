@@ -4,11 +4,11 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#152329">
-  <meta name="description" content="Защити базу на разрушенном поле боя. Лёгкие танки преследуют тебя, средние и тяжёлые атакуют базу. Три направления, клавиатура и мышь.">
-  <title>Танчики — магнитный рубеж</title>
+  <meta name="description" content="Защити базу на Магнитной доске или в Городе. Три направления атаки, клавиатура и мышь.">
+  <title>Танчики — оборона базы</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect width='48' height='48' rx='10' fill='%23152329'/%3E%3Cpath fill='%23d4ed87' d='M11 15h6v25h-6zm20 0h6v25h-6zM18 19h12v17H18zM22 5h4v22h-4z'/%3E%3C/svg%3E">
   <style>
-:root{color-scheme:dark;--bg:#111b20;--panel:#1b2a30;--line:#34434a;--muted:#9cacae;--ink:#edf0e7;--lime:#d4ed87;--blue:#78b8de;--orange:#e6a37d}*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 35% 0,#24343a 0,#111b20 70%);font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--ink);font-size:14px}.app{max-width:1500px;margin:auto;padding:24px 30px 16px}.topbar{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-bottom:24px}.brand{display:flex;align-items:center;gap:14px}.eyebrow{font-size:10px;letter-spacing:2px;font-weight:700;color:var(--muted);margin:0 0 5px}.eyebrow span{padding:0 8px;color:#56666b}h1{font-size:25px;letter-spacing:-.8px;font-weight:650;margin:0}.brand-icon{display:block;width:44px;height:44px;border:1px solid #526449;border-radius:12px;position:relative;background:#273831}.brand-icon:before,.brand-icon:after{content:"";position:absolute;top:13px;width:5px;height:23px;background:var(--lime);border-radius:2px}.brand-icon:before{left:9px}.brand-icon:after{right:9px}.brand-icon i{position:absolute;left:16px;top:17px;width:11px;height:15px;background:var(--lime);border-radius:3px}.brand-icon i:after{content:"";position:absolute;left:4px;top:-12px;width:3px;height:17px;background:var(--lime)}button,a,input{touch-action:manipulation}button{font:inherit;cursor:pointer}button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(--lime);outline-offset:4px}button:disabled{cursor:default;opacity:.38}.header-actions{display:flex;gap:8px}.icon-button{border:1px solid var(--line);border-radius:8px;color:#c4d0d0;background:#1d2a30;padding:9px 12px;font-size:12px}.icon-button:hover{background:#2d3d42}.icon-button span{margin-left:5px}.icon-button[aria-pressed=true]{color:var(--lime);border-color:#7d9554}.game-layout{display:grid;grid-template-columns:minmax(0,1fr) 274px;gap:22px}.play-area{min-width:0}.dashboard{height:73px;display:grid;grid-template-columns:1.35fr 1fr .7fr .7fr;align-items:center;gap:26px;padding:0 8px 18px}.meter>div:first-child{display:flex;align-items:baseline;justify-content:space-between;gap:8px}.dashboard span{font-size:10px;font-weight:700;letter-spacing:1.4px;color:var(--muted)}.dashboard strong{font-size:19px;font-weight:600;font-variant-numeric:tabular-nums}.dashboard small{font-weight:400;font-size:11px;color:#829396;margin-left:3px}.meter-track{height:4px;background:#314149;border-radius:4px;margin-top:10px;overflow:hidden}.meter-track i{display:block;height:100%;width:100%;background:var(--lime);border-radius:4px;transition:width .2s}.player-meter .meter-track i{background:var(--blue)}.wave-meter,.kill-meter{display:flex;flex-direction:column;gap:5px;border-left:1px solid var(--line);padding-left:20px}.wave-meter b{font-weight:650}.board-shell{position:relative;width:100%;border:5px solid #415154;outline:1px solid #6a7975;border-radius:12px;overflow:hidden;background:#b5b49c;box-shadow:0 20px 42px #0005,0 0 0 8px #17242a}canvas{display:block;width:100%;height:auto;aspect-ratio:28/18;cursor:crosshair;outline:none;touch-action:none}.board-tag{position:absolute;top:12px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:7px;background:#172b2ddb;border:1px solid #667c6a;border-radius:30px;padding:6px 12px;font-size:10px;font-weight:600;white-space:nowrap;pointer-events:none;backdrop-filter:blur(4px)}.pulse-dot{width:6px;height:6px;display:inline-block;background:var(--lime);border-radius:50%;flex:none}.underboard{display:flex;align-items:center;gap:17px;margin-top:17px;font-size:10px;color:#b1c0bd;flex-wrap:wrap;padding:0 5px}.underboard>span{display:flex;align-items:center;gap:6px}.legend-dot{width:7px;height:7px;border-radius:50%;display:inline-block}.legend-dot.player{background:#78b8de}.legend-dot.hunter{background:#df8764}.legend-dot.assault{background:#d4a15b;border-radius:1px;width:8px;height:8px}.legend-square{width:8px;height:8px;background:#95a59a;transform:rotate(15deg)}.route-toggle{margin-left:auto;display:flex;gap:6px;align-items:center;cursor:pointer}.route-toggle input{accent-color:var(--lime);margin:0;width:12px;height:12px}.sidebar{padding:21px 19px 18px;background:linear-gradient(145deg,#213238,#19272d);border:1px solid var(--line);border-radius:14px;align-self:start;min-height:calc(100% - 31px)}.phase-head{display:flex;align-items:center;justify-content:space-between;gap:10px}.phase-badge{border-radius:4px;background:#344639;color:var(--lime);font-size:9px;letter-spacing:1.5px;font-weight:800;padding:5px 7px}.phase-badge.battle{color:#ffc697;background:#523e30}.phase-badge.end{color:#e7e9df;background:#405056}.muted{font-size:11px;color:#829699;font-variant-numeric:tabular-nums}.sidebar h2{font-size:23px;font-weight:600;letter-spacing:-.6px;margin:18px 0 9px}.sidebar-copy{color:#c0cdca;font-size:12px;line-height:1.6;margin:0 0 21px}.wave-card{background:#142328;border:1px solid #35464a;border-radius:9px;padding:14px}.section-label{display:flex;align-items:center;justify-content:space-between;color:#9dafad;font-size:9px;letter-spacing:1.3px;font-weight:700;margin-bottom:13px}.section-label span:last-child{letter-spacing:.3px}.lane-row{display:flex;align-items:center;gap:9px;margin-top:10px;min-height:20px}.lane-chip{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:5px;font-size:10px;font-weight:800;color:#203238;background:#a6bbaf;flex:none}.lane-chip.b{background:#d2bca0}.lane-chip.c{background:#c4b4cb}.lane-enemies{display:flex;gap:6px;flex:1;align-items:center;flex-wrap:wrap}.enemy-pip{display:inline-block;height:13px;width:10px;border-radius:2px;background:#d07860;position:relative;border:1px solid #e69879}.enemy-pip:after{content:"";position:absolute;left:3px;top:-4px;background:inherit;width:2px;height:5px}.enemy-pip.medium{width:13px;background:#bd8b4e;border-color:#f1bc70}.enemy-pip.medium:after{left:5px}.lane-time{font-size:10px;color:#b0c0b7;white-space:nowrap;font-variant-numeric:tabular-nums}.fineprint{font-size:10px;line-height:1.5;color:#94a8a5;margin:13px 0 0}.primary{border:1px solid #e2f5ad;background:var(--lime);color:#233323;width:100%;font-weight:750;border-radius:8px;padding:14px 13px;margin-top:12px;text-align:left;display:flex;justify-content:space-between;align-items:center;box-shadow:0 3px 0 #93aa55;transition:background .15s,transform .15s}.primary:hover{background:#e3f7ab}.primary:active{transform:translateY(2px);box-shadow:0 1px 0 #93aa55}.primary span{font-size:19px;line-height:15px;opacity:.65}.combat-status{margin:15px 0 0;display:flex;align-items:center;gap:9px;font-size:12px;color:#e4cfb6;padding:9px 0}.combat-status .pulse-dot{background:#eaaa75}.salvage-card{border-top:1px solid #3b4b4e;margin-top:23px;padding-top:19px}.empty-state{font-size:12px;line-height:1.6;color:#91a6a4;margin:0;min-height:47px}.selected-wreck{display:flex;gap:10px;align-items:center}.wreck-symbol{font-size:24px;width:37px;height:37px;background:#34423b;border:1px dashed #89a28b;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#c5d3bf}.wreck-info strong{font-size:12px;font-weight:650;display:block}.wreck-info p{font-size:10px;color:#b2c1b7;margin:5px 0 0}.wreck-life{font-size:10px;color:#d9cfa5;margin:10px 0 0;line-height:1.45}.secondary{width:100%;border:1px solid #72927f;background:#304a40;color:#e5f1cf;border-radius:7px;font-size:11px;font-weight:650;padding:11px 8px;margin-top:12px}.secondary:hover{background:#3b5b4e}.text-button{border:0;background:none;color:#adbfb8;font-size:11px;padding:9px 0 0;width:100%}.text-button:hover{color:white}.undo-button{border:0;background:none;display:flex;width:100%;align-items:center;justify-content:space-between;color:#c3d0c7;font-size:10px;margin-top:15px;padding:0}.undo-button kbd{font-size:9px;background:#203237;border-color:#435552}.tactical-note{display:flex;gap:9px;color:#a4b7b0;font-size:11px;line-height:1.6;margin-top:24px}.tactical-note p{margin:0}.note-icon{font-size:20px;line-height:20px;color:var(--lime)}footer{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-top:23px;padding-top:17px;border-top:1px solid #2d3c41;font-size:10px;color:#8b9f9d}.controls{display:flex;gap:20px;flex-wrap:wrap}.controls>span{display:flex;align-items:center;gap:4px}kbd{font-family:inherit;font-size:10px;background:#25353b;color:#cfdbd4;border:1px solid #4d5e61;border-bottom-width:2px;padding:2px 5px;border-radius:4px}footer a{font-size:10px;color:#b4c4bb;text-decoration:none;white-space:nowrap}footer a:hover{color:var(--lime)}.toast{position:absolute;bottom:17px;left:50%;transform:translate(-50%,8px);background:#182a2eeb;color:#eff1e1;border:1px solid #829280;padding:10px 16px;border-radius:8px;font-size:12px;max-width:85%;text-align:center;opacity:0;transition:opacity .2s,transform .2s;pointer-events:none;z-index:3}.toast.show{opacity:1;transform:translate(-50%,0)}.overlay{position:absolute;inset:0;background:#102024c9;z-index:5;display:flex;align-items:center;justify-content:center;padding:24px;backdrop-filter:blur(5px)}[hidden]{display:none!important}.modal{max-width:465px;max-height:100%;overflow:auto;width:100%;border:1px solid #657974;background:#1e3036;border-radius:16px;padding:30px;box-shadow:0 15px 70px #0005}.modal h2{font-size:30px;letter-spacing:-1px;line-height:1.1;margin:12px 0 15px}.modal p{font-size:13px;line-height:1.65;color:#c6d3cc}.modal .eyebrow{font-size:9px;color:var(--lime)}.modal .primary{margin-top:18px}.modal .secondary{margin-top:12px}.modal-actions{display:flex;flex-direction:column}.modal-list{padding-left:18px;color:#c6d3cc;font-size:12px;line-height:1.65}.modal-list li{margin-bottom:8px}.result-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:15px 0;border-top:1px solid #42534f;border-bottom:1px solid #42534f}.result-grid strong{display:block;font-size:24px;color:var(--lime);font-weight:600}.result-grid span{font-size:9px;color:#a9bcb2}.mobile-notice{display:none}.low-hp{color:#ffb191!important}@media(min-width:1450px){.app{padding-top:30px}.game-layout{grid-template-columns:minmax(0,1fr) 294px;gap:26px}.sidebar{padding:25px 23px}.sidebar-copy,.empty-state{font-size:13px}.tactical-note{font-size:12px}.dashboard{height:77px}}@media(max-width:1100px){.app{padding:18px 18px 12px}.game-layout{grid-template-columns:minmax(0,1fr) 245px;gap:17px}.sidebar{padding:17px 15px}.dashboard{gap:15px}.wave-meter,.kill-meter{padding-left:13px}.sidebar h2{font-size:21px}.controls{gap:10px}.header-actions .icon-button{padding:9px}.board-tag{top:8px;font-size:9px}}@media(max-width:840px){.game-layout{grid-template-columns:1fr}.sidebar{display:grid;grid-template-columns:1fr 1fr;gap:12px 20px;min-height:0}.phase-head,.sidebar h2,.sidebar-copy{grid-column:1/-1}.sidebar h2{margin:0}.sidebar-copy{margin:0}.wave-card{grid-column:1;grid-row:4/7}.primary{grid-column:2;margin:0;align-self:start}.salvage-card{grid-column:2;border:0;padding:0;margin:0}.tactical-note{grid-column:1/-1;margin:0}.combat-status{margin:0}.mobile-notice{display:block;padding:8px 12px;margin-bottom:18px;border:1px solid #4c6156;border-radius:7px;color:#becbb7;font-size:11px}.topbar{gap:10px}.brand-icon{display:none}h1{font-size:21px}.eyebrow{font-size:8px}.icon-button{font-size:10px}.desktop-label{display:none}footer{flex-direction:column;align-items:flex-start}.modal{padding:20px}.modal h2{font-size:25px}}@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+:root{color-scheme:dark;--bg:#111b20;--panel:#1b2a30;--line:#34434a;--muted:#9cacae;--ink:#edf0e7;--lime:#d4ed87;--blue:#78b8de;--orange:#e6a37d}*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 35% 0,#24343a 0,#111b20 70%);font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--ink);font-size:14px}.app{max-width:1500px;margin:auto;padding:24px 30px 16px}.topbar{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-bottom:24px}.brand{display:flex;align-items:center;gap:14px}.eyebrow{font-size:10px;letter-spacing:2px;font-weight:700;color:var(--muted);margin:0 0 5px}.eyebrow span{padding:0 8px;color:#56666b}h1{font-size:25px;letter-spacing:-.8px;font-weight:650;margin:0}.brand-icon{display:block;width:44px;height:44px;border:1px solid #526449;border-radius:12px;position:relative;background:#273831}.brand-icon:before,.brand-icon:after{content:"";position:absolute;top:13px;width:5px;height:23px;background:var(--lime);border-radius:2px}.brand-icon:before{left:9px}.brand-icon:after{right:9px}.brand-icon i{position:absolute;left:16px;top:17px;width:11px;height:15px;background:var(--lime);border-radius:3px}.brand-icon i:after{content:"";position:absolute;left:4px;top:-12px;width:3px;height:17px;background:var(--lime)}button,a,input{touch-action:manipulation}button{font:inherit;cursor:pointer}button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(--lime);outline-offset:4px}button:disabled{cursor:default;opacity:.38}.header-actions{display:flex;gap:8px}.icon-button{border:1px solid var(--line);border-radius:8px;color:#c4d0d0;background:#1d2a30;padding:9px 12px;font-size:12px}.icon-button:hover{background:#2d3d42}.icon-button span{margin-left:5px}.icon-button[aria-pressed=true]{color:var(--lime);border-color:#7d9554}.game-layout{display:grid;grid-template-columns:minmax(0,1fr) 274px;gap:22px}.play-area{min-width:0}.dashboard{height:73px;display:grid;grid-template-columns:1.35fr 1fr .7fr .7fr;align-items:center;gap:26px;padding:0 8px 18px}.meter>div:first-child{display:flex;align-items:baseline;justify-content:space-between;gap:8px}.dashboard span{font-size:10px;font-weight:700;letter-spacing:1.4px;color:var(--muted)}.dashboard strong{font-size:19px;font-weight:600;font-variant-numeric:tabular-nums}.dashboard small{font-weight:400;font-size:11px;color:#829396;margin-left:3px}.meter-track{height:4px;background:#314149;border-radius:4px;margin-top:10px;overflow:hidden}.meter-track i{display:block;height:100%;width:100%;background:var(--lime);border-radius:4px;transition:width .2s}.player-meter .meter-track i{background:var(--blue)}.wave-meter,.kill-meter{display:flex;flex-direction:column;gap:5px;border-left:1px solid var(--line);padding-left:20px}.wave-meter b{font-weight:650}.board-shell{position:relative;width:100%;border:5px solid #415154;outline:1px solid #6a7975;border-radius:12px;overflow:hidden;background:#b5b49c;box-shadow:0 20px 42px #0005,0 0 0 8px #17242a}canvas{display:block;width:100%;height:auto;aspect-ratio:28/18;cursor:crosshair;outline:none;touch-action:none}.pulse-dot{width:6px;height:6px;display:inline-block;background:var(--lime);border-radius:50%;flex:none}.underboard{display:flex;align-items:center;gap:17px;margin-top:17px;font-size:10px;color:#b1c0bd;flex-wrap:wrap;padding:0 5px}.underboard>span{display:flex;align-items:center;gap:6px}.legend-dot{width:7px;height:7px;border-radius:50%;display:inline-block}.legend-dot.player{background:#78b8de}.legend-dot.hunter{background:#df8764}.legend-dot.assault{background:#d4a15b;border-radius:1px;width:8px;height:8px}.legend-square{width:8px;height:8px;background:#95a59a;transform:rotate(15deg)}.route-toggle{margin-left:auto;display:flex;gap:6px;align-items:center;cursor:pointer}.route-toggle input{accent-color:var(--lime);margin:0;width:12px;height:12px}.sidebar{padding:21px 19px 18px;background:linear-gradient(145deg,#213238,#19272d);border:1px solid var(--line);border-radius:14px;align-self:start;min-height:calc(100% - 31px)}.phase-head{display:flex;align-items:center;justify-content:space-between;gap:10px}.phase-badge{border-radius:4px;background:#344639;color:var(--lime);font-size:9px;letter-spacing:1.5px;font-weight:800;padding:5px 7px}.phase-badge.battle{color:#ffc697;background:#523e30}.phase-badge.end{color:#e7e9df;background:#405056}.muted{font-size:11px;color:#829699;font-variant-numeric:tabular-nums}.sidebar h2{font-size:23px;font-weight:600;letter-spacing:-.6px;margin:18px 0 9px}.sidebar-copy{color:#c0cdca;font-size:12px;line-height:1.6;margin:0 0 21px}.wave-card{background:#142328;border:1px solid #35464a;border-radius:9px;padding:14px}.section-label{display:flex;align-items:center;justify-content:space-between;color:#9dafad;font-size:9px;letter-spacing:1.3px;font-weight:700;margin-bottom:13px}.section-label span:last-child{letter-spacing:.3px}.lane-row{display:flex;align-items:center;gap:9px;margin-top:10px;min-height:20px}.lane-chip{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:5px;font-size:10px;font-weight:800;color:#203238;background:#a6bbaf;flex:none}.lane-chip.b{background:#d2bca0}.lane-chip.c{background:#c4b4cb}.lane-enemies{display:flex;gap:6px;flex:1;align-items:center;flex-wrap:wrap}.enemy-pip{display:inline-block;height:13px;width:10px;border-radius:2px;background:#d07860;position:relative;border:1px solid #e69879}.enemy-pip:after{content:"";position:absolute;left:3px;top:-4px;background:inherit;width:2px;height:5px}.enemy-pip.medium{width:13px;background:#bd8b4e;border-color:#f1bc70}.enemy-pip.medium:after{left:5px}.lane-time{font-size:10px;color:#b0c0b7;white-space:nowrap;font-variant-numeric:tabular-nums}.fineprint{font-size:10px;line-height:1.5;color:#94a8a5;margin:13px 0 0}.primary{border:1px solid #e2f5ad;background:var(--lime);color:#233323;width:100%;font-weight:750;border-radius:8px;padding:14px 13px;margin-top:12px;text-align:left;display:flex;justify-content:space-between;align-items:center;box-shadow:0 3px 0 #93aa55;transition:background .15s,transform .15s}.primary:hover{background:#e3f7ab}.primary:active{transform:translateY(2px);box-shadow:0 1px 0 #93aa55}.primary span{font-size:19px;line-height:15px;opacity:.65}.combat-status{margin:15px 0 0;display:flex;align-items:center;gap:9px;font-size:12px;color:#e4cfb6;padding:9px 0}.combat-status .pulse-dot{background:#eaaa75}.salvage-card{border-top:1px solid #3b4b4e;margin-top:23px;padding-top:19px}.empty-state{font-size:12px;line-height:1.6;color:#91a6a4;margin:0;min-height:47px}.selected-wreck{display:flex;gap:10px;align-items:center}.wreck-symbol{font-size:24px;width:37px;height:37px;background:#34423b;border:1px dashed #89a28b;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#c5d3bf}.wreck-info strong{font-size:12px;font-weight:650;display:block}.wreck-info p{font-size:10px;color:#b2c1b7;margin:5px 0 0}.wreck-life{font-size:10px;color:#d9cfa5;margin:10px 0 0;line-height:1.45}.secondary{width:100%;border:1px solid #72927f;background:#304a40;color:#e5f1cf;border-radius:7px;font-size:11px;font-weight:650;padding:11px 8px;margin-top:12px}.secondary:hover{background:#3b5b4e}.text-button{border:0;background:none;color:#adbfb8;font-size:11px;padding:9px 0 0;width:100%}.text-button:hover{color:white}.undo-button{border:0;background:none;display:flex;width:100%;align-items:center;justify-content:space-between;color:#c3d0c7;font-size:10px;margin-top:15px;padding:0}.undo-button kbd{font-size:9px;background:#203237;border-color:#435552}.tactical-note{display:flex;gap:9px;color:#a4b7b0;font-size:11px;line-height:1.6;margin-top:24px}.tactical-note p{margin:0}.note-icon{font-size:20px;line-height:20px;color:var(--lime)}footer{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-top:23px;padding-top:17px;border-top:1px solid #2d3c41;font-size:10px;color:#8b9f9d}.controls{display:flex;gap:20px;flex-wrap:wrap}.controls>span{display:flex;align-items:center;gap:4px}kbd{font-family:inherit;font-size:10px;background:#25353b;color:#cfdbd4;border:1px solid #4d5e61;border-bottom-width:2px;padding:2px 5px;border-radius:4px}footer a{font-size:10px;color:#b4c4bb;text-decoration:none;white-space:nowrap}footer a:hover{color:var(--lime)}.toast{position:absolute;bottom:17px;left:50%;transform:translate(-50%,8px);background:#182a2eeb;color:#eff1e1;border:1px solid #829280;padding:10px 16px;border-radius:8px;font-size:12px;max-width:85%;text-align:center;opacity:0;transition:opacity .2s,transform .2s;pointer-events:none;z-index:3}.toast.show{opacity:1;transform:translate(-50%,0)}.overlay{position:absolute;inset:0;background:#102024c9;z-index:5;display:flex;align-items:center;justify-content:center;padding:24px;backdrop-filter:blur(5px)}[hidden]{display:none!important}.modal{max-width:465px;max-height:100%;overflow:auto;width:100%;border:1px solid #657974;background:#1e3036;border-radius:16px;padding:30px;box-shadow:0 15px 70px #0005}.modal h2{font-size:30px;letter-spacing:-1px;line-height:1.1;margin:12px 0 15px}.modal p{font-size:13px;line-height:1.65;color:#c6d3cc}.modal .eyebrow{font-size:9px;color:var(--lime)}.modal .primary{margin-top:18px}.modal .secondary{margin-top:12px}.modal-actions{display:flex;flex-direction:column}.modal-list{padding-left:18px;color:#c6d3cc;font-size:12px;line-height:1.65}.modal-list li{margin-bottom:8px}.result-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:15px 0;border-top:1px solid #42534f;border-bottom:1px solid #42534f}.result-grid strong{display:block;font-size:24px;color:var(--lime);font-weight:600}.result-grid span{font-size:9px;color:#a9bcb2}.mobile-notice{display:none}.low-hp{color:#ffb191!important}@media(min-width:1450px){.app{padding-top:30px}.game-layout{grid-template-columns:minmax(0,1fr) 294px;gap:26px}.sidebar{padding:25px 23px}.sidebar-copy,.empty-state{font-size:13px}.tactical-note{font-size:12px}.dashboard{height:77px}}@media(max-width:1100px){.app{padding:18px 18px 12px}.game-layout{grid-template-columns:minmax(0,1fr) 245px;gap:17px}.sidebar{padding:17px 15px}.dashboard{gap:15px}.wave-meter,.kill-meter{padding-left:13px}.sidebar h2{font-size:21px}.controls{gap:10px}.header-actions .icon-button{padding:9px}}@media(max-width:840px){.game-layout{grid-template-columns:1fr}.sidebar{display:grid;grid-template-columns:1fr 1fr;gap:12px 20px;min-height:0}.phase-head,.sidebar h2,.sidebar-copy{grid-column:1/-1}.sidebar h2{margin:0}.sidebar-copy{margin:0}.wave-card{grid-column:1;grid-row:4/7}.primary{grid-column:2;margin:0;align-self:start}.salvage-card{grid-column:2;border:0;padding:0;margin:0}.tactical-note{grid-column:1/-1;margin:0}.combat-status{margin:0}.mobile-notice{display:block;padding:8px 12px;margin-bottom:18px;border:1px solid #4c6156;border-radius:7px;color:#becbb7;font-size:11px}.topbar{gap:10px}.brand-icon{display:none}h1{font-size:21px}.eyebrow{font-size:8px}.icon-button{font-size:10px}.desktop-label{display:none}footer{flex-direction:column;align-items:flex-start}.modal{padding:20px}.modal h2{font-size:25px}}@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
 
 .enemy-pip{display:inline-flex;align-items:center;justify-content:center;min-width:15px;height:15px;color:#201c19;font-size:9px;font-weight:800}
 .enemy-pip.heavy{min-width:18px;background:#d3b6d7;border:3px double #563e57}
@@ -24,12 +24,19 @@
 .route-options select{padding:3px 6px;border:1px solid #607775;border-radius:4px;background:#203237;color:var(--ink);font:inherit}
 .route-controls .fineprint{margin:6px 0 0}
 .route-options :focus-visible,.salvage-card button:focus-visible{outline:2px solid var(--lime);outline-offset:3px}
-.action-preview{position:absolute;top:42px;left:50%;transform:translateX(-50%);width:max-content;max-width:68%;margin:0;padding:6px 10px;border:1px solid #819485;border-radius:6px;background:#203237;color:#eff3e3;font-size:12px;line-height:1.4;text-align:center;pointer-events:none}
+.action-preview{position:absolute;top:110px;left:50%;transform:translateX(-50%);width:max-content;max-width:68%;margin:0;padding:6px 10px;border:1px solid #819485;border-radius:6px;background:#203237;color:#eff3e3;font-size:12px;line-height:1.4;text-align:center;pointer-events:none}
 .action-preview:empty{padding:0;border:0}
 .wreck-lesson{margin:8px 0 12px;padding:8px 10px;border-left:2px solid var(--lime);background:#182a2e;color:#e8efda;font-size:12px;line-height:1.45}
 #campaign-dialog{width:calc(100% - 32px);max-height:calc(100dvh - 32px);overflow:hidden}
 #campaign-dialog[open]{display:flex;flex-direction:column}
-#campaign-dialog::backdrop{background:#102024c9;backdrop-filter:blur(5px)}
+#campaign-dialog::backdrop,#map-dialog::backdrop{background:#102024c9;backdrop-filter:blur(5px)}
+#map-dialog{width:calc(100% - 32px);max-width:620px;max-height:calc(100dvh - 32px);color:var(--ink)}
+.map-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.map-choice{display:grid;gap:9px;border:1px solid #617471;border-radius:9px;background:#17272d;color:var(--ink);padding:9px;text-align:left;font-weight:650}
+.map-choice:hover,.map-choice[aria-current=true]{border-color:var(--lime);background:#304239}
+.map-choice canvas{border-radius:5px;cursor:pointer}
+.map-choice span{padding:0 2px 3px}
+#entry-status{margin:8px 0 0;color:#ffd4a0;font-size:11px;line-height:1.5}
 #campaign-content{min-height:0;overflow:auto;padding:4px 8px}
 #campaign-content:focus-visible{outline:2px solid var(--lime);outline-offset:-2px}
 @media(max-width:480px){.topbar{flex-wrap:wrap}.header-actions{flex-wrap:wrap}}
@@ -57,8 +64,8 @@
 <body>
   <div class="app">
     <header class="topbar">
-      <div class="brand"><span class="brand-icon" aria-hidden="true"><i></i></span><div><p class="eyebrow">ТАНЧИКИ <span>/</span> ПРОТОТИП 06</p><h1>Магнитный рубеж</h1></div></div>
-      <div class="header-actions"><button id="sound" class="icon-button" aria-pressed="false" title="Включить звук">Звук выкл</button><button id="campaign" class="icon-button" aria-haspopup="dialog">Кампания</button><button id="help" class="icon-button" title="Правила и управление">Как играть <span>?</span></button><button id="pause" class="icon-button" title="Пауза (Esc)">Ⅱ <span class="desktop-label">Пауза</span></button></div>
+      <div class="brand"><span class="brand-icon" aria-hidden="true"><i></i></span><div><p class="eyebrow">ТАНЧИКИ <span>/</span> ПРОТОТИП 06</p><h1 id="map-name"></h1></div></div>
+      <div class="header-actions"><button id="maps" class="icon-button" aria-haspopup="dialog">Карты</button><button id="sound" class="icon-button" aria-pressed="false" title="Включить звук">Звук выкл</button><button id="campaign" class="icon-button" aria-haspopup="dialog">Кампания</button><button id="help" class="icon-button" title="Правила и управление">Как играть <span>?</span></button><button id="pause" class="icon-button" title="Пауза (Esc)">Ⅱ <span class="desktop-label">Пауза</span></button></div>
     </header>
     <div class="mobile-notice">Для игры нужны клавиатура и мышь. Открой эту страницу на компьютере.</div>
     <main class="game-layout">
@@ -71,7 +78,6 @@
         </div>
         <div class="board-shell" id="board-shell">
           <canvas id="board" width="1120" height="720" tabindex="0" aria-label="Поле боя. WASD — движение, мышь — прицел, левая кнопка — огонь. В подготовке нажми на корпус, чтобы выбрать его."></canvas>
-          <div id="board-tag" class="board-tag"><span class="pulse-dot"></span><span id="board-tag-text">Разведай поле · выбери позицию</span></div>
           <p id="action-preview" class="action-preview" role="status"></p>
           <div id="toast" class="toast" role="status" aria-live="polite"></div>
           <div id="overlay" class="overlay" hidden>
@@ -94,7 +100,7 @@
       <aside class="sidebar" aria-label="Управление волной и корпусами">
         <div class="phase-head"><span id="phase-badge" class="phase-badge">ПОДГОТОВКА</span><span id="phase-number" class="muted"></span></div>
         <h2 id="phase-title">Выбери позицию</h2><p id="phase-copy" class="sidebar-copy">Лёгкие отвлекают тебя, средние прорываются к базе. Используй руины, чтобы разделить угрозы.</p>
-        <section class="wave-card"><div class="section-label"><span id="wave-card-title">СЛЕДУЮЩАЯ АТАКА</span><span id="enemy-total"></span></div><div id="wave-plan"></div><p id="wave-note" class="fineprint">Сначала займи удобную позицию, затем начни волну.</p></section>
+        <section class="wave-card"><div class="section-label"><span id="wave-card-title">СЛЕДУЮЩАЯ АТАКА</span><span id="enemy-total"></span></div><div id="wave-plan"></div><p id="entry-status" role="status" hidden></p><p id="wave-note" class="fineprint"></p></section>
         <button id="start" class="primary">Начать волну 1 <span>↵</span></button>
         <div id="combat-status" class="combat-status" hidden><span class="pulse-dot"></span><span id="combat-copy"></span></div>
         <p id="wreck-discovery" class="wreck-lesson" role="status" hidden></p>
@@ -123,6 +129,12 @@
     <div id="campaign-content" tabindex="0" autofocus></div>
     <form method="dialog" class="modal-actions"><button class="primary">Закрыть</button></form>
   </dialog>
+  <dialog id="map-dialog" class="modal" aria-labelledby="map-title">
+    <h2 id="map-title">Выбор карты</h2>
+    <p>Выбор карты начинает новую попытку.</p>
+    <div id="map-options" class="map-options"></div>
+    <form method="dialog" class="modal-actions"><button class="secondary">Продолжить текущую попытку</button></form>
+  </dialog>
   <script>
 /* Scenario data shared by simulation, preview and presentation. Y grows down. */
 (function (root) {
@@ -133,8 +145,14 @@
     { x:12.5, y:14.6, w:.4, h:1.7, kind:'bunker' },
     { x:14.5, y:16.4, w:.4, h:1.6, kind:'bunker' }
   ];
+  const historicalGeometry = {
+    BASE_RECT: { x:13.1, y:12.6, w:1.8, h:1.8 },
+    PLAYER_START: { x:16.4, y:17.2 },
+    PLAYER_RETURN_AREA: { x:15.5, y:15.6, w:2, h:1.8 }
+  };
   const CLASSIC = {
-    mapId:'classic', mapVersion:1, AI_MODE:'classic', SPAWN_INTERVAL:2.5,
+    ...historicalGeometry,
+    mapId:'classic', mapName:'Классическая карта', mapVersion:1, AI_MODE:'classic', SPAWN_INTERVAL:2.5,
     WALLS:[
       {x:0,y:7.5,w:8.1,h:1.5}, {x:9.9,y:7.5,w:8.2,h:1.5}, {x:19.9,y:7.5,w:8.1,h:1.5},
       {x:11.8,y:10.6,w:4.4,h:1.6}, ...niche
@@ -148,7 +166,8 @@
     ], ROADS:[], AREAS:[]
   };
   const BATTLEFIELD = {
-    mapId:'battlefield', mapVersion:1, AI_MODE:'roles', SPAWN_INTERVAL:2.5,
+    ...historicalGeometry,
+    mapId:'battlefield', mapName:'Магнитный рубеж', mapVersion:1, AI_MODE:'roles', SPAWN_INTERVAL:2.5,
     WALLS:[
       {x:5.2,y:3.0,w:3.8,h:2.8,kind:'ruin'},
       {x:12.2,y:3.0,w:3.6,h:2.3,kind:'ruin'},
@@ -186,13 +205,145 @@
       {label:'ВОСТОЧНЫЙ ОБХОД',x:23.5,y:10.1}
     ]
   };
+  const campaignRoster = [
+    [['A','LMLL']],
+    [['A','MLMLL']],
+    [['C','LMLMLL']],
+    [['C','MHLL'], ['B','LMLM']],
+    [['B','MHLL'], ['C','LMLL']],
+    [['A','LML'], ['C','MLLL'], ['B','MLL']],
+    [['B','LHML'], ['C','MLL'], ['A','MHLL']],
+    [['A','HLMLL'], ['B','MLLL'], ['C','HLMLL']]
+  ];
+  const enemyTypes = { L:'light', M:'medium', H:'heavy' };
+  // Calibrated starts are stored as 1/60-second ticks and exposed as seconds to the runtime.
+  const campaignWaves = startTicks => campaignRoster.map((wave, waveIndex) =>
+    wave.map(([lane, roster], index) => ({
+      lane, types: Array.from(roster, type => enemyTypes[type]), start: startTicks[waveIndex][index] / 60
+    }))
+  );
+  const wall = (x, y, w, h, kind = 'toy') => ({ x, y, w, h, kind });
+  const points = (...pairs) => pairs.map(([x, y]) => ({ x, y }));
+  const MAGNETIC = {
+    mapId:'magnetic', mapName:'Магнитная доска', mapVersion:1, AI_MODE:'roles', SPAWN_INTERVAL:2.5,
+    BASE_RECT:{ x:13.1, y:12.8, w:1.8, h:1.8 },
+    PLAYER_START:{ x:16.4, y:17.2 },
+    PLAYER_RETURN_AREA:{ x:15.4, y:17.3, w:2.1, h:.1 },
+    WALLS:[
+      wall(8.4, 0, .8, 11.5),
+      wall(18.8, 0, .8, 11.5),
+      wall(2.8, 4, 4, 5),
+      wall(11, 2.05, 2.2, 3.1),
+      wall(14.8, 2.05, 4, 3.1),
+      wall(19.6, 4, .4, 5),
+      wall(23.2, 4, 2.8, 5),
+      wall(12.5, 14.8, 5.9, .4, 'bunker'),
+      wall(18, 14.8, .4, 3.2, 'bunker'),
+      wall(12.5, 14.8, .4, 1.7, 'bunker'),
+      wall(14.5, 16.6, .4, 1.4, 'bunker'),
+    ],
+    SPAWNS:{
+      A:{ x:7.2, y:1.5, w:1.6, h:2, direction:'down' },
+      B:{ x:21.6, y:1.5, w:3, h:2, direction:'down' },
+      C:{ x:14, y:1.5, w:3, h:2, direction:'down' },
+    },
+    TACTICS:{
+      A: {
+        position:{ x:7.6, y:10.2 }, fork:{ x:7.6, y:2.8 }, merge:{ x:7.6, y:10.2 },
+        shortPath:points([7.6,2.8], [7.6,9.8]),
+        bypass:points([7.6,2.8], [1.6,2.8], [1.6,10.2], [7.6,10.2]),
+        blockers:points([7.6,6.5]), usefulAreas:[{ x:7.3, y:6, w:.6, h:1 }]
+      },
+      B: {
+        position:{ x:21.6, y:10.2 }, fork:{ x:21.6, y:2.8 }, merge:{ x:21.6, y:10.2 },
+        shortPath:points([21.6,2.8], [21.6,9.8]),
+        bypass:points([21.6,2.8], [27,2.8], [27,10.2], [21.6,10.2]),
+        blockers:points([20.8,6.5], [22.4,6.5]), usefulAreas:[{ x:20.5, y:6, w:2.2, h:1.5 }]
+      },
+      C: {
+        position:{ x:14, y:9.45 }, fork:{ x:14, y:1.5 }, merge:{ x:14, y:7 },
+        acquisitionPosition:{ x:14, y:8.6 },
+        shortPath:points([14,1.5], [14,7]),
+        bypass:points([14,1.5], [10.1,1.5], [10.1,7], [14,7]),
+        blockers:points([14,3.65]), usefulAreas:[{ x:13.7, y:3.15, w:.6, h:1 }]
+      },
+    },
+    TRAVEL_ROUTES:{
+      'A>B':points([7.6,10.2], [7.6,12.2], [21.6,12.2], [21.6,10.2]),
+      'A>C':points([7.6,10.2], [7.6,12.2], [14,12.2], [14,9.45]),
+      'B>A':points([21.6,10.2], [21.6,12.2], [7.6,12.2], [7.6,10.2]),
+      'B>C':points([21.6,10.2], [21.6,12.2], [14,12.2], [14,9.45]),
+      'C>A':points([14,9.45], [14,12.2], [7.6,12.2], [7.6,10.2]),
+      'C>B':points([14,9.45], [14,12.2], [21.6,12.2], [21.6,10.2]),
+    },
+    WAVES: campaignWaves([[0], [0], [0], [0,948], [0,1216], [0,303,996], [0,322,455], [0,334,542]])
+  };
+  const CITY = {
+    mapId:'city', mapName:'Город', mapVersion:1, AI_MODE:'roles', SPAWN_INTERVAL:2.5,
+    BASE_RECT:{ x:3.2, y:10.3, w:1.8, h:1.8 },
+    PLAYER_START:{ x:6.85, y:15.25 },
+    PLAYER_RETURN_AREA:{ x:5.53, y:15.23, w:1.52, h:.06 },
+    WALLS:[
+      wall(2, 3.5, 3.2, 4.5, 'city'),
+      wall(6.8, 3.5, 2.8, 4.5, 'city'),
+      wall(16, 0, 8, 4.2, 'city'),
+      wall(16, 5.8, 8, 5.4, 'city'),
+      wall(18.8, 11.2, 5.2, 2.2, 'city'),
+      wall(24, 9.6, 2.4, .8, 'city'),
+      wall(12.4, 8.4, 2, 2, 'city'),
+      wall(12.4, 12, 2, 3, 'city'),
+      wall(8, 15, 16, 1, 'city'),
+      wall(3, 13, 5, .4, 'bunker'),
+      wall(7.6, 13, .4, 3.2, 'bunker'),
+      wall(3, 15.8, 5, .4, 'bunker'),
+      wall(3, 13, .4, 1.59, 'bunker'),
+      // The inner wall blocks fire through the west opening and leaves an exit around its north end.
+      wall(4.65, 14.62, .3, 1.18, 'bunker'),
+    ],
+    SPAWNS:{
+      A:{ x:6, y:.65, w:2, h:1.25, direction:'down' },
+      B:{ x:26.5, y:14.2, w:2, h:2, direction:'left' },
+      C:{ x:26.5, y:5, w:2, h:2, direction:'left' },
+    },
+    TACTICS:{
+      A: {
+        position:{ x:6, y:9.5 }, fork:{ x:6, y:2.5 }, merge:{ x:6, y:9 },
+        shortPath:points([6,2.5], [6,9]),
+        bypass:points([6,2.5], [1.5,2.5], [1.5,9], [6,9]),
+        blockers:points([6,5.35]), usefulAreas:[{ x:5.7, y:4.85, w:.6, h:1 }]
+      },
+      B: {
+        position:{ x:15.2, y:7.5 }, fork:{ x:25.5, y:14.2 }, merge:{ x:7, y:11.2 },
+        acquisitionPosition:{ x:16.8, y:12.2 },
+        shortPath:points([25.5,14.2], [15.2,14.2], [15.2,11.2], [11.8,11.2], [7,11.2]),
+        bypass:points([25.5,14.2], [27.2,14.2], [27.2,5], [11.8,5], [11.8,9.5], [7,9.5]),
+        blockers:points([18.63,13.92], [13.76,11.43]), usefulAreas:[{ x:18.45, y:13.9, w:1, h:.6 }, { x:12.9, y:10.9, w:1, h:.6 }],
+        outerBypass:points([25.5,14.2], [25.5,16.8], [1.8,16.8], [1.8,12.5], [6.8,12.5], [6.8,9.5])
+      },
+      C: {
+        position:{ x:20.8, y:5 }, fork:{ x:25.5, y:5 }, merge:{ x:15.2, y:7.5 },
+        shortPath:points([25.5,5], [11.8,5], [11.8,9.5], [7,9.5]),
+        bypass:points([25.5,5], [27.2,5], [27.2,14.2], [15.2,14.2], [15.2,7.5]),
+        blockers:points([18.5,5]), usefulAreas:[{ x:18, y:4.7, w:1, h:.6 }]
+      },
+    },
+    TRAVEL_ROUTES:{
+      'A>C':points([6,9.5], [11.8,9.5], [11.8,5], [20.8,5]),
+      'C>A':points([20.8,5], [11.8,5], [11.8,9.5], [6,9.5]),
+      'A>B':points([6,9.5], [11.8,9.5], [11.8,7.5], [15.2,7.5]),
+      'B>A':points([15.2,7.5], [11.8,7.5], [11.8,9.5], [6,9.5]),
+      'B>C':points([15.2,7.5], [15.2,5], [20.8,5]),
+      'C>B':points([20.8,5], [15.2,5], [15.2,7.5]),
+    },
+    WAVES: campaignWaves([[0], [0], [0], [0,1137], [0,10], [964,0,1026], [0,463,511], [789,503,0]])
+  };
   function freeze(value) {
     if(value && typeof value==='object' && !Object.isFrozen(value)) {
       Object.values(value).forEach(freeze); Object.freeze(value);
     }
     return value;
   }
-  const scenarios=freeze({BATTLEFIELD,CLASSIC});
+  const scenarios=freeze({BATTLEFIELD,CLASSIC,MAGNETIC,CITY});
   root.TankScenarios=scenarios;
   if(typeof module!=='undefined'&&module.exports) module.exports=scenarios;
 })(typeof globalThis!=='undefined'?globalThis:this);
@@ -238,7 +389,7 @@
   const approach = (from, to, limit) => from + clamp(to - from, -limit, limit);
   const DODGE_TURN_RATE = 1080 * Math.PI / 180;
   const ATTEMPT_LOG_VERSION = 1;
-  const BUILD_ID = 'prototype-06-shared-combat-1';
+  const BUILD_ID = 'prototype-06-two-maps-1';
   const scenarios = typeof module !== 'undefined' && module.exports ? require('./scenarios.js') : root.TankScenarios;
   const ENEMY_TYPES = Object.freeze({
     light: Object.freeze({ hp: 20, speed: 2.6, damage: 8, range: 6, cooldown: 1.4 }),
@@ -254,9 +405,12 @@
   const CLASSIC_ENEMY_TYPES = Object.freeze({
     light: Object.freeze({ ...ENEMY_TYPES.light, range: 4 }), medium: ENEMY_TYPES.medium
   });
-  const BASE_RECT = { x: 13.1, y: 12.6, w: 1.8, h: 1.8 };
   const CONFIG = Object.freeze({ ...scenarios.BATTLEFIELD, W, H, ENEMY_TYPES, ENEMY_WINDUP: 0 });
   const CLASSIC_CONFIG = Object.freeze({ ...scenarios.CLASSIC, W, H, ENEMY_TYPES: CLASSIC_ENEMY_TYPES, ENEMY_WINDUP: 0.35 });
+  const MAP_CONFIGS = Object.freeze(Object.fromEntries([scenarios.MAGNETIC, scenarios.CITY].map(map =>
+    [map.mapId, Object.freeze({ ...map, W, H, ENEMY_TYPES, ENEMY_WINDUP: 0 })]
+  )));
+  const baseRect = config => config.BASE_RECT ?? CONFIG.BASE_RECT;
 
   const clamp = (n, lo, hi) => Math.max(lo, Math.min(hi, n));
   const square = n => n * n;
@@ -352,13 +506,13 @@
   function staticPositionFree(config, x, y, radius = TANK_RADIUS) {
     if (x < radius - EPS || y < radius - EPS || x > config.W - radius + EPS || y > config.H - radius + EPS) return false;
     return config.WALLS.every(rect => pointRectDistanceSq(x, y, rect) >= radius * radius - EPS) &&
-      pointRectDistanceSq(x, y, BASE_RECT) >= radius * radius - EPS;
+      pointRectDistanceSq(x, y, baseRect(config)) >= radius * radius - EPS;
   }
 
   function staticSegmentFree(config, ax, ay, bx, by, radius = TANK_RADIUS) {
     if (!staticPositionFree(config, ax, ay, radius) || !staticPositionFree(config, bx, by, radius)) return false;
     return config.WALLS.every(rect => segmentRectDistanceSq(ax, ay, bx, by, rect) >= radius * radius - EPS) &&
-      segmentRectDistanceSq(ax, ay, bx, by, BASE_RECT) >= radius * radius - EPS;
+      segmentRectDistanceSq(ax, ay, bx, by, baseRect(config)) >= radius * radius - EPS;
   }
 
   function hullCount(mask) {
@@ -410,15 +564,16 @@
     const size = columns * rows;
     const nodes = new Array(size);
     const goals = new Map();
+    const base = baseRect(config);
     for (let row = 0; row < rows; row++) {
       for (let column = 0; column < columns; column++) {
         const id = row * columns + column;
         const x = (column + 0.5) * CELL;
         const y = (row + 0.5) * CELL;
         nodes[id] = { x, y, free: staticPositionFree(config, x, y), edges: [] };
-        if (!nodes[id].free || pointRectDistanceSq(x, y, BASE_RECT) > square(TANK_RADIUS + CELL * 1.2)) continue;
-        const edgeX = clamp(x, BASE_RECT.x, BASE_RECT.x + BASE_RECT.w);
-        const edgeY = clamp(y, BASE_RECT.y, BASE_RECT.y + BASE_RECT.h);
+        if (!nodes[id].free || pointRectDistanceSq(x, y, base) > square(TANK_RADIUS + CELL * 1.2)) continue;
+        const edgeX = clamp(x, base.x, base.x + base.w);
+        const edgeY = clamp(y, base.y, base.y + base.h);
         const d = Math.hypot(x - edgeX, y - edgeY);
         if (!d) continue;
         const goal = {
@@ -462,12 +617,13 @@
       this.paused = false;
       this.waveIndex = 0;
       this.player = {
-        id: 'player', x: 16.4, y: 17.2, r: TANK_RADIUS, module: null,
+        id: 'player', ...(this.config.PLAYER_START ?? CONFIG.PLAYER_START), r: TANK_RADIUS, module: null,
         angle: -Math.PI / 2, bodyAngle: -Math.PI / 2,
         alive: true, respawn: 0, cooldown: 0
       };
       this._restorePlayerHp();
-      this.base = { x: 14, y: 13.5, w: 1.8, h: 1.8, hp: 240, maxHp: 240 };
+      const { x, y, w, h } = baseRect(this.config);
+      this.base = { x: x + w / 2, y: y + h / 2, w, h, hp: 240, maxHp: 240 };
       this.baseLoss = null;
       this.enemies = [];
       this.wrecks = [];
@@ -565,8 +721,8 @@
       this._undo = [];
       this._traffic = null;
       this._laneReadyAt = Object.fromEntries(Object.keys(this.config.SPAWNS).map(lane => [lane, 0]));
-      this._spawnQueue = this.config.WAVES[this.waveIndex].flatMap(pkg => pkg.types.map((type, index) => ({
-        at: pkg.start + index * this.config.SPAWN_INTERVAL, lane: pkg.lane, type
+      this._spawnQueue = this.config.WAVES[this.waveIndex].flatMap((pkg, groupIndex) => pkg.types.map((type, index) => ({
+        at: pkg.start + index * this.config.SPAWN_INTERVAL, lane: pkg.lane, type, groupIndex, first: index === 0
       }))).sort((a, b) => a.at - b.at || a.lane.localeCompare(b.lane));
       this.lastMessage = `Волна ${this.waveNumber}`;
       this._emit('wave', { wave: this.waveNumber });
@@ -749,6 +905,7 @@
         this._updateRespawn(dt);
       } else if (this.phase === 'prep') {
         this._preparationSeconds += dt;
+        this._updateRespawn(0, 'wave_transition');
       }
       this._updatePlayer(dt, input);
       if (this.phase === 'battle') this._spawnDue();
@@ -809,7 +966,7 @@
       }
     }
 
-    _updateRespawn(dt) {
+    _updateRespawn(dt, reason = 'respawn_timer') {
       if (this.player.alive) return;
       this.player.respawn = Math.max(0, this.player.respawn - dt);
       if (this.player.respawn > EPS) return;
@@ -818,18 +975,35 @@
       Object.assign(this.player, spot, { alive: true, respawn: 0, cooldown: 0 });
       this._restorePlayerHp();
       this.lastMessage = 'Танк восстановлен';
-      this._recordAttempt('player_return', { reason: 'respawn_timer', ...this._attemptState() });
+      this._recordAttempt('player_return', { reason, ...this._attemptState() });
     }
 
     _respawnPosition() {
-      const preferred = { x: 16.4, y: 17.2 };
+      const preferred = this.config.PLAYER_START ?? CONFIG.PLAYER_START;
       if (this._positionFree(preferred.x, preferred.y, this.player, true)) return preferred;
-      for (let y = 17.4; y >= 15.6; y -= 0.3) {
-        for (let x = 15.5; x <= 17.5; x += 0.3) {
+      const area = this.config.PLAYER_RETURN_AREA ?? (this.config.PLAYER_START ? null : CONFIG.PLAYER_RETURN_AREA);
+      if (!area) return null;
+      for (let y = area.y + area.h; y >= area.y - EPS; y -= 0.3) {
+        for (let x = area.x; x <= area.x + area.w + EPS; x += 0.3) {
           if (this._positionFree(x, y, this.player, true)) return { x, y };
         }
       }
       return null;
+    }
+
+    getEntrySignals() {
+      if (this.phase !== 'prep' && this.phase !== 'battle') return [];
+      return this.config.WAVES[this.waveIndex].flatMap(({ lane, start }, groupIndex) => {
+        if (this.phase === 'prep') return [{ lane, start, status: 'planned' }];
+        const firstPending = this._spawnQueue.some(item => item.first && item.groupIndex === groupIndex);
+        if (!firstPending) return [{ lane, start, status: 'active' }];
+        const remaining = start - this._waveTime;
+        if (remaining <= EPS) return [{ lane, start, status: 'waiting', seconds: 0 }];
+        if (remaining <= 3 + EPS) {
+          return [{ lane, start, status: 'countdown', seconds: Math.ceil(remaining - EPS) }];
+        }
+        return [];
+      });
     }
 
     _spawnDue() {
@@ -2037,20 +2211,12 @@
       this.phase = 'prep';
       this._traffic = null;
       this._undo = [];
-      const returning = !this.player.alive;
-      if (returning) {
-        const position = this._respawnPosition();
-        if (position) Object.assign(this.player, position);
-      }
-      this.player.alive = true;
-      this._restorePlayerHp();
       this.player.respawn = 0;
       this.player.cooldown = 0;
+      if (this.player.alive) this._restorePlayerHp();
+      else this._updateRespawn(0, 'wave_transition');
       this.lastMessage = `Волна ${completed} отбита. Подготовка к волне ${this.waveNumber}`;
       this._emit('wave', { wave: this.waveNumber, preparation: true });
-      if (returning) {
-        this._recordAttempt('player_return', { reason: 'wave_transition', ...this._attemptState() });
-      }
     }
 
     _recordWaveEnd(outcome) {
@@ -2829,7 +2995,7 @@
 
   }
 
-  const api = { Game, CONFIG, CLASSIC_CONFIG, PLAYER_WEAPON, PLAYER_MODULES, TANK_RADIUS, isInSpawnZone };
+  const api = { Game, MAP_CONFIGS, CONFIG, CLASSIC_CONFIG, PLAYER_WEAPON, PLAYER_MODULES, TANK_RADIUS, isInSpawnZone };
   root.TankCore = api;
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
 })(typeof globalThis !== 'undefined' ? globalThis : this);
@@ -2838,14 +3004,14 @@
   <script>
 (() => {
   'use strict';
-  const { Game, CONFIG, PLAYER_WEAPON, PLAYER_MODULES, TANK_RADIUS, isInSpawnZone } = globalThis.TankCore;
-  const game = new Game();
+  const { Game, MAP_CONFIGS, PLAYER_WEAPON, PLAYER_MODULES, TANK_RADIUS, isInSpawnZone } = globalThis.TankCore;
+  let game = new Game(MAP_CONFIGS.magnetic);
   const el = (id) => document.getElementById(id);
   const canvas = el('board'), ctx = canvas.getContext('2d');
   const keys = new Set(), effects = [], unitLabels = [];
   const simulationStep = 1 / 60;
   let pendingSimulation = 0;
-  const pointer = { x: 14, y: 7, down: false, inside: false, pendingShot: null };
+  const pointer = { ...game.config.PLAYER_START, down: false, inside: false, pendingShot: null };
   let selected = null, lastFrame = 0, visualTime = 0, lastUiKey = '', endShown = false;
   let reinforcement = null;
   let previewAction = null, preparationPreview = null;
@@ -2853,20 +3019,17 @@
   let firstWreck = null, prepLesson = null;
   const discoverySeconds = 4;
   let modalKind = null, pauseBeforeHelp = false, toastUntil = 0, routePreview = [];
-  const campaignDialog = el('campaign-dialog');
+  const campaignDialog = el('campaign-dialog'), mapDialog = el('map-dialog');
+  let mapPickerGame = null, mapPickerWasPaused = false;
   let routeKey = null, soundOn = false, audio = null, shake = 0;
   const clamp = (v,a,b) => Math.max(a,Math.min(b,v));
-  const waveCount = CONFIG.WAVES.length;
   const waveLabel = wave => String(wave).padStart(2, '0');
-  el('wave-max').textContent = `/ ${waveLabel(waveCount)}`;
   const tankPlural = new Intl.PluralRules('ru');
   const enemyLooks = {
     light: { name: 'Лёгкий', role: 'преследует игрока', mark: 'Л', dark: '#8b453b', main: '#c76f58', top: '#e69b7d' },
     medium: { name: 'Средний', role: 'атакует базу', mark: 'С', dark: '#815b37', main: '#be8f4f', top: '#e0b47a' },
     heavy: { name: 'Тяжёлый', role: 'атакует базу', mark: 'Т', dark: '#553f58', main: '#85648a', top: '#e1bde5' }
   };
-  for(const lane of Object.keys(CONFIG.SPAWNS))el('route-lane').add(new Option(lane,lane));
-  for(const type of Object.keys(CONFIG.ENEMY_TYPES))el('route-type').add(new Option(enemyLooks[type].name,type));
   const hitsToKill = hp => Math.ceil(hp / PLAYER_WEAPON.damage);
   const moduleNames = { engine: 'Двигатель', armor: 'Броня', barrel: 'Удлинённый ствол' };
   const rangeLabel = range => range.toLocaleString('ru');
@@ -2884,20 +3047,62 @@
   };
   function enemyPlanPip(type) {
     const { name, role, mark } = enemyLooks[type];
-    const spec = CONFIG.ENEMY_TYPES[type];
+    const spec = game.config.ENEMY_TYPES[type];
     const description = `${name}: ${role} · ${spec.hp} HP · попаданий: ${hitsToKill(spec.hp)}${spec.wreck ? ' · оставляет корпус' : ''}`;
     return `<span class="enemy-pip ${type}" role="img" title="${description}" aria-label="${description}">${mark}</span>`;
   }
   function waveGroups(wave) {
-    return wave.map(({lane, start, types}) => `<div class="lane-row"><span class="lane-chip ${lane.toLowerCase()}">${lane}</span><div class="lane-enemies">${types.map(enemyPlanPip).join('')}</div><span class="lane-time">${start === 0 ? 'Сразу' : `+${start} с`}</span></div>`).join('');
+    return [...wave].sort((a,b)=>a.start-b.start).map(({lane, start, types}) => `<div class="lane-row"><span class="lane-chip ${lane.toLowerCase()}">${lane}</span><div class="lane-enemies">${types.map(enemyPlanPip).join('')}</div><span class="lane-time">${start === 0 ? 'Сразу' : `+${start.toLocaleString('ru')} с`}</span></div>`).join('');
   }
-  const spawnInterval = CONFIG.SPAWN_INTERVAL.toLocaleString('ru');
+  const spawnInterval = () => game.config.SPAWN_INTERVAL.toLocaleString('ru');
   const breachPointRadius = .11, breachPointStroke = .045;
-  const laneColors = ['#4d7469','#8b663e','#735f7f'];
-  const laneColor = lane => laneColors[Object.keys(CONFIG.SPAWNS).indexOf(lane) % laneColors.length] || laneColors[0];
-  let terrainSeed = 404;
-  const terrainRandom = () => { terrainSeed = (terrainSeed * 1664525 + 1013904223) >>> 0; return terrainSeed / 4294967296; };
-  const terrainMarks = Array.from({length:100},(_,i)=>({x:terrainRandom()*CONFIG.W,y:terrainRandom()*CONFIG.H,size:.15+terrainRandom()*.55,angle:terrainRandom()*Math.PI,crater:i<14}));
+  const laneColors = { A:'#245846', B:'#743f27', C:'#563d73' };
+  const laneColor = lane => laneColors[lane] ?? laneColors.A;
+
+  function configureMapView(){
+    el('map-name').textContent=game.config.mapName;
+    el('wave-max').textContent=`/ ${waveLabel(game.config.WAVES.length)}`;
+    el('route-lane').replaceChildren(new Option('Все',''),
+      ...Object.keys(game.config.SPAWNS).map(lane=>new Option(lane,lane)));
+    el('route-type').replaceChildren(new Option('Первый в группе',''),
+      ...Object.keys(game.config.ENEMY_TYPES).map(type=>new Option(enemyLooks[type].name,type)));
+    for(const button of el('map-options').children) {
+      button.setAttribute('aria-current',String(button.dataset.mapId===game.config.mapId));
+    }
+  }
+  function drawMapMiniature(surface,config) {
+    const mapCtx=surface.getContext('2d'), { W,H,BASE_RECT }=config;
+    mapCtx.scale(surface.width/W,surface.height/H);
+    const magnetic=config.mapId==='magnetic';
+    mapCtx.fillStyle=magnetic?'#9ecac1':'#c4ad91';
+    mapCtx.fillRect(0,0,W,H);
+    for(const wall of config.WALLS) {
+      mapCtx.fillStyle=wall.kind==='bunker'?'#465d61':magnetic?'#467c84':'#935b48';
+      mapCtx.fillRect(wall.x,wall.y,wall.w,wall.h);
+    }
+    for(const [lane,spawn] of Object.entries(config.SPAWNS)) {
+      mapCtx.fillStyle=laneColor(lane);
+      mapCtx.fillRect(spawn.x-spawn.w/2,spawn.y-spawn.h/2,spawn.w,spawn.h);
+      mapCtx.fillStyle='#fff6df';mapCtx.textAlign='center';mapCtx.textBaseline='middle';
+      mapCtx.font='bold 1px system-ui';mapCtx.fillText(lane,spawn.x,spawn.y);
+    }
+    mapCtx.fillStyle='#f5d073';
+    mapCtx.fillRect(BASE_RECT.x,BASE_RECT.y,BASE_RECT.w,BASE_RECT.h);
+  }
+  function setupMapChoices(){
+    for(const config of Object.values(MAP_CONFIGS)) {
+      const button=document.createElement('button'), miniature=document.createElement('canvas'), name=document.createElement('span');
+      button.className='map-choice';
+      button.type='button';
+      button.dataset.mapId=config.mapId;
+      button.onclick=()=>selectMap(config);
+      miniature.width=280;miniature.height=180;miniature.setAttribute('aria-hidden','true');
+      drawMapMiniature(miniature,config);
+      name.textContent=config.mapName;
+      button.append(miniature,name);
+      el('map-options').appendChild(button);
+    }
+  }
   function toast(text, seconds = 3.5) {
     el('toast').textContent=text; el('toast').classList.add('show'); toastUntil=performance.now()+seconds*1000;
   }
@@ -2910,13 +3115,36 @@
     el('overlay').hidden=false;el('modal-actions').querySelector('button')?.focus({preventScroll:true});
   }
   function closeModal(){el('overlay').hidden=true;modalKind=null;focusBoard();}
+  function showMapPicker(){
+    if(mapDialog.open||campaignDialog.open)return;
+    clearInput();mapPickerGame=game;mapPickerWasPaused=game.paused;game.paused=true;
+    mapDialog.showModal();
+  }
+  mapDialog.addEventListener('close',()=>{
+    if(game===mapPickerGame)game.paused=mapPickerWasPaused;
+    else focusBoard();
+    mapPickerGame=null;lastFrame=performance.now();
+  });
+  function selectMap(config){
+    game=new Game(config);
+    clearInput();
+    Object.assign(pointer,config.PLAYER_START,{inside:false});
+    selected=null;reinforcement=null;setActionPreview(null);
+    routeKey=null;routePreview=[];effects.length=0;unitLabels.length=0;shake=0;
+    firstWreck=null;prepLesson=null;endShown=false;pauseBeforeHelp=false;lastUiKey='';visualTime=0;toastUntil=0;
+    el('toast').classList.remove('show');el('toast').textContent='';
+    el('route-estimate').textContent='';
+    configureMapView();
+    mapDialog.close();closeModal();
+    updateUi();
+  }
   const exportLabel = 'Скачать журнал JSON';
   function exportAttempt(){
     const blob = new Blob([game.exportAttemptLog()], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = 'tanks-attempt.json';
+    link.download = `tanks-${game.config.mapId}-v${game.config.mapVersion}-attempt.json`;
     link.click();
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   }
@@ -2926,18 +3154,20 @@
     if(['won','lost'].includes(game.phase))return;
     if(game.paused){resume();return;}
     game.paused=true;
-    openModal('pause','БОЙ ОСТАНОВЛЕН','Пауза','<p>Можно выдохнуть. Поле и все снаряды ждут твоего возвращения.</p>',[['Продолжить',resume,true],[exportLabel,exportAttempt,false],['Начать попытку заново',reset,false]]);
+    openModal('pause','БОЙ ОСТАНОВЛЕН','Пауза','<p>Поле и снаряды ждут твоего возвращения.</p>',[['Продолжить',resume,true],[exportLabel,exportAttempt,false],['Новая попытка',showMapPicker,false]]);
   }
   function showCampaign(){
     if(modalKind)return;
-    const waves=CONFIG.WAVES.map((wave,index)=>`
+    const waveCount=game.config.WAVES.length;
+    const waves=game.config.WAVES.map((wave,index)=>`
       <section class="campaign-wave">
         <h3>Волна ${index+1}${index+1===waveCount?' · Финал':''}</h3>
         ${waveGroups(wave)}
       </section>`).join('');
     const legend=Object.values(enemyLooks).map(({mark,name})=>`${mark} — ${name.toLowerCase()}`).join(' · ');
     const content=el('campaign-content');
-    content.innerHTML=`<p>${legend}. Группы выходят параллельно, на одном входе между появлениями не менее ${spawnInterval} с.</p>${waves}`;
+    el('campaign-title').textContent=`Кампания · ${game.config.mapName}`;
+    content.innerHTML=`<p>${legend}. На одном входе между появлениями не менее ${spawnInterval()} с.</p>${waves}`;
     clearInput();
     game.paused=true;
     campaignDialog.showModal();
@@ -2954,16 +3184,10 @@
   function help(){
     if(modalKind==='help'){closeHelp();return;}
     pauseBeforeHelp=game.paused;game.paused=true;
-    openModal('help','ТРИ НАПРАВЛЕНИЯ · ОДНА БАЗА','Как играть',`<ol class="modal-list"><li><b>Защищай базу.</b> WASD — движение, мышь — прицел, удержание ЛКМ — огонь. До старта проверь входы и время атаки в плане волны. Кнопка «Кампания» показывает расписание всех волн (${waveCount}).</li><li><b>Лёгкий (Л) охотится за тобой.</b> Знак «!» означает преследование. Уходи за укрытие и меняй позицию.</li><li><b>Средний (С) и тяжёлый (Т) атакуют базу.</b> Рядом с танком указаны HP и число попаданий до уничтожения (×). Оставленные корпуса меняют маршрут и задерживают снаряды обеих сторон. Перечёркнутый корпус рядом с танком означает, что в зоне появления он не оставит баррикаду.</li><li><b>Враг стреляет без предупреждения.</b> При открытой цели и готовом орудии он сразу выпускает снаряд. Меняй позицию и используй твёрдые укрытия. Воронки и следы на земле проходимы.</li><li><b>Между волнами</b> нажми на корпус: оставь его баррикадой или разбери на ремонт базы до +${CONFIG.ENEMY_TYPES.medium.wreck.repairHp} HP за средний или +${CONFIG.ENEMY_TYPES.heavy.wreck.repairHp} HP за тяжёлый. Средний корпус даёт на выбор двигатель или удлинённый ствол. Ствол увеличивает дальность до ${rangeLabel(PLAYER_MODULES.barrel.range)} ед. Тяжёлый корпус даёт броню. В слоте помещается один модуль. Последнее действие можно отменить через Ctrl+Z. Подпись «до N» показывает последнюю волну службы.</li><li>Твой танк восстанавливается между волнами и возвращается через 4 секунды после гибели. Пока ты возвращаешься, бой продолжается.</li></ol>`,[['Понятно',closeHelp,true]]);
+    openModal('help','ТРИ НАПРАВЛЕНИЯ · ОДНА БАЗА','Как играть',`<ol class="modal-list"><li><b>Защищай базу.</b> WASD — движение, мышь — прицел, удержание ЛКМ — огонь. До старта проверь входы и время атаки в плане волны. Кнопка «Кампания» показывает расписание всех волн (${game.config.WAVES.length}).</li><li><b>Лёгкий (Л) охотится за тобой.</b> Знак «!» означает преследование. Уходи за укрытие и меняй позицию.</li><li><b>Средний (С) и тяжёлый (Т) атакуют базу.</b> Рядом с танком указаны HP и число попаданий до уничтожения (×). Оставленные корпуса меняют маршрут и задерживают снаряды обеих сторон. Перечёркнутый корпус рядом с танком означает, что в зоне появления он не оставит баррикаду.</li><li><b>Враг стреляет без предупреждения.</b> При открытой цели и готовом орудии он сразу выпускает снаряд. Меняй позицию и используй твёрдые укрытия. Здания и блоки останавливают движение и снаряды.</li><li><b>Между волнами</b> нажми на корпус: оставь его баррикадой или разбери на ремонт базы до +${game.config.ENEMY_TYPES.medium.wreck.repairHp} HP за средний или +${game.config.ENEMY_TYPES.heavy.wreck.repairHp} HP за тяжёлый. Средний корпус даёт на выбор двигатель или удлинённый ствол. Ствол увеличивает дальность до ${rangeLabel(PLAYER_MODULES.barrel.range)} ед. Тяжёлый корпус даёт броню. В слоте помещается один модуль. Последнее действие можно отменить через Ctrl+Z. Подпись «до N» показывает последнюю волну службы.</li><li>Твой танк восстанавливается между волнами и возвращается через 4 секунды после гибели. Пока ты возвращаешься, бой продолжается.</li></ol>`,[['Понятно',closeHelp,true]]);
   }
   function closeHelp(){game.paused=pauseBeforeHelp;closeModal();if(game.paused){game.paused=false;pause();}else lastFrame=performance.now();}
-  function reset(){
-    clearInput();
-    game.reset();selected=null;reinforcement=null;setActionPreview(null);routeKey=null;routePreview=[];effects.length=0;shake=0;
-    firstWreck=null;prepLesson=null;endShown=false;lastUiKey='';
-    closeModal();game.paused=false;toast('Новая попытка. Перед боем можно занять позицию.');
-  }
-  function start(){if(['won','lost'].includes(game.phase)){reset();return;}if(game.phase!=='prep'||game.paused||reinforcement)return;if(game.startWave()){selected=null;setActionPreview(null);routeKey=null;toast(`Волна ${game.waveNumber}. Защищай базу.`,2);focusBoard();}}
+  function start(){if(['won','lost'].includes(game.phase)){showMapPicker();return;}if(game.phase!=='prep'||game.paused||reinforcement)return;if(game.startWave()){selected=null;setActionPreview(null);routeKey=null;toast(`Волна ${game.waveNumber}. Защищай базу.`,2);focusBoard();}}
   function repair(){
     const result=game.repairFromWreck(selected);
     if(result.ok){leaveWreck();routeKey=null;toast(result.hp>0?`Корпус разобран. База +${result.hp} HP.`:'Корпус разобран. Проход освобождён.');}
@@ -3000,7 +3224,7 @@
     routeKey=null;
     toast('Действие отменено. Позиция танка восстановлена.');
   }
-  el('start').onclick=start;el('pause').onclick=pause;el('help').onclick=help;el('campaign').onclick=showCampaign;el('repair').onclick=repair;
+  el('start').onclick=start;el('pause').onclick=pause;el('help').onclick=help;el('campaign').onclick=showCampaign;el('maps').onclick=showMapPicker;el('repair').onclick=repair;
   el('install-module').onclick=()=>installModule();
   el('install-barrel').onclick=()=>installModule('barrel');
   el('leave').onclick=leaveWreck;el('undo').onclick=undo;
@@ -3040,7 +3264,7 @@
     oscillator.stop(end);
   }
   document.addEventListener('keydown',(e)=>{
-    if(campaignDialog.open)return;
+    if(campaignDialog.open||mapDialog.open)return;
     const interactive=e.target instanceof Element&&e.target.closest('button,a,input,select,textarea');
     const routeSelect=e.target===el('route-lane')||e.target===el('route-type');
     if(!routeSelect&&!modalKind&&['KeyW','KeyA','KeyS','KeyD','ArrowUp','ArrowLeft','ArrowDown','ArrowRight'].includes(e.code)){e.preventDefault();keys.add(e.code);}
@@ -3050,7 +3274,7 @@
     if(modalKind&&e.code==='Tab'){const buttons=[...el('overlay').querySelectorAll('button')];const current=buttons.indexOf(document.activeElement);e.preventDefault();buttons[(current+(e.shiftKey?-1:1)+buttons.length)%buttons.length]?.focus();}
   });
   document.addEventListener('keyup',(e)=>keys.delete(e.code));
-  function pointerMove(e){const r=canvas.getBoundingClientRect();pointer.x=(e.clientX-r.left)/r.width*CONFIG.W;pointer.y=(e.clientY-r.top)/r.height*CONFIG.H;}
+  function pointerMove(e){const r=canvas.getBoundingClientRect();pointer.x=(e.clientX-r.left)/r.width*game.config.W;pointer.y=(e.clientY-r.top)/r.height*game.config.H;}
   canvas.addEventListener('pointermove',pointerMove);canvas.addEventListener('pointerenter',()=>pointer.inside=true);canvas.addEventListener('pointerleave',()=>pointer.inside=false);
   canvas.addEventListener('pointerdown',(e)=>{
     if(e.button!==0)return;
@@ -3188,6 +3412,7 @@
   }
   function updateUi(){
     const prep=game.phase==='prep',fighting=['battle','settling'].includes(game.phase),finished=['won','lost'].includes(game.phase);
+    const waveCount=game.config.WAVES.length;
     el('route-controls').hidden=!prep;
     el('route-lane').disabled=el('route-type').disabled=!el('routes').checked;
     updateWreckLessons(prep);
@@ -3197,7 +3422,11 @@
     el('player-fill').style.width=clamp(playerHp/game.player.maxHp*100,0,100)+'%';el('wave-value').textContent=waveLabel(game.waveNumber);el('kill-value').textContent=game.stats.kills;
     el('start').hidden=!prep&&!finished;el('start').disabled=game.paused||!!reinforcement;el('start').innerHTML=finished?'Новая попытка <span>↵</span>':`Начать волну ${game.waveNumber} <span>↵</span>`;
     el('combat-status').hidden=!fighting;el('combat-copy').textContent=game.phase==='settling'?'Ждём последние снаряды…':`Осталось противников: ${game.remaining}`;
-    el('board-tag-text').textContent=prep?'Разведай поле · выбери позицию':game.phase==='settling'?'Последние снаряды в полёте':finished?(game.phase==='won'?'База защищена':'База уничтожена'):'Лёгкие преследуют · остальные идут к базе';
+    const entryWarning=game.getEntrySignals().filter(signal=>['countdown','waiting'].includes(signal.status))
+      .map(signal=>`Вход ${signal.lane} · ${entryLabel(signal)}`).join(' | ');
+    const entryStatus=el('entry-status');
+    entryStatus.hidden=!entryWarning;
+    if(entryStatus.textContent!==entryWarning)entryStatus.textContent=entryWarning;
     el('pause').disabled=finished;el('wreck-count').textContent=game.wrecks.length;el('undo').disabled=!game.canUndo;
     const wreck=game.wrecks.find(w=>w.id===selected);
     if(!wreck || !prep){selected=null;reinforcement=null;}
@@ -3209,12 +3438,12 @@
       showActionReason('undo-reason',game.canUndo?null:preparationReasons[game.getUndoPreview().reason]);
       el('phase-number').textContent=`${waveLabel(game.waveNumber)} / ${waveLabel(waveCount)}`;
       el('phase-title').textContent=prep?(game.waveIndex===0?'Выбери позицию':'Используй корпуса'):finished?(game.phase==='won'?'База уцелела':'Попробуй ещё'):'Держи оборону';
-      el('phase-copy').textContent=prep?(game.waveIndex===0?'Лёгкие отвлекают тебя, средние прорываются к базе. Используй руины, чтобы разделить угрозы.':'Проверь направления следующей атаки. Оставь полезные корпуса или разбери их на ремонт либо модуль.'):fighting?'Уводи лёгких от открытой позиции и перехватывай атакующих базу.':'Попробуй другую позицию и используй корпуса у укрытий.';
+      el('phase-copy').textContent=prep?(game.waveIndex===0?'Лёгкие идут за тобой, средние атакуют базу. До старта можно занять позицию у укрытия.':'Проверь направления следующей атаки. Оставь полезные корпуса или разбери их на ремонт либо модуль.'):fighting?'Уводи лёгких от открытой позиции и перехватывай атакующих базу.':'Попробуй другую позицию и используй корпуса у укрытий.';
       el('wave-card-title').textContent=prep?'СЛЕДУЮЩАЯ АТАКА':'АТАКА ЭТОЙ ВОЛНЫ';
-      const plan=CONFIG.WAVES[game.waveIndex],total=plan.reduce((n,p)=>n+p.types.length,0);
+      const plan=game.config.WAVES[game.waveIndex],total=plan.reduce((n,p)=>n+p.types.length,0);
       el('enemy-total').textContent=`${total} ${{one:'танк',few:'танка',many:'танков',other:'танка'}[tankPlural.select(total)]}`;
       el('wave-plan').innerHTML=waveGroups(plan);
-      el('wave-note').textContent=`Между появлениями на одном входе не менее ${spawnInterval} с.`;
+      el('wave-note').textContent=`Между появлениями на одном входе не менее ${spawnInterval()} с.`;
       el('salvage-actions').hidden=!prep||!wreck||!!reinforcement;
       el('reinforcement-actions').hidden=!reinforcement;
       if(reinforcement){
@@ -3247,79 +3476,126 @@
         el('choose-reinforcement').disabled=!!choiceReason;
         showActionReason('choose-reinforcement-reason',preparationReasons[choiceReason]);
       } else el('salvage-content').innerHTML=`<p class="empty-state">${!game.wrecks.length?'Пока нет корпусов. Их оставляют средние и тяжёлые танки.':prep?'Нажми на корпус на поле, чтобы выбрать действие.':'Корпуса уже работают как препятствия. Разбор и установка модулей доступны между волнами.'}</p>`;
-      el('tip').textContent=!game.player.alive?'Твой танк скоро вернётся. Бой продолжается, а база остаётся уязвимой.':prep?'Наведи указатель на действие или перейди к нему клавишей Tab, чтобы увидеть результат на поле.':'За тобой идёт лёгкий? Разорви видимость у руин, затем вернись к защите базы. Следи за флангами.';
+      el('tip').textContent=!game.player.alive?'Твой танк вернётся, когда место возврата освободится.':prep?'Наведи указатель на действие или перейди к нему клавишей Tab, чтобы увидеть результат на поле.':'Разорви видимость у укрытия, чтобы уйти от лёгких. Следи за флангами.';
       if(!prep||game.paused)setActionPreview(null);
       else if(previewAction)updateActionPreview();
     }
-    if(finished&&!endShown){endShown=true;const win=game.phase==='won';openModal('end',win?`ВОЛНЫ ПРОЙДЕНЫ · ${waveCount}/${waveCount}`:'БАЗА ПОТЕРЯНА',win?'Оборона выдержала':'Ещё одна попытка',`<p>${win?'Ты защитил базу. Попробуй пройти ещё раз и оставить корпуса в других местах.':baseDefeatText()}</p><div class="result-grid"><div><strong>${game.stats.kills}</strong><span>ТАНКОВ УНИЧТОЖЕНО</span></div><div><strong>${game.stats.wrecksCreated}</strong><span>КОРПУСОВ СОЗДАНО</span></div><div><strong>${baseHp}</strong><span>HP БАЗЫ</span></div></div><p>Удалось ли намеренно оставить полезный корпус? Пришлось ли разобрать его ради ремонта?</p>`,[['Играть ещё раз',reset,true],[exportLabel,exportAttempt,false],['Посмотреть поле',()=>{closeModal();},false]]);}
+    if(finished&&!endShown){endShown=true;const win=game.phase==='won';openModal('end',`${game.config.mapName} · v${game.config.mapVersion}`,win?`Отбито волн: ${waveCount} из ${waveCount}`:'База потеряна',`<p>${win?'База уцелела.':baseDefeatText()}</p><div class="result-grid"><div><strong>${game.stats.kills}</strong><span>ТАНКОВ УНИЧТОЖЕНО</span></div><div><strong>${game.stats.wrecksCreated}</strong><span>КОРПУСОВ СОЗДАНО</span></div><div><strong>${baseHp}</strong><span>HP БАЗЫ</span></div></div>`,[['Новая попытка',showMapPicker,true],[exportLabel,exportAttempt,false],['Посмотреть поле',closeModal,false]]);}
   }
   function roundRect(x,y,w,h,r){ctx.beginPath();ctx.roundRect(x,y,w,h,r);}
   function text(label,x,y,size,color,align='center',weight=600){
     // Keep font metrics above one pixel while retaining world-space dimensions.
     ctx.save();ctx.translate(x,y);ctx.scale(.01,.01);ctx.fillStyle=color;ctx.font=`${weight} ${size*100}px system-ui,"DejaVu Sans",sans-serif`;ctx.textAlign=align;ctx.textBaseline='middle';ctx.fillText(label,0,0);ctx.restore();
   }
-  function drawGround(){
-    ctx.fillStyle='#b5b49c';ctx.fillRect(0,0,CONFIG.W,CONFIG.H);
-    const grad=ctx.createLinearGradient(0,0,CONFIG.W,CONFIG.H);grad.addColorStop(0,'#d7cfaf40');grad.addColorStop(1,'#7b8b752b');ctx.fillStyle=grad;ctx.fillRect(0,0,CONFIG.W,CONFIG.H);
-    // Flat, low-contrast stains never share the outline or shadow of solid cover.
-    for(const m of terrainMarks){
-      ctx.fillStyle=m.crater?'#6e705c15':'#737f5d13';ctx.beginPath();ctx.ellipse(m.x,m.y,m.size*1.65,m.size,m.angle,0,Math.PI*2);ctx.fill();
-      if(m.crater){ctx.fillStyle='#72685213';ctx.beginPath();ctx.ellipse(m.x,m.y,m.size*.78,m.size*.5,m.angle,0,Math.PI*2);ctx.fill();}
-      else{ctx.strokeStyle='#68765528';ctx.lineWidth=.025;ctx.beginPath();ctx.moveTo(m.x-.08,m.y+.06);ctx.lineTo(m.x-.13,m.y-.08);ctx.moveTo(m.x+.05,m.y+.07);ctx.lineTo(m.x+.09,m.y-.06);ctx.stroke();}
-    }
-    ctx.save();ctx.lineJoin='round';ctx.lineCap='round';
-    for(const road of CONFIG.ROADS||[]){
-      if(road.points.length<2)continue;
-      ctx.beginPath();road.points.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));
-      ctx.strokeStyle='#89877124';ctx.lineWidth=road.width+.23;ctx.stroke();ctx.strokeStyle='#c6b38f';ctx.lineWidth=road.width;ctx.stroke();
-      ctx.strokeStyle='#b39c7838';ctx.lineWidth=road.width*.64;ctx.stroke();
-      for(const side of [-1,1]){
-        ctx.beginPath();road.points.forEach((p,i)=>{
-          const prev=road.points[Math.max(0,i-1)],next=road.points[Math.min(road.points.length-1,i+1)];
-          const length=Math.hypot(next.x-prev.x,next.y-prev.y)||1,offset=side*road.width*.23;
-          const x=p.x-(next.y-prev.y)/length*offset,y=p.y+(next.x-prev.x)/length*offset;
-          i?ctx.lineTo(x,y):ctx.moveTo(x,y);
-        });
-        ctx.strokeStyle='#846f4d25';ctx.lineWidth=.15;ctx.setLineDash([.045,.12]);ctx.stroke();ctx.setLineDash([]);
-      }
-    }
-    ctx.restore();
-    for(const area of CONFIG.AREAS||[])text(area.label,area.x,area.y,.19,'#5c655470','center',700);
+  function tracePath(points){
+    ctx.beginPath();
+    points.forEach(({x,y},index)=>index?ctx.lineTo(x,y):ctx.moveTo(x,y));
   }
-  function drawEntrance(lane,spawn){
+  function drawGround(){
+    const { W,H,mapId,TACTICS }=game.config;
+    if(mapId==='city'){
+      ctx.fillStyle='#c7af91';ctx.fillRect(0,0,W,H);
+      ctx.save();
+      ctx.lineCap='round';ctx.lineJoin='round';
+      const streets=Object.values(TACTICS).flatMap(tactic=>[tactic.shortPath,tactic.bypass,tactic.outerBypass].filter(Boolean));
+      for(const [color,width] of [['#e1c8a6',1.58],['#8b8d89',1.33],['#a2a099',.04]]){
+        ctx.strokeStyle=color;ctx.lineWidth=width;
+        ctx.setLineDash(width<.1?[.25,.23]:[]);
+        for(const street of streets){tracePath(street);ctx.stroke();}
+      }
+      ctx.restore();
+      return;
+    }
+    const enamel=ctx.createLinearGradient(0,0,W,H);
+    enamel.addColorStop(0,'#bddbd2');enamel.addColorStop(1,'#83b6b6');
+    ctx.fillStyle=enamel;ctx.fillRect(0,0,W,H);
+    ctx.strokeStyle='#2b635526';ctx.lineWidth=.022;ctx.beginPath();
+    for(let x=1;x<W;x++){ctx.moveTo(x,0);ctx.lineTo(x,H);}
+    for(let y=1;y<H;y++){ctx.moveTo(0,y);ctx.lineTo(W,y);}
+    ctx.stroke();
+    ctx.strokeStyle='#346c655c';ctx.lineWidth=.07;ctx.strokeRect(.12,.12,W-.24,H-.24);
+  }
+  function entryLabel(signal){
+    if(signal.status==='waiting')return 'ожидает освобождения';
+    if(signal.status==='countdown')return `через ${signal.seconds} с`;
+    if(signal.status==='planned')return signal.start===0?'сразу':`+${signal.start.toLocaleString('ru')} с`;
+    return '';
+  }
+  function drawEntrance(lane,spawn,signal){
     const x=spawn.x-spawn.w/2,y=spawn.y-spawn.h/2,color=laneColor(lane);
-    ctx.fillStyle=color+'18';ctx.fillRect(x,y,spawn.w,spawn.h);
-    ctx.save();ctx.beginPath();ctx.rect(x,y,spawn.w,spawn.h);ctx.clip();ctx.strokeStyle=color+'27';ctx.lineWidth=.08;
-    for(let j=-spawn.h;j<spawn.w+spawn.h;j+=.42){ctx.beginPath();ctx.moveTo(x+j,y);ctx.lineTo(x+j-spawn.h,y+spawn.h);ctx.stroke();}ctx.restore();
-    ctx.strokeStyle=color+'b3';ctx.lineWidth=.035;ctx.setLineDash([.15,.12]);ctx.strokeRect(x,y,spawn.w,spawn.h);ctx.setLineDash([]);
-    text(lane,spawn.x,spawn.y-.34,.44,color,'center',800);text('ВХОД',spawn.x,spawn.y+.18,.18,color);
-    if(spawn.direction==='left')text('←',x-.4,spawn.y,.6,color);
-    else text('↓',spawn.x,y+spawn.h+.38,.6,color);
+    ctx.fillStyle=color+(signal?'39':'16');ctx.fillRect(x,y,spawn.w,spawn.h);
+    ctx.save();ctx.beginPath();ctx.rect(x,y,spawn.w,spawn.h);ctx.clip();
+    ctx.strokeStyle=color+(signal?'42':'24');ctx.lineWidth=.06;
+    for(let j=-spawn.h;j<spawn.w+spawn.h;j+=.42){
+      ctx.beginPath();ctx.moveTo(x+j,y);ctx.lineTo(x+j-spawn.h,y+spawn.h);ctx.stroke();
+    }
+    ctx.restore();ctx.strokeStyle=signal?.status==='waiting'?'#a24015':color;
+    ctx.lineWidth=signal?.status==='active'?.09:signal?.status==='waiting'?.10:.05;
+    ctx.setLineDash(signal?[]:[.15,.12]);ctx.strokeRect(x,y,spawn.w,spawn.h);ctx.setLineDash([]);
+    text(lane,spawn.x,spawn.y-.26,.56,color,'center',850);
+    text('ВХОД',spawn.x,spawn.y+.32,.21,color,'center',750);
+    const direction={left:[-1,0,'←'],right:[1,0,'→'],up:[0,-1,'↑'],down:[0,1,'↓']};
+    const [dx,dy,arrow]=direction[spawn.direction]??direction.down;
+    const pivotX=spawn.x+dx*(spawn.w/2+.33),pivotY=spawn.y+dy*(spawn.h/2+.32);
+    text(arrow,pivotX,pivotY,.65,color);
+    const label=signal&&entryLabel(signal);
+    if(label){
+      const width=Math.max(1.4,label.length*.14+.35);
+      const labelX=clamp(pivotX+dx*(width/2+.40),width/2+.20,game.config.W-width/2-.20);
+      const labelY=clamp(pivotY+dy*.44,.38,game.config.H-.38);
+      ctx.fillStyle=signal.status==='waiting'?'#7a341f':color;
+      roundRect(labelX-width/2,labelY-.24,width,.48,.11);ctx.fill();
+      text(label,labelX,labelY,.23,'#fff4db','center',750);
+    }
   }
   function drawCover(w){
-    const ruin=w.kind==='ruin',bunker=w.kind==='bunker';
-    ctx.fillStyle='#283d3230';ctx.fillRect(w.x+.10,w.y+.15,w.w,w.h);
-    ctx.fillStyle=ruin?'#737b70':bunker?'#586e63':'#7d8780';ctx.fillRect(w.x,w.y,w.w,w.h);
-    ctx.fillStyle=ruin?'#96998a':bunker?'#819184':'#a5aaa0';ctx.fillRect(w.x+.035,w.y+.035,w.w-.07,Math.min(.17,w.h-.07));
-    ctx.fillStyle='#3e504b60';ctx.fillRect(w.x+.035,w.y+w.h-Math.min(.16,w.h*.28),w.w-.07,Math.min(.125,w.h*.24));
-    ctx.save();ctx.beginPath();ctx.rect(w.x+.06,w.y+.2,w.w-.12,Math.max(.08,w.h-.26));ctx.clip();
-    ctx.strokeStyle='#394a433d';ctx.lineWidth=.025;
-    if(ruin){
-      for(let row=0;row<w.h/.49;row++){
-        const y=w.y+.49+row*.49;ctx.beginPath();ctx.moveTo(w.x,y);ctx.lineTo(w.x+w.w,y);ctx.stroke();
-        for(let x=w.x+(row%2)*.47;x<w.x+w.w;x+=.94){ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x,y-.49);ctx.stroke();}
+    const city=w.kind==='city',bunker=w.kind==='bunker';
+    const palette=city?['#664939','#ad7058','#d38c68']
+      :bunker?['#31494e','#526970','#789297']
+      :w.x<9?['#2e686c','#58a399','#83c8ae']
+      :w.x<19?['#3c6977','#5291a4','#83bfcb']
+      :['#5f4779','#88659d','#ad8bb9'];
+    const [edge,front,top]=palette;
+    const columns=Math.ceil(w.w/(city?2.75:1)),rows=Math.ceil(w.h/(city?2.6:1));
+    const width=w.w/columns,height=w.h/rows;
+    ctx.fillStyle='#182f3338';ctx.fillRect(w.x+.07,w.y+.10,w.w,w.h);
+    ctx.fillStyle=edge;ctx.fillRect(w.x,w.y,w.w,w.h);
+    for(let column=0;column<columns;column++){
+      for(let row=0;row<rows;row++){
+        const x=w.x+column*width,y=w.y+row*height;
+        const inset=.035,bevel=Math.min(.16,width*.20,height*.25);
+        ctx.fillStyle=front;
+        ctx.fillRect(x+inset,y+inset,width-2*inset,height-2*inset);
+        ctx.fillStyle=top;
+        ctx.fillRect(x+inset,y+inset,width-2*inset,height-bevel-2*inset);
+        if(city&&width>1.15&&height>.75){
+          ctx.fillStyle='#c17a60';
+          ctx.beginPath();ctx.moveTo(x+inset,y+height/2);ctx.lineTo(x+width/2,y+inset);
+          ctx.lineTo(x+width-inset,y+height/2);ctx.lineTo(x+width/2,y+height-bevel-inset);ctx.closePath();ctx.fill();
+          ctx.strokeStyle='#f0b78e';ctx.lineWidth=.035;ctx.beginPath();
+          ctx.moveTo(x+width*.18,y+height/2);ctx.lineTo(x+width*.82,y+height/2);ctx.stroke();
+        }
       }
-      ctx.fillStyle='#4c5a4f35';ctx.beginPath();ctx.moveTo(w.x+w.w*.39,w.y+.2);ctx.lineTo(w.x+w.w*.58,w.y+w.h*.48);ctx.lineTo(w.x+w.w*.48,w.y+w.h-.08);ctx.lineTo(w.x+w.w*.32,w.y+w.h*.61);ctx.closePath();ctx.fill();
-      ctx.strokeStyle='#bac0aa40';ctx.beginPath();ctx.moveTo(w.x+w.w*.39,w.y+.21);ctx.lineTo(w.x+w.w*.58,w.y+w.h*.48);ctx.lineTo(w.x+w.w*.48,w.y+w.h-.09);ctx.stroke();
-    }else{
-      const horizontal=w.w>w.h;
-      for(let d=.85;d<(horizontal?w.w:w.h);d+=.85){ctx.beginPath();ctx.moveTo(w.x+(horizontal?d:0),w.y+(horizontal?0:d));ctx.lineTo(w.x+(horizontal?d:w.w),w.y+(horizontal?w.h:d));ctx.stroke();}
     }
-    ctx.restore();ctx.strokeStyle='#42554d';ctx.lineWidth=.045;ctx.strokeRect(w.x,w.y,w.w,w.h);
+  }
+  function drawMapObjectives(){
+    const start=game.config.PLAYER_START;
+    ctx.strokeStyle='#315c5c';ctx.lineWidth=.035;ctx.beginPath();ctx.arc(start.x,start.y,.69,0,Math.PI*2);ctx.stroke();
+    text('R',start.x,start.y,.34,'#315c5c','center',800);
+    const {x,y,w,h,hp}=game.base;
+    ctx.fillStyle='#433e31';roundRect(x-w/2,y-h/2,w,h,.12);ctx.fill();
+    ctx.fillStyle=hp>0?'#dfc36e':'#827769';roundRect(x-w*.43,y-h*.43,w*.86,h*.86,.10);ctx.fill();
+    ctx.fillStyle='#817443';ctx.beginPath();ctx.moveTo(x,y-h*.25);
+    ctx.lineTo(x+w*.20,y-h*.14);ctx.lineTo(x+w*.15,y+h*.10);ctx.lineTo(x,y+h*.20);
+    ctx.lineTo(x-w*.15,y+h*.10);ctx.lineTo(x-w*.20,y-h*.14);ctx.closePath();ctx.fill();
+    ctx.strokeStyle='#f0dea0';ctx.lineWidth=.07;ctx.beginPath();ctx.moveTo(x-w*.09,y);
+    ctx.lineTo(x-w*.017,y+h*.065);ctx.lineTo(x+w*.105,y-h*.09);ctx.stroke();
+    text('БАЗА',x,y+h*.34,.20,'#54471f','center',850);
   }
   function drawBoard(){
     drawGround();
-    for(const [lane,spawn] of Object.entries(CONFIG.SPAWNS))drawEntrance(lane,spawn);
+    const signals=new Map(game.getEntrySignals().map(signal=>[signal.lane,signal]));
+    for(const [lane,spawn] of Object.entries(game.config.SPAWNS))drawEntrance(lane,spawn,signals.get(lane));
     if(game.phase==='prep'&&el('routes').checked){
       const lane=el('route-lane').value||null,type=el('route-type').value||null;
       const key=`${game.navigationVersion}|${lane??''}|${type}`;
@@ -3349,10 +3625,8 @@
       ctx.setLineDash([]);
       ctx.lineDashOffset=0;
     }else el('route-estimate').hidden=true;
-    for(const w of CONFIG.WALLS)drawCover(w);
-    text('ЗАЩИЩЁННАЯ НИША',16.4,15.72,.20,'#536c58');
-    ctx.strokeStyle='#8aa18480';ctx.lineWidth=.035;ctx.beginPath();ctx.arc(16.4,17.2,.7,0,Math.PI*2);ctx.stroke();text('R',16.4,17.2,.31,'#708668');
-    const b=game.base;ctx.fillStyle='#54674340';roundRect(b.x-1,b.y-.85,2,2,.2);ctx.fill();ctx.fillStyle='#a7ad7d';roundRect(b.x-.9,b.y-.9,1.8,1.8,.12);ctx.fill();ctx.fillStyle=b.hp>0?'#dfc36e':'#645f51';roundRect(b.x-.72,b.y-.72,1.44,1.44,.1);ctx.fill();ctx.strokeStyle='#726e3d';ctx.lineWidth=.06;roundRect(b.x-.72,b.y-.72,1.44,1.44,.1);ctx.stroke();ctx.fillStyle='#817443';ctx.beginPath();ctx.moveTo(b.x,b.y-.42);ctx.lineTo(b.x+.34,b.y-.24);ctx.lineTo(b.x+.27,b.y+.21);ctx.lineTo(b.x,b.y+.42);ctx.lineTo(b.x-.27,b.y+.21);ctx.lineTo(b.x-.34,b.y-.24);ctx.closePath();ctx.fill();ctx.strokeStyle='#f0dea0';ctx.lineWidth=.07;ctx.beginPath();ctx.moveTo(b.x-.16,b.y);ctx.lineTo(b.x-.03,b.y+.12);ctx.lineTo(b.x+.19,b.y-.16);ctx.stroke();text('БАЗА',b.x,b.y+.58,.17,'#635927','center',800);
+    for(const w of game.config.WALLS)drawCover(w);
+    drawMapObjectives();
   }
   function hpBar(o,y,color,width=.9){ctx.fillStyle='#18322a55';roundRect(o.x-width/2,y,width,.09,.03);ctx.fill();ctx.fillStyle=color;roundRect(o.x-width/2,y,width*clamp(o.hp/o.maxHp,0,1),.09,.03);ctx.fill();}
   function drawNoWreckIcon(x,y){
@@ -3381,14 +3655,14 @@
     ctx.save();ctx.font='700 34px system-ui,"DejaVu Sans",sans-serif';
     for(const {label,actor,noWreck} of unitLabels){
       const {x,y,r}=actor,iconSpace=noWreck ? .43 : 0,width=ctx.measureText(label).width/100+.22+iconSpace;
-      const cx=clamp(x,width/2,CONFIG.W-width/2);
+      const cx=clamp(x,width/2,game.config.W-width/2);
       const preferred=y<1.2?1:-1;
       // Try the nearest row first, with space for the tank and its HP bar.
-      for(let row=0;row<CONFIG.H/(height+gap);row++){
+      for(let row=0;row<game.config.H/(height+gap);row++){
         let placed=false;
         for(const side of [preferred,-preferred]){
           const cy=y+side*(r+.45+row*(height+gap));
-          if(cy<height/2||cy>CONFIG.H-height/2)continue;
+          if(cy<height/2||cy>game.config.H-height/2)continue;
           if(occupied.some(b=>Math.abs(cx-b.x)<(width+b.width)/2+gap&&Math.abs(cy-b.y)<(height+b.height)/2+gap))continue;
           if(row||side!==preferred){
             ctx.strokeStyle='#23342b';ctx.lineWidth=.03;ctx.beginPath();
@@ -3431,12 +3705,12 @@
     ctx.fillStyle=dark;roundRect(-.40,-.29,.78,.58,.07);ctx.fill();ctx.fillStyle=main;roundRect(-.36,-.27,.70,.50,.06);ctx.fill();ctx.fillStyle=top;ctx.fillRect(.20,-.22,.09,.12);
     if(!player){ctx.strokeStyle=top;ctx.lineWidth=.045;ctx.beginPath();if(t.type!=='light'){const bars=t.type==='heavy'?3:2;for(let i=0;i<bars;i++){const x=-.31+.075*i;ctx.moveTo(x,-.16);ctx.lineTo(x,.14);}}else{ctx.moveTo(-.28,-.13);ctx.lineTo(-.15,0);ctx.lineTo(-.28,.13);}ctx.stroke();}ctx.restore();
     ctx.save();ctx.translate(t.x,t.y);ctx.rotate(ang);ctx.fillStyle=dark;roundRect(-.23,-.23,.46,.46,.10);ctx.fill();ctx.fillStyle=main;roundRect(-.20,-.22,.40,.36,.07);ctx.fill();ctx.fillStyle=dark;roundRect(.1,-.085,.60,.17,.03);ctx.fill();ctx.fillStyle=top;ctx.fillRect(.2,-.065,.43,.045);ctx.fillStyle=top;ctx.beginPath();ctx.arc(-.06,-.05,.07,0,Math.PI*2);ctx.fill();ctx.restore();
-    if(player){const side=t.y>CONFIG.H-1.1?-1:1;ctx.strokeStyle='#366b8480';ctx.lineWidth=.035;ctx.beginPath();ctx.arc(t.x,t.y,.68,0,Math.PI*2);ctx.stroke();hpBar(t,t.y+.76*side,'#286f9b');text('ТЫ',t.x,t.y+.99*side,.20,'#235b77');}
+    if(player){const side=t.y>game.config.H-1.1?-1:1;ctx.strokeStyle='#366b8480';ctx.lineWidth=.035;ctx.beginPath();ctx.arc(t.x,t.y,.68,0,Math.PI*2);ctx.stroke();hpBar(t,t.y+.76*side,'#286f9b');text('ТЫ',t.x,t.y+.99*side,.20,'#235b77');}
     else {
       const side=t.y<1.2?1:-1;
       hpBar(t,t.y+.64*side,look.dark);
       const pursuit=t.type==='light' && t.intent==='press';
-      const noWreck=!!CONFIG.ENEMY_TYPES[t.type].wreck && isInSpawnZone(CONFIG,t.x,t.y);
+      const noWreck=!!game.config.ENEMY_TYPES[t.type].wreck && isInSpawnZone(game.config,t.x,t.y);
       unitLabels.push({actor:t,noWreck,label:`${look.mark} · ${Math.ceil(t.hp)} HP · ×${hitsToKill(t.hp)}${pursuit?' · !':''}`});
     }
   }
@@ -3504,7 +3778,7 @@
     const wreck = game.wrecks.find(w => w.id === firstWreck.id);
     if (!wreck) return;
     const radius = wreck.r + .30;
-    const y = wreck.y > CONFIG.H - 1.4 ? -1 : 1;
+    const y = wreck.y > game.config.H - 1.4 ? -1 : 1;
     ctx.save();ctx.translate(wreck.x,wreck.y);
     ctx.lineWidth=.075;ctx.setLineDash([.14,.12]);
     ctx.strokeStyle='#23342b';ctx.beginPath();ctx.arc(0,0,radius,0,Math.PI*2);ctx.stroke();
@@ -3560,7 +3834,7 @@
 
   function draw(){
     const r=canvas.getBoundingClientRect(),dpr=Math.min(devicePixelRatio||1,2),w=Math.round(r.width*dpr),h=Math.round(r.height*dpr);if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;}
-    ctx.setTransform(w/CONFIG.W,0,0,h/CONFIG.H,0,0);ctx.clearRect(0,0,CONFIG.W,CONFIG.H);ctx.save();
+    ctx.setTransform(w/game.config.W,0,0,h/game.config.H,0,0);ctx.clearRect(0,0,game.config.W,game.config.H);ctx.save();
     if(shake>0)ctx.translate(Math.sin(visualTime*75)*shake,Math.cos(visualTime*69)*shake*.6);
     unitLabels.length=0;
     drawBoard();for(const w of game.wrecks)drawWreck(w);drawBreachMarkers();for(const e of game.enemies)drawTank(e,false);drawTank(game.player,true);
@@ -3626,6 +3900,9 @@
     if(toastUntil&&now>toastUntil){el('toast').classList.remove('show');toastUntil=0;}
     updateUi();draw();requestAnimationFrame(frame);
   }
+  setupMapChoices();
+  configureMapView();
+  showMapPicker();
   requestAnimationFrame(frame);
 })();
 

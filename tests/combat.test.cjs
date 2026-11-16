@@ -172,7 +172,7 @@ test('a light closes on a visible player outside weapon range instead of shootin
 });
 
 test('a shot aims at the nearest visible base edge when a ruin hides the center', () => {
-  const game = new Game();
+  const game = new Game(CONFIG);
   game.phase = 'battle';
   const enemy = addEnemy(game, 'medium', 11, 11.1);
   assert.equal(game._firstCollision(enemy.x, enemy.y, 14, 13.5, enemy.id)?.kind, 'wall');
