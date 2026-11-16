@@ -2639,10 +2639,6 @@
           }
         ]
       },
-      "waveOneHull": {
-        "id": "w10",
-        "useful": true
-      },
       "branches": {
         "keepRecorded": {
           "available": true,
@@ -2663,6 +2659,61 @@
                 "reinforced": false
               }
             ]
+          },
+          "battle": {
+            "horizonTicks": 7200,
+            "observedTicks": 1536,
+            "input": {
+              "stepSeconds": 0.016666666666666666,
+              "held": {}
+            },
+            "firstBaseShot": {
+              "tick": 607,
+              "lane": "A",
+              "enemyId": "e22",
+              "type": "light",
+              "position": {
+                "x": 7.297124026043941,
+                "y": 11.368315022010208
+              },
+              "bulletId": "b30"
+            },
+            "firstShots": {
+              "A": {
+                "tick": 607,
+                "lane": "A",
+                "enemyId": "e22",
+                "type": "light",
+                "position": {
+                  "x": 7.297124026043941,
+                  "y": 11.368315022010208
+                },
+                "bulletId": "b30"
+              }
+            },
+            "firstDamage": {
+              "tick": 642,
+              "hpBefore": 240,
+              "hpAfter": 232
+            },
+            "phase": "lost",
+            "baseHp": 0,
+            "playerHp": 60,
+            "playerAlive": true,
+            "wrecksAfter": [
+              {
+                "id": "w10",
+                "type": "medium",
+                "hp": 60,
+                "expiresAfterWave": 2
+              }
+            ],
+            "removed": [],
+            "routeDecisions": {
+              "detour": 8,
+              "unreachable": 3
+            },
+            "pending": []
           }
         },
         "engine": {
@@ -2684,6 +2735,51 @@
             "baseHp": 240,
             "module": "engine",
             "wrecks": []
+          },
+          "battle": {
+            "horizonTicks": 7200,
+            "observedTicks": 1271,
+            "input": {
+              "stepSeconds": 0.016666666666666666,
+              "held": {}
+            },
+            "firstBaseShot": {
+              "tick": 374,
+              "lane": "A",
+              "enemyId": "e20",
+              "type": "light",
+              "position": {
+                "x": 7.374876986748812,
+                "y": 11.203043472305644
+              },
+              "bulletId": "b22"
+            },
+            "firstShots": {
+              "A": {
+                "tick": 374,
+                "lane": "A",
+                "enemyId": "e20",
+                "type": "light",
+                "position": {
+                  "x": 7.374876986748812,
+                  "y": 11.203043472305644
+                },
+                "bulletId": "b22"
+              }
+            },
+            "firstDamage": {
+              "tick": 407,
+              "hpBefore": 240,
+              "hpAfter": 228
+            },
+            "phase": "lost",
+            "baseHp": 0,
+            "playerHp": 60,
+            "playerAlive": true,
+            "wrecksAfter": [],
+            "removed": [],
+            "routeDecisions": {},
+            "pending": []
           }
         },
         "barrel": {
@@ -2705,6 +2801,51 @@
             "baseHp": 240,
             "module": "barrel",
             "wrecks": []
+          },
+          "battle": {
+            "horizonTicks": 7200,
+            "observedTicks": 1271,
+            "input": {
+              "stepSeconds": 0.016666666666666666,
+              "held": {}
+            },
+            "firstBaseShot": {
+              "tick": 374,
+              "lane": "A",
+              "enemyId": "e20",
+              "type": "light",
+              "position": {
+                "x": 7.374876986748812,
+                "y": 11.203043472305644
+              },
+              "bulletId": "b22"
+            },
+            "firstShots": {
+              "A": {
+                "tick": 374,
+                "lane": "A",
+                "enemyId": "e20",
+                "type": "light",
+                "position": {
+                  "x": 7.374876986748812,
+                  "y": 11.203043472305644
+                },
+                "bulletId": "b22"
+              }
+            },
+            "firstDamage": {
+              "tick": 407,
+              "hpBefore": 240,
+              "hpAfter": 228
+            },
+            "phase": "lost",
+            "baseHp": 0,
+            "playerHp": 60,
+            "playerAlive": true,
+            "wrecksAfter": [],
+            "removed": [],
+            "routeDecisions": {},
+            "pending": []
           }
         },
         "repair": {
@@ -2725,8 +2866,57 @@
             "baseHp": 240,
             "module": null,
             "wrecks": []
+          },
+          "battle": {
+            "horizonTicks": 7200,
+            "observedTicks": 1271,
+            "input": {
+              "stepSeconds": 0.016666666666666666,
+              "held": {}
+            },
+            "firstBaseShot": {
+              "tick": 374,
+              "lane": "A",
+              "enemyId": "e20",
+              "type": "light",
+              "position": {
+                "x": 7.374876986748812,
+                "y": 11.203043472305644
+              },
+              "bulletId": "b22"
+            },
+            "firstShots": {
+              "A": {
+                "tick": 374,
+                "lane": "A",
+                "enemyId": "e20",
+                "type": "light",
+                "position": {
+                  "x": 7.374876986748812,
+                  "y": 11.203043472305644
+                },
+                "bulletId": "b22"
+              }
+            },
+            "firstDamage": {
+              "tick": 407,
+              "hpBefore": 240,
+              "hpAfter": 228
+            },
+            "phase": "lost",
+            "baseHp": 0,
+            "playerHp": 60,
+            "playerAlive": true,
+            "wrecksAfter": [],
+            "removed": [],
+            "routeDecisions": {},
+            "pending": []
           }
         }
+      },
+      "waveOneHull": {
+        "id": "w10",
+        "useful": true
       }
     },
     {
@@ -2752,10 +2942,6 @@
           }
         ]
       },
-      "waveOneHull": {
-        "id": "w11",
-        "useful": true
-      },
       "branches": {
         "keepRecorded": {
           "available": true,
@@ -2776,6 +2962,59 @@
                 "reinforced": false
               }
             ]
+          },
+          "battle": {
+            "horizonTicks": 7200,
+            "observedTicks": 1376,
+            "input": {
+              "stepSeconds": 0.016666666666666666,
+              "held": {}
+            },
+            "firstBaseShot": {
+              "tick": 483,
+              "lane": "A",
+              "enemyId": "e25",
+              "type": "medium",
+              "position": {
+                "x": 5.918022418631793,
+                "y": 5.404346032194592
+              },
+              "bulletId": "b233"
+            },
+            "firstShots": {
+              "A": {
+                "tick": 483,
+                "lane": "A",
+                "enemyId": "e25",
+                "type": "medium",
+                "position": {
+                  "x": 5.918022418631793,
+                  "y": 5.404346032194592
+                },
+                "bulletId": "b233"
+              }
+            },
+            "firstDamage": {
+              "tick": 512,
+              "hpBefore": 240,
+              "hpAfter": 228
+            },
+            "phase": "lost",
+            "baseHp": 0,
+            "playerHp": 60,
+            "playerAlive": true,
+            "wrecksAfter": [],
+            "removed": [
+              {
+                "reason": "destroyed_by_enemy",
+                "wreckId": "w11",
+                "battleSeconds": 15.166666666667
+              }
+            ],
+            "routeDecisions": {
+              "breach": 1
+            },
+            "pending": []
           }
         },
         "engine": {
@@ -2797,6 +3036,51 @@
             "baseHp": 240,
             "module": "engine",
             "wrecks": []
+          },
+          "battle": {
+            "horizonTicks": 7200,
+            "observedTicks": 1343,
+            "input": {
+              "stepSeconds": 0.016666666666666666,
+              "held": {}
+            },
+            "firstBaseShot": {
+              "tick": 168,
+              "lane": "A",
+              "enemyId": "e25",
+              "type": "medium",
+              "position": {
+                "x": 5.881151411318764,
+                "y": 5.380173829513334
+              },
+              "bulletId": "b27"
+            },
+            "firstShots": {
+              "A": {
+                "tick": 168,
+                "lane": "A",
+                "enemyId": "e25",
+                "type": "medium",
+                "position": {
+                  "x": 5.881151411318764,
+                  "y": 5.380173829513334
+                },
+                "bulletId": "b27"
+              }
+            },
+            "firstDamage": {
+              "tick": 197,
+              "hpBefore": 240,
+              "hpAfter": 228
+            },
+            "phase": "lost",
+            "baseHp": 0,
+            "playerHp": 60,
+            "playerAlive": true,
+            "wrecksAfter": [],
+            "removed": [],
+            "routeDecisions": {},
+            "pending": []
           }
         },
         "barrel": {
@@ -2818,6 +3102,51 @@
             "baseHp": 240,
             "module": "barrel",
             "wrecks": []
+          },
+          "battle": {
+            "horizonTicks": 7200,
+            "observedTicks": 1343,
+            "input": {
+              "stepSeconds": 0.016666666666666666,
+              "held": {}
+            },
+            "firstBaseShot": {
+              "tick": 168,
+              "lane": "A",
+              "enemyId": "e25",
+              "type": "medium",
+              "position": {
+                "x": 5.881151411318764,
+                "y": 5.380173829513334
+              },
+              "bulletId": "b27"
+            },
+            "firstShots": {
+              "A": {
+                "tick": 168,
+                "lane": "A",
+                "enemyId": "e25",
+                "type": "medium",
+                "position": {
+                  "x": 5.881151411318764,
+                  "y": 5.380173829513334
+                },
+                "bulletId": "b27"
+              }
+            },
+            "firstDamage": {
+              "tick": 197,
+              "hpBefore": 240,
+              "hpAfter": 228
+            },
+            "phase": "lost",
+            "baseHp": 0,
+            "playerHp": 60,
+            "playerAlive": true,
+            "wrecksAfter": [],
+            "removed": [],
+            "routeDecisions": {},
+            "pending": []
           }
         },
         "repair": {
@@ -2838,8 +3167,57 @@
             "baseHp": 240,
             "module": null,
             "wrecks": []
+          },
+          "battle": {
+            "horizonTicks": 7200,
+            "observedTicks": 1343,
+            "input": {
+              "stepSeconds": 0.016666666666666666,
+              "held": {}
+            },
+            "firstBaseShot": {
+              "tick": 168,
+              "lane": "A",
+              "enemyId": "e25",
+              "type": "medium",
+              "position": {
+                "x": 5.881151411318764,
+                "y": 5.380173829513334
+              },
+              "bulletId": "b27"
+            },
+            "firstShots": {
+              "A": {
+                "tick": 168,
+                "lane": "A",
+                "enemyId": "e25",
+                "type": "medium",
+                "position": {
+                  "x": 5.881151411318764,
+                  "y": 5.380173829513334
+                },
+                "bulletId": "b27"
+              }
+            },
+            "firstDamage": {
+              "tick": 197,
+              "hpBefore": 240,
+              "hpAfter": 228
+            },
+            "phase": "lost",
+            "baseHp": 0,
+            "playerHp": 60,
+            "playerAlive": true,
+            "wrecksAfter": [],
+            "removed": [],
+            "routeDecisions": {},
+            "pending": []
           }
         }
+      },
+      "waveOneHull": {
+        "id": "w11",
+        "useful": true
       }
     },
     {
@@ -2887,11 +3265,6 @@
           }
         ]
       },
-      "availableFromWaveFour": {
-        "heavy": "w96",
-        "donor": "w121",
-        "heavyUseful": false
-      },
       "branches": {
         "keepRecorded": {
           "available": true,
@@ -2934,6 +3307,85 @@
                 "reinforced": false
               }
             ]
+          },
+          "battle": {
+            "horizonTicks": 7200,
+            "observedTicks": 1798,
+            "input": {
+              "stepSeconds": 0.016666666666666666,
+              "held": {}
+            },
+            "firstBaseShot": {
+              "tick": 617,
+              "lane": "B",
+              "enemyId": "e138",
+              "type": "medium",
+              "position": {
+                "x": 19.879777547467544,
+                "y": 12.364050444745484
+              },
+              "bulletId": "b265"
+            },
+            "firstShots": {
+              "B": {
+                "tick": 617,
+                "lane": "B",
+                "enemyId": "e138",
+                "type": "medium",
+                "position": {
+                  "x": 19.879777547467544,
+                  "y": 12.364050444745484
+                },
+                "bulletId": "b265"
+              },
+              "C": {
+                "tick": 1430,
+                "lane": "C",
+                "enemyId": "e274",
+                "type": "light",
+                "position": {
+                  "x": 10.6225892770212,
+                  "y": 7.354767667169551
+                },
+                "bulletId": "b279"
+              }
+            },
+            "firstDamage": {
+              "tick": 646,
+              "hpBefore": 240,
+              "hpAfter": 228
+            },
+            "phase": "lost",
+            "baseHp": 0,
+            "playerHp": 60,
+            "playerAlive": true,
+            "wrecksAfter": [
+              {
+                "id": "w96",
+                "type": "heavy",
+                "hp": 32,
+                "expiresAfterWave": 6
+              },
+              {
+                "id": "w137",
+                "type": "medium",
+                "hp": 60,
+                "expiresAfterWave": 5
+              }
+            ],
+            "removed": [
+              {
+                "reason": "destroyed_by_enemy",
+                "wreckId": "w121",
+                "battleSeconds": 66.43333333333085
+              }
+            ],
+            "routeDecisions": {
+              "breach": 2,
+              "detour": 10,
+              "unreachable": 5
+            },
+            "pending": []
           }
         },
         "armor": {
@@ -2976,6 +3428,94 @@
                 "maxHp": 60,
                 "expiresAfterWave": 5,
                 "reinforced": false
+              }
+            ]
+          },
+          "battle": {
+            "horizonTicks": 7200,
+            "observedTicks": 1374,
+            "input": {
+              "stepSeconds": 0.016666666666666666,
+              "held": {}
+            },
+            "firstBaseShot": {
+              "tick": 617,
+              "lane": "B",
+              "enemyId": "e138",
+              "type": "medium",
+              "position": {
+                "x": 19.879777547467544,
+                "y": 12.364050444745484
+              },
+              "bulletId": "b268"
+            },
+            "firstShots": {
+              "B": {
+                "tick": 617,
+                "lane": "B",
+                "enemyId": "e138",
+                "type": "medium",
+                "position": {
+                  "x": 19.879777547467544,
+                  "y": 12.364050444745484
+                },
+                "bulletId": "b268"
+              },
+              "C": {
+                "tick": 1339,
+                "lane": "C",
+                "enemyId": "e281",
+                "type": "light",
+                "position": {
+                  "x": 13.87608001709909,
+                  "y": 6.828559264739163
+                },
+                "bulletId": "b285"
+              }
+            },
+            "firstDamage": {
+              "tick": 646,
+              "hpBefore": 240,
+              "hpAfter": 228
+            },
+            "phase": "lost",
+            "baseHp": 0,
+            "playerHp": 90,
+            "playerAlive": true,
+            "wrecksAfter": [
+              {
+                "id": "w137",
+                "type": "medium",
+                "hp": 60,
+                "expiresAfterWave": 5
+              }
+            ],
+            "removed": [
+              {
+                "reason": "destroyed_by_enemy",
+                "wreckId": "w121",
+                "battleSeconds": 66.43333333333085
+              }
+            ],
+            "routeDecisions": {
+              "breach": 1,
+              "detour": 8,
+              "unreachable": 3
+            },
+            "pending": [
+              {
+                "at": 25.266666666666666,
+                "lane": "C",
+                "type": "light",
+                "groupIndex": 1,
+                "first": false
+              },
+              {
+                "at": 27.766666666666666,
+                "lane": "C",
+                "type": "light",
+                "groupIndex": 1,
+                "first": false
               }
             ]
           }
@@ -3021,8 +3561,96 @@
                 "reinforced": false
               }
             ]
+          },
+          "battle": {
+            "horizonTicks": 7200,
+            "observedTicks": 1226,
+            "input": {
+              "stepSeconds": 0.016666666666666666,
+              "held": {}
+            },
+            "firstBaseShot": {
+              "tick": 390,
+              "lane": "B",
+              "enemyId": "e138",
+              "type": "medium",
+              "position": {
+                "x": 19.879777547467544,
+                "y": 12.364050444745484
+              },
+              "bulletId": "b146"
+            },
+            "firstShots": {
+              "B": {
+                "tick": 390,
+                "lane": "B",
+                "enemyId": "e138",
+                "type": "medium",
+                "position": {
+                  "x": 19.879777547467544,
+                  "y": 12.364050444745484
+                },
+                "bulletId": "b146"
+              }
+            },
+            "firstDamage": {
+              "tick": 419,
+              "hpBefore": 240,
+              "hpAfter": 228
+            },
+            "phase": "lost",
+            "baseHp": 0,
+            "playerHp": 60,
+            "playerAlive": true,
+            "wrecksAfter": [
+              {
+                "id": "w96",
+                "type": "heavy",
+                "hp": 108,
+                "expiresAfterWave": 7
+              },
+              {
+                "id": "w137",
+                "type": "medium",
+                "hp": 60,
+                "expiresAfterWave": 5
+              }
+            ],
+            "removed": [],
+            "routeDecisions": {
+              "detour": 7,
+              "unreachable": 2
+            },
+            "pending": [
+              {
+                "at": 22.766666666666666,
+                "lane": "C",
+                "type": "medium",
+                "groupIndex": 1,
+                "first": false
+              },
+              {
+                "at": 25.266666666666666,
+                "lane": "C",
+                "type": "light",
+                "groupIndex": 1,
+                "first": false
+              },
+              {
+                "at": 27.766666666666666,
+                "lane": "C",
+                "type": "light",
+                "groupIndex": 1,
+                "first": false
+              }
+            ]
           }
         }
+      },
+      "availableFromWaveFour": {
+        "heavy": "w96",
+        "donor": "w121",
+        "heavyUseful": false
       }
     },
     {
@@ -3081,11 +3709,6 @@
           }
         ]
       },
-      "availableFromWaveFour": {
-        "heavy": "w260",
-        "donor": "w268",
-        "heavyUseful": true
-      },
       "branches": {
         "keepRecorded": {
           "available": true,
@@ -3139,6 +3762,91 @@
                 "reinforced": false
               }
             ]
+          },
+          "battle": {
+            "horizonTicks": 7200,
+            "observedTicks": 1561,
+            "input": {
+              "stepSeconds": 0.016666666666666666,
+              "held": {}
+            },
+            "firstBaseShot": {
+              "tick": 912,
+              "lane": "B",
+              "enemyId": "e285",
+              "type": "medium",
+              "position": {
+                "x": 9.988452478014324,
+                "y": 11.376322874808201
+              },
+              "bulletId": "b520"
+            },
+            "firstShots": {
+              "B": {
+                "tick": 912,
+                "lane": "B",
+                "enemyId": "e285",
+                "type": "medium",
+                "position": {
+                  "x": 9.988452478014324,
+                  "y": 11.376322874808201
+                },
+                "bulletId": "b520"
+              },
+              "C": {
+                "tick": 1106,
+                "lane": "C",
+                "enemyId": "e287",
+                "type": "light",
+                "position": {
+                  "x": 10.983098482971153,
+                  "y": 12.2724569815054
+                },
+                "bulletId": "b527"
+              }
+            },
+            "firstDamage": {
+              "tick": 941,
+              "hpBefore": 204,
+              "hpAfter": 192
+            },
+            "phase": "lost",
+            "baseHp": 0,
+            "playerHp": 60,
+            "playerAlive": true,
+            "wrecksAfter": [
+              {
+                "id": "w260",
+                "type": "heavy",
+                "hp": 24,
+                "expiresAfterWave": 6
+              },
+              {
+                "id": "w268",
+                "type": "medium",
+                "hp": 60,
+                "expiresAfterWave": 5
+              },
+              {
+                "id": "w284",
+                "type": "medium",
+                "hp": 60,
+                "expiresAfterWave": 5
+              }
+            ],
+            "removed": [
+              {
+                "reason": "destroyed_by_enemy",
+                "wreckId": "w276",
+                "battleSeconds": 79.56666666666344
+              }
+            ],
+            "routeDecisions": {
+              "breach": 9,
+              "detour": 16,
+              "unreachable": 6
+            },
+            "pending": []
           }
         },
         "armor": {
@@ -3194,6 +3902,85 @@
                 "reinforced": false
               }
             ]
+          },
+          "battle": {
+            "horizonTicks": 7200,
+            "observedTicks": 1373,
+            "input": {
+              "stepSeconds": 0.016666666666666666,
+              "held": {}
+            },
+            "firstBaseShot": {
+              "tick": 403,
+              "lane": "C",
+              "enemyId": "e287",
+              "type": "light",
+              "position": {
+                "x": 10.875,
+                "y": 9.125
+              },
+              "bulletId": "b484"
+            },
+            "firstShots": {
+              "C": {
+                "tick": 403,
+                "lane": "C",
+                "enemyId": "e287",
+                "type": "light",
+                "position": {
+                  "x": 10.875,
+                  "y": 9.125
+                },
+                "bulletId": "b484"
+              },
+              "B": {
+                "tick": 912,
+                "lane": "B",
+                "enemyId": "e285",
+                "type": "medium",
+                "position": {
+                  "x": 9.988452478014324,
+                  "y": 11.376322874808201
+                },
+                "bulletId": "b495"
+              }
+            },
+            "firstDamage": {
+              "tick": 438,
+              "hpBefore": 204,
+              "hpAfter": 196
+            },
+            "phase": "lost",
+            "baseHp": 0,
+            "playerHp": 90,
+            "playerAlive": true,
+            "wrecksAfter": [
+              {
+                "id": "w268",
+                "type": "medium",
+                "hp": 52,
+                "expiresAfterWave": 5
+              },
+              {
+                "id": "w284",
+                "type": "medium",
+                "hp": 60,
+                "expiresAfterWave": 5
+              }
+            ],
+            "removed": [
+              {
+                "reason": "destroyed_by_enemy",
+                "wreckId": "w276",
+                "battleSeconds": 79.56666666666344
+              }
+            ],
+            "routeDecisions": {
+              "breach": 3,
+              "detour": 15,
+              "unreachable": 7
+            },
+            "pending": []
           }
         },
         "reinforced": {
@@ -3248,8 +4035,92 @@
                 "reinforced": false
               }
             ]
+          },
+          "battle": {
+            "horizonTicks": 7200,
+            "observedTicks": 1561,
+            "input": {
+              "stepSeconds": 0.016666666666666666,
+              "held": {}
+            },
+            "firstBaseShot": {
+              "tick": 912,
+              "lane": "B",
+              "enemyId": "e285",
+              "type": "medium",
+              "position": {
+                "x": 9.988452478014324,
+                "y": 11.376322874808201
+              },
+              "bulletId": "b520"
+            },
+            "firstShots": {
+              "B": {
+                "tick": 912,
+                "lane": "B",
+                "enemyId": "e285",
+                "type": "medium",
+                "position": {
+                  "x": 9.988452478014324,
+                  "y": 11.376322874808201
+                },
+                "bulletId": "b520"
+              },
+              "C": {
+                "tick": 1106,
+                "lane": "C",
+                "enemyId": "e287",
+                "type": "light",
+                "position": {
+                  "x": 10.983098482971153,
+                  "y": 12.2724569815054
+                },
+                "bulletId": "b527"
+              }
+            },
+            "firstDamage": {
+              "tick": 941,
+              "hpBefore": 204,
+              "hpAfter": 192
+            },
+            "phase": "lost",
+            "baseHp": 0,
+            "playerHp": 60,
+            "playerAlive": true,
+            "wrecksAfter": [
+              {
+                "id": "w260",
+                "type": "heavy",
+                "hp": 24,
+                "expiresAfterWave": 7
+              },
+              {
+                "id": "w284",
+                "type": "medium",
+                "hp": 60,
+                "expiresAfterWave": 5
+              }
+            ],
+            "removed": [
+              {
+                "reason": "destroyed_by_enemy",
+                "wreckId": "w276",
+                "battleSeconds": 79.56666666666344
+              }
+            ],
+            "routeDecisions": {
+              "breach": 8,
+              "detour": 16,
+              "unreachable": 6
+            },
+            "pending": []
           }
         }
+      },
+      "availableFromWaveFour": {
+        "heavy": "w260",
+        "donor": "w268",
+        "heavyUseful": true
       }
     },
     {
@@ -3308,58 +4179,6 @@
           }
         ]
       },
-      "resourceUpperBound": {
-        "wave": 7,
-        "medium": 3,
-        "heavy": 1,
-        "available": [
-          {
-            "type": "heavy",
-            "lane": "B",
-            "sourceWave": 5,
-            "throughWave": 7
-          },
-          {
-            "type": "medium",
-            "lane": "A",
-            "sourceWave": 6,
-            "throughWave": 7
-          },
-          {
-            "type": "medium",
-            "lane": "C",
-            "sourceWave": 6,
-            "throughWave": 7
-          },
-          {
-            "type": "medium",
-            "lane": "B",
-            "sourceWave": 6,
-            "throughWave": 7
-          }
-        ]
-      },
-      "recordedExpiry": [
-        {
-          "sequence": 112,
-          "type": "wreck_removed",
-          "wave": 6,
-          "preparationSeconds": 9.516666666666719,
-          "battleSeconds": 112.46666666666157,
-          "wreck": {
-            "id": "w267",
-            "type": "medium",
-            "x": 19.891029648699803,
-            "y": 12.338142286507253,
-            "r": 0.5,
-            "hp": 60,
-            "maxHp": 60,
-            "expiresAfterWave": 6,
-            "reinforced": false
-          },
-          "reason": "expired"
-        }
-      ],
       "branches": {
         "keepRecorded": {
           "available": true,
@@ -3413,6 +4232,89 @@
                 "reinforced": false
               }
             ]
+          },
+          "battle": {
+            "horizonTicks": 7200,
+            "observedTicks": 1262,
+            "input": {
+              "stepSeconds": 0.016666666666666666,
+              "held": {}
+            },
+            "firstBaseShot": {
+              "tick": 545,
+              "lane": "C",
+              "enemyId": "e393",
+              "type": "medium",
+              "position": {
+                "x": 13.876134919872529,
+                "y": 7.817119086501111
+              },
+              "bulletId": "b487"
+            },
+            "firstShots": {
+              "C": {
+                "tick": 545,
+                "lane": "C",
+                "enemyId": "e393",
+                "type": "medium",
+                "position": {
+                  "x": 13.876134919872529,
+                  "y": 7.817119086501111
+                },
+                "bulletId": "b487"
+              },
+              "B": {
+                "tick": 780,
+                "lane": "B",
+                "enemyId": "e363",
+                "type": "light",
+                "position": {
+                  "x": 20.665095093389297,
+                  "y": 11.225805220898803
+                },
+                "bulletId": "b530"
+              }
+            },
+            "firstDamage": {
+              "tick": 574,
+              "hpBefore": 240,
+              "hpAfter": 228
+            },
+            "phase": "lost",
+            "baseHp": 0,
+            "playerHp": 60,
+            "playerAlive": true,
+            "wrecksAfter": [
+              {
+                "id": "w263",
+                "type": "heavy",
+                "hp": 100,
+                "expiresAfterWave": 7
+              },
+              {
+                "id": "w304",
+                "type": "medium",
+                "hp": 40,
+                "expiresAfterWave": 7
+              }
+            ],
+            "removed": [
+              {
+                "reason": "destroyed_by_enemy",
+                "wreckId": "w354",
+                "battleSeconds": 118.34999999999457
+              },
+              {
+                "reason": "destroyed_by_enemy",
+                "wreckId": "w294",
+                "battleSeconds": 124.71666666666087
+              }
+            ],
+            "routeDecisions": {
+              "detour": 24,
+              "breach": 4
+            },
+            "pending": []
           }
         },
         "spentOneUseful": {
@@ -3467,9 +4369,128 @@
             "baseHp": 240,
             "module": "engine",
             "wrecks": []
+          },
+          "battle": {
+            "horizonTicks": 7200,
+            "observedTicks": 994,
+            "input": {
+              "stepSeconds": 0.016666666666666666,
+              "held": {}
+            },
+            "firstBaseShot": {
+              "tick": 371,
+              "lane": "B",
+              "enemyId": "e363",
+              "type": "light",
+              "position": {
+                "x": 20.67550067292704,
+                "y": 11.288311268386543
+              },
+              "bulletId": "b373"
+            },
+            "firstShots": {
+              "B": {
+                "tick": 371,
+                "lane": "B",
+                "enemyId": "e363",
+                "type": "light",
+                "position": {
+                  "x": 20.67550067292704,
+                  "y": 11.288311268386543
+                },
+                "bulletId": "b373"
+              },
+              "C": {
+                "tick": 545,
+                "lane": "C",
+                "enemyId": "e371",
+                "type": "medium",
+                "position": {
+                  "x": 13.876134919872529,
+                  "y": 7.817119086501111
+                },
+                "bulletId": "b379"
+              },
+              "A": {
+                "tick": 832,
+                "lane": "A",
+                "enemyId": "e375",
+                "type": "medium",
+                "position": {
+                  "x": 8.190704975474029,
+                  "y": 11.99359146069006
+                },
+                "bulletId": "b393"
+              }
+            },
+            "firstDamage": {
+              "tick": 406,
+              "hpBefore": 240,
+              "hpAfter": 232
+            },
+            "phase": "lost",
+            "baseHp": 0,
+            "playerHp": 60,
+            "playerAlive": true,
+            "wrecksAfter": [],
+            "removed": [],
+            "routeDecisions": {},
+            "pending": []
           }
         }
-      }
+      },
+      "resourceUpperBound": {
+        "wave": 7,
+        "medium": 3,
+        "heavy": 1,
+        "available": [
+          {
+            "type": "heavy",
+            "lane": "B",
+            "sourceWave": 5,
+            "throughWave": 7
+          },
+          {
+            "type": "medium",
+            "lane": "A",
+            "sourceWave": 6,
+            "throughWave": 7
+          },
+          {
+            "type": "medium",
+            "lane": "C",
+            "sourceWave": 6,
+            "throughWave": 7
+          },
+          {
+            "type": "medium",
+            "lane": "B",
+            "sourceWave": 6,
+            "throughWave": 7
+          }
+        ]
+      },
+      "recordedExpiry": [
+        {
+          "sequence": 112,
+          "type": "wreck_removed",
+          "wave": 6,
+          "preparationSeconds": 9.516666666666719,
+          "battleSeconds": 112.46666666666157,
+          "wreck": {
+            "id": "w267",
+            "type": "medium",
+            "x": 19.891029648699803,
+            "y": 12.338142286507253,
+            "r": 0.5,
+            "hp": 60,
+            "maxHp": 60,
+            "expiresAfterWave": 6,
+            "reinforced": false
+          },
+          "reason": "expired"
+        }
+      ]
     },
     {
       "mode": "recorded-preparation-replay",
@@ -3516,38 +4537,6 @@
           }
         ]
       },
-      "resourceUpperBound": {
-        "wave": 7,
-        "medium": 3,
-        "heavy": 1,
-        "available": [
-          {
-            "type": "heavy",
-            "lane": "B",
-            "sourceWave": 5,
-            "throughWave": 7
-          },
-          {
-            "type": "medium",
-            "lane": "A",
-            "sourceWave": 6,
-            "throughWave": 7
-          },
-          {
-            "type": "medium",
-            "lane": "C",
-            "sourceWave": 6,
-            "throughWave": 7
-          },
-          {
-            "type": "medium",
-            "lane": "B",
-            "sourceWave": 6,
-            "throughWave": 7
-          }
-        ]
-      },
-      "recordedExpiry": [],
       "branches": {
         "keepRecorded": {
           "available": true,
@@ -3588,6 +4577,103 @@
                 "maxHp": 60,
                 "expiresAfterWave": 7,
                 "reinforced": false
+              }
+            ]
+          },
+          "battle": {
+            "horizonTicks": 7200,
+            "observedTicks": 1269,
+            "input": {
+              "stepSeconds": 0.016666666666666666,
+              "held": {}
+            },
+            "firstBaseShot": {
+              "tick": 794,
+              "lane": "A",
+              "enemyId": "e783",
+              "type": "medium",
+              "position": {
+                "x": 0.875,
+                "y": 5.875
+              },
+              "bulletId": "b920"
+            },
+            "firstShots": {
+              "A": {
+                "tick": 794,
+                "lane": "A",
+                "enemyId": "e783",
+                "type": "medium",
+                "position": {
+                  "x": 0.875,
+                  "y": 5.875
+                },
+                "bulletId": "b920"
+              },
+              "B": {
+                "tick": 991,
+                "lane": "B",
+                "enemyId": "e412",
+                "type": "light",
+                "position": {
+                  "x": 10.997797003214071,
+                  "y": 11.376828410080645
+                },
+                "bulletId": "b958"
+              },
+              "C": {
+                "tick": 1168,
+                "lane": "C",
+                "enemyId": "e733",
+                "type": "medium",
+                "position": {
+                  "x": 9.683690706639867,
+                  "y": 8.592709888520073
+                },
+                "bulletId": "b1142"
+              }
+            },
+            "firstDamage": {
+              "tick": 823,
+              "hpBefore": 204,
+              "hpAfter": 192
+            },
+            "phase": "lost",
+            "baseHp": 0,
+            "playerHp": 60,
+            "playerAlive": true,
+            "wrecksAfter": [
+              {
+                "id": "w403",
+                "type": "medium",
+                "hp": 60,
+                "expiresAfterWave": 7
+              }
+            ],
+            "removed": [
+              {
+                "reason": "destroyed_by_enemy",
+                "wreckId": "w358",
+                "battleSeconds": 128.7499999999946
+              },
+              {
+                "reason": "destroyed_by_enemy",
+                "wreckId": "w392",
+                "battleSeconds": 129.96666666666223
+              }
+            ],
+            "routeDecisions": {
+              "breach": 3,
+              "detour": 15,
+              "unreachable": 3
+            },
+            "pending": [
+              {
+                "at": 16.016666666666666,
+                "lane": "A",
+                "type": "light",
+                "groupIndex": 2,
+                "first": false
               }
             ]
           }
@@ -3633,6 +4719,87 @@
                 "reinforced": false
               }
             ]
+          },
+          "battle": {
+            "horizonTicks": 7200,
+            "observedTicks": 1427,
+            "input": {
+              "stepSeconds": 0.016666666666666666,
+              "held": {}
+            },
+            "firstBaseShot": {
+              "tick": 678,
+              "lane": "A",
+              "enemyId": "e783",
+              "type": "medium",
+              "position": {
+                "x": 5.881151411318764,
+                "y": 5.380173829513334
+              },
+              "bulletId": "b918"
+            },
+            "firstShots": {
+              "A": {
+                "tick": 678,
+                "lane": "A",
+                "enemyId": "e783",
+                "type": "medium",
+                "position": {
+                  "x": 5.881151411318764,
+                  "y": 5.380173829513334
+                },
+                "bulletId": "b918"
+              },
+              "B": {
+                "tick": 991,
+                "lane": "B",
+                "enemyId": "e412",
+                "type": "light",
+                "position": {
+                  "x": 10.997797003214071,
+                  "y": 11.376828410080645
+                },
+                "bulletId": "b928"
+              },
+              "C": {
+                "tick": 1168,
+                "lane": "C",
+                "enemyId": "e733",
+                "type": "medium",
+                "position": {
+                  "x": 9.683690706639867,
+                  "y": 8.592709888520073
+                },
+                "bulletId": "b933"
+              }
+            },
+            "firstDamage": {
+              "tick": 707,
+              "hpBefore": 229,
+              "hpAfter": 217
+            },
+            "phase": "lost",
+            "baseHp": 0,
+            "playerHp": 60,
+            "playerAlive": true,
+            "wrecksAfter": [],
+            "removed": [
+              {
+                "reason": "destroyed_by_enemy",
+                "wreckId": "w358",
+                "battleSeconds": 128.7499999999946
+              },
+              {
+                "reason": "destroyed_by_enemy",
+                "wreckId": "w392",
+                "battleSeconds": 129.96666666666223
+              }
+            ],
+            "routeDecisions": {
+              "breach": 3,
+              "detour": 4
+            },
+            "pending": []
           }
         },
         "noWrecks": {
@@ -3673,9 +4840,108 @@
             "baseHp": 240,
             "module": "barrel",
             "wrecks": []
+          },
+          "battle": {
+            "horizonTicks": 7200,
+            "observedTicks": 1283,
+            "input": {
+              "stepSeconds": 0.016666666666666666,
+              "held": {}
+            },
+            "firstBaseShot": {
+              "tick": 376,
+              "lane": "B",
+              "enemyId": "e412",
+              "type": "light",
+              "position": {
+                "x": 10.997797003214071,
+                "y": 11.376828410080645
+              },
+              "bulletId": "b415"
+            },
+            "firstShots": {
+              "B": {
+                "tick": 376,
+                "lane": "B",
+                "enemyId": "e412",
+                "type": "light",
+                "position": {
+                  "x": 10.997797003214071,
+                  "y": 11.376828410080645
+                },
+                "bulletId": "b415"
+              },
+              "A": {
+                "tick": 678,
+                "lane": "A",
+                "enemyId": "e419",
+                "type": "medium",
+                "position": {
+                  "x": 5.881151411318764,
+                  "y": 5.380173829513334
+                },
+                "bulletId": "b424"
+              },
+              "C": {
+                "tick": 1088,
+                "lane": "C",
+                "enemyId": "e418",
+                "type": "medium",
+                "position": {
+                  "x": 9.683690706639867,
+                  "y": 8.592709888520073
+                },
+                "bulletId": "b438"
+              }
+            },
+            "firstDamage": {
+              "tick": 411,
+              "hpBefore": 240,
+              "hpAfter": 232
+            },
+            "phase": "lost",
+            "baseHp": 0,
+            "playerHp": 60,
+            "playerAlive": true,
+            "wrecksAfter": [],
+            "removed": [],
+            "routeDecisions": {},
+            "pending": []
           }
         }
-      }
+      },
+      "resourceUpperBound": {
+        "wave": 7,
+        "medium": 3,
+        "heavy": 1,
+        "available": [
+          {
+            "type": "heavy",
+            "lane": "B",
+            "sourceWave": 5,
+            "throughWave": 7
+          },
+          {
+            "type": "medium",
+            "lane": "A",
+            "sourceWave": 6,
+            "throughWave": 7
+          },
+          {
+            "type": "medium",
+            "lane": "C",
+            "sourceWave": 6,
+            "throughWave": 7
+          },
+          {
+            "type": "medium",
+            "lane": "B",
+            "sourceWave": 6,
+            "throughWave": 7
+          }
+        ]
+      },
+      "recordedExpiry": []
     },
     {
       "mode": "recorded-preparation-replay",
@@ -3732,6 +4998,420 @@
             "reinforced": false
           }
         ]
+      },
+      "branches": {
+        "keepRecorded": {
+          "available": true,
+          "actions": [],
+          "after": {
+            "baseHp": 124,
+            "module": "engine",
+            "wrecks": [
+              {
+                "id": "w556",
+                "type": "medium",
+                "x": 18.626750361662072,
+                "y": 13.92202494103526,
+                "r": 0.5,
+                "hp": 40,
+                "maxHp": 60,
+                "expiresAfterWave": 8,
+                "reinforced": false
+              },
+              {
+                "id": "w569",
+                "type": "heavy",
+                "x": 13.742128489515867,
+                "y": 11.431728310530403,
+                "r": 0.5,
+                "hp": 120,
+                "maxHp": 120,
+                "expiresAfterWave": 9,
+                "reinforced": false
+              },
+              {
+                "id": "w646",
+                "type": "heavy",
+                "x": 5.754661322251048,
+                "y": 3.494161586977386,
+                "r": 0.5,
+                "hp": 120,
+                "maxHp": 120,
+                "expiresAfterWave": 9,
+                "reinforced": false
+              },
+              {
+                "id": "w653",
+                "type": "medium",
+                "x": 1.1888706840349896,
+                "y": 6.605626994619504,
+                "r": 0.5,
+                "hp": 60,
+                "maxHp": 60,
+                "expiresAfterWave": 8,
+                "reinforced": false
+              }
+            ]
+          },
+          "battle": {
+            "horizonTicks": 7200,
+            "observedTicks": 1423,
+            "input": {
+              "stepSeconds": 0.016666666666666666,
+              "held": {}
+            },
+            "firstBaseShot": {
+              "tick": 800,
+              "lane": "C",
+              "enemyId": "e668",
+              "type": "light",
+              "position": {
+                "x": 10.45590460223153,
+                "y": 7.835425930567179
+              },
+              "bulletId": "b680"
+            },
+            "firstShots": {
+              "C": {
+                "tick": 800,
+                "lane": "C",
+                "enemyId": "e668",
+                "type": "light",
+                "position": {
+                  "x": 10.45590460223153,
+                  "y": 7.835425930567179
+                },
+                "bulletId": "b680"
+              }
+            },
+            "firstDamage": {
+              "tick": 835,
+              "hpBefore": 124,
+              "hpAfter": 116
+            },
+            "phase": "lost",
+            "baseHp": 0,
+            "playerHp": 60,
+            "playerAlive": true,
+            "wrecksAfter": [
+              {
+                "id": "w653",
+                "type": "medium",
+                "hp": 60,
+                "expiresAfterWave": 8
+              }
+            ],
+            "removed": [
+              {
+                "reason": "destroyed_by_enemy",
+                "wreckId": "w556",
+                "battleSeconds": 154.3333333333483
+              },
+              {
+                "reason": "destroyed_by_enemy",
+                "wreckId": "w569",
+                "battleSeconds": 164.50000000002305
+              },
+              {
+                "reason": "destroyed_by_enemy",
+                "wreckId": "w646",
+                "battleSeconds": 165.0500000000235
+              }
+            ],
+            "routeDecisions": {
+              "detour": 34,
+              "breach": 10,
+              "unreachable": 1
+            },
+            "pending": [
+              {
+                "at": 15.65,
+                "lane": "A",
+                "type": "light",
+                "groupIndex": 0,
+                "first": false
+              },
+              {
+                "at": 18.15,
+                "lane": "A",
+                "type": "medium",
+                "groupIndex": 0,
+                "first": false
+              },
+              {
+                "at": 20.65,
+                "lane": "A",
+                "type": "light",
+                "groupIndex": 0,
+                "first": false
+              },
+              {
+                "at": 23.15,
+                "lane": "A",
+                "type": "light",
+                "groupIndex": 0,
+                "first": false
+              }
+            ]
+          }
+        },
+        "spentOneUseful": {
+          "available": true,
+          "actions": [
+            {
+              "method": "repairFromWreck",
+              "args": [
+                "w556"
+              ],
+              "result": {
+                "ok": true,
+                "hp": 25
+              }
+            }
+          ],
+          "after": {
+            "baseHp": 149,
+            "module": "engine",
+            "wrecks": [
+              {
+                "id": "w569",
+                "type": "heavy",
+                "x": 13.742128489515867,
+                "y": 11.431728310530403,
+                "r": 0.5,
+                "hp": 120,
+                "maxHp": 120,
+                "expiresAfterWave": 9,
+                "reinforced": false
+              },
+              {
+                "id": "w646",
+                "type": "heavy",
+                "x": 5.754661322251048,
+                "y": 3.494161586977386,
+                "r": 0.5,
+                "hp": 120,
+                "maxHp": 120,
+                "expiresAfterWave": 9,
+                "reinforced": false
+              },
+              {
+                "id": "w653",
+                "type": "medium",
+                "x": 1.1888706840349896,
+                "y": 6.605626994619504,
+                "r": 0.5,
+                "hp": 60,
+                "maxHp": 60,
+                "expiresAfterWave": 8,
+                "reinforced": false
+              }
+            ]
+          },
+          "battle": {
+            "horizonTicks": 7200,
+            "observedTicks": 1882,
+            "input": {
+              "stepSeconds": 0.016666666666666666,
+              "held": {}
+            },
+            "firstBaseShot": {
+              "tick": 803,
+              "lane": "C",
+              "enemyId": "e668",
+              "type": "light",
+              "position": {
+                "x": 10.654806574915995,
+                "y": 8.34667087200803
+              },
+              "bulletId": "b677"
+            },
+            "firstShots": {
+              "C": {
+                "tick": 803,
+                "lane": "C",
+                "enemyId": "e668",
+                "type": "light",
+                "position": {
+                  "x": 10.654806574915995,
+                  "y": 8.34667087200803
+                },
+                "bulletId": "b677"
+              },
+              "A": {
+                "tick": 1607,
+                "lane": "A",
+                "enemyId": "e674",
+                "type": "heavy",
+                "position": {
+                  "x": 5.875422296094303,
+                  "y": 4.368924532446389
+                },
+                "bulletId": "b1226"
+              }
+            },
+            "firstDamage": {
+              "tick": 838,
+              "hpBefore": 149,
+              "hpAfter": 141
+            },
+            "phase": "lost",
+            "baseHp": 0,
+            "playerHp": 60,
+            "playerAlive": true,
+            "wrecksAfter": [
+              {
+                "id": "w653",
+                "type": "medium",
+                "hp": 60,
+                "expiresAfterWave": 8
+              }
+            ],
+            "removed": [
+              {
+                "reason": "destroyed_by_enemy",
+                "wreckId": "w646",
+                "battleSeconds": 165.0500000000235
+              },
+              {
+                "reason": "destroyed_by_enemy",
+                "wreckId": "w569",
+                "battleSeconds": 171.53333333336198
+              }
+            ],
+            "routeDecisions": {
+              "detour": 33,
+              "breach": 9,
+              "unreachable": 1
+            },
+            "pending": [
+              {
+                "at": 23.15,
+                "lane": "A",
+                "type": "light",
+                "groupIndex": 0,
+                "first": false
+              }
+            ]
+          }
+        },
+        "noWrecks": {
+          "available": true,
+          "actions": [
+            {
+              "method": "repairFromWreck",
+              "args": [
+                "w556"
+              ],
+              "result": {
+                "ok": true,
+                "hp": 25
+              }
+            },
+            {
+              "method": "repairFromWreck",
+              "args": [
+                "w569"
+              ],
+              "result": {
+                "ok": true,
+                "hp": 45
+              }
+            },
+            {
+              "method": "repairFromWreck",
+              "args": [
+                "w646"
+              ],
+              "result": {
+                "ok": true,
+                "hp": 45
+              }
+            },
+            {
+              "method": "repairFromWreck",
+              "args": [
+                "w653"
+              ],
+              "result": {
+                "ok": true,
+                "hp": 1
+              }
+            }
+          ],
+          "after": {
+            "baseHp": 240,
+            "module": "engine",
+            "wrecks": []
+          },
+          "battle": {
+            "horizonTicks": 7200,
+            "observedTicks": 1501,
+            "input": {
+              "stepSeconds": 0.016666666666666666,
+              "held": {}
+            },
+            "firstBaseShot": {
+              "tick": 803,
+              "lane": "C",
+              "enemyId": "e668",
+              "type": "light",
+              "position": {
+                "x": 10.654806574915995,
+                "y": 8.34667087200803
+              },
+              "bulletId": "b676"
+            },
+            "firstShots": {
+              "C": {
+                "tick": 803,
+                "lane": "C",
+                "enemyId": "e668",
+                "type": "light",
+                "position": {
+                  "x": 10.654806574915995,
+                  "y": 8.34667087200803
+                },
+                "bulletId": "b676"
+              },
+              "A": {
+                "tick": 992,
+                "lane": "A",
+                "enemyId": "e674",
+                "type": "heavy",
+                "position": {
+                  "x": 5.875182114225499,
+                  "y": 4.369572996080132
+                },
+                "bulletId": "b681"
+              },
+              "B": {
+                "tick": 1112,
+                "lane": "B",
+                "enemyId": "e671",
+                "type": "medium",
+                "position": {
+                  "x": 9.988452478014324,
+                  "y": 11.376322874808201
+                },
+                "bulletId": "b684"
+              }
+            },
+            "firstDamage": {
+              "tick": 838,
+              "hpBefore": 240,
+              "hpAfter": 232
+            },
+            "phase": "lost",
+            "baseHp": 0,
+            "playerHp": 60,
+            "playerAlive": true,
+            "wrecksAfter": [],
+            "removed": [],
+            "routeDecisions": {},
+            "pending": []
+          }
+        }
       },
       "resourceUpperBound": {
         "wave": 8,
@@ -3790,167 +5470,7 @@
           },
           "reason": "expired"
         }
-      ],
-      "branches": {
-        "keepRecorded": {
-          "available": true,
-          "actions": [],
-          "after": {
-            "baseHp": 124,
-            "module": "engine",
-            "wrecks": [
-              {
-                "id": "w556",
-                "type": "medium",
-                "x": 18.626750361662072,
-                "y": 13.92202494103526,
-                "r": 0.5,
-                "hp": 40,
-                "maxHp": 60,
-                "expiresAfterWave": 8,
-                "reinforced": false
-              },
-              {
-                "id": "w569",
-                "type": "heavy",
-                "x": 13.742128489515867,
-                "y": 11.431728310530403,
-                "r": 0.5,
-                "hp": 120,
-                "maxHp": 120,
-                "expiresAfterWave": 9,
-                "reinforced": false
-              },
-              {
-                "id": "w646",
-                "type": "heavy",
-                "x": 5.754661322251048,
-                "y": 3.494161586977386,
-                "r": 0.5,
-                "hp": 120,
-                "maxHp": 120,
-                "expiresAfterWave": 9,
-                "reinforced": false
-              },
-              {
-                "id": "w653",
-                "type": "medium",
-                "x": 1.1888706840349896,
-                "y": 6.605626994619504,
-                "r": 0.5,
-                "hp": 60,
-                "maxHp": 60,
-                "expiresAfterWave": 8,
-                "reinforced": false
-              }
-            ]
-          }
-        },
-        "spentOneUseful": {
-          "available": true,
-          "actions": [
-            {
-              "method": "repairFromWreck",
-              "args": [
-                "w556"
-              ],
-              "result": {
-                "ok": true,
-                "hp": 25
-              }
-            }
-          ],
-          "after": {
-            "baseHp": 149,
-            "module": "engine",
-            "wrecks": [
-              {
-                "id": "w569",
-                "type": "heavy",
-                "x": 13.742128489515867,
-                "y": 11.431728310530403,
-                "r": 0.5,
-                "hp": 120,
-                "maxHp": 120,
-                "expiresAfterWave": 9,
-                "reinforced": false
-              },
-              {
-                "id": "w646",
-                "type": "heavy",
-                "x": 5.754661322251048,
-                "y": 3.494161586977386,
-                "r": 0.5,
-                "hp": 120,
-                "maxHp": 120,
-                "expiresAfterWave": 9,
-                "reinforced": false
-              },
-              {
-                "id": "w653",
-                "type": "medium",
-                "x": 1.1888706840349896,
-                "y": 6.605626994619504,
-                "r": 0.5,
-                "hp": 60,
-                "maxHp": 60,
-                "expiresAfterWave": 8,
-                "reinforced": false
-              }
-            ]
-          }
-        },
-        "noWrecks": {
-          "available": true,
-          "actions": [
-            {
-              "method": "repairFromWreck",
-              "args": [
-                "w556"
-              ],
-              "result": {
-                "ok": true,
-                "hp": 25
-              }
-            },
-            {
-              "method": "repairFromWreck",
-              "args": [
-                "w569"
-              ],
-              "result": {
-                "ok": true,
-                "hp": 45
-              }
-            },
-            {
-              "method": "repairFromWreck",
-              "args": [
-                "w646"
-              ],
-              "result": {
-                "ok": true,
-                "hp": 45
-              }
-            },
-            {
-              "method": "repairFromWreck",
-              "args": [
-                "w653"
-              ],
-              "result": {
-                "ok": true,
-                "hp": 1
-              }
-            }
-          ],
-          "after": {
-            "baseHp": 240,
-            "module": "engine",
-            "wrecks": []
-          }
-        }
-      }
+      ]
     },
     {
       "mode": "recorded-preparation-replay",
@@ -4019,64 +5539,6 @@
           }
         ]
       },
-      "resourceUpperBound": {
-        "wave": 8,
-        "medium": 3,
-        "heavy": 2,
-        "available": [
-          {
-            "type": "heavy",
-            "lane": "B",
-            "sourceWave": 7,
-            "throughWave": 9
-          },
-          {
-            "type": "medium",
-            "lane": "B",
-            "sourceWave": 7,
-            "throughWave": 8
-          },
-          {
-            "type": "medium",
-            "lane": "C",
-            "sourceWave": 7,
-            "throughWave": 8
-          },
-          {
-            "type": "medium",
-            "lane": "A",
-            "sourceWave": 7,
-            "throughWave": 8
-          },
-          {
-            "type": "heavy",
-            "lane": "A",
-            "sourceWave": 7,
-            "throughWave": 9
-          }
-        ]
-      },
-      "recordedExpiry": [
-        {
-          "sequence": 213,
-          "type": "wreck_removed",
-          "wave": 7,
-          "preparationSeconds": 12.400000000000196,
-          "battleSeconds": 137.60000000000164,
-          "wreck": {
-            "id": "w220",
-            "type": "medium",
-            "x": 10.900647491973496,
-            "y": 6.767762245045078,
-            "r": 0.5,
-            "hp": 32,
-            "maxHp": 60,
-            "expiresAfterWave": 7,
-            "reinforced": false
-          },
-          "reason": "expired"
-        }
-      ],
       "branches": {
         "keepRecorded": {
           "available": true,
@@ -4139,6 +5601,115 @@
                 "maxHp": 120,
                 "expiresAfterWave": 9,
                 "reinforced": false
+              }
+            ]
+          },
+          "battle": {
+            "horizonTicks": 7200,
+            "observedTicks": 1236,
+            "input": {
+              "stepSeconds": 0.016666666666666666,
+              "held": {}
+            },
+            "firstBaseShot": {
+              "tick": 832,
+              "lane": "C",
+              "enemyId": "e358",
+              "type": "heavy",
+              "position": {
+                "x": 14.370030764147385,
+                "y": 6.803774286112555
+              },
+              "bulletId": "b363"
+            },
+            "firstShots": {
+              "C": {
+                "tick": 832,
+                "lane": "C",
+                "enemyId": "e358",
+                "type": "heavy",
+                "position": {
+                  "x": 14.370030764147385,
+                  "y": 6.803774286112555
+                },
+                "bulletId": "b363"
+              },
+              "B": {
+                "tick": 949,
+                "lane": "B",
+                "enemyId": "e357",
+                "type": "light",
+                "position": {
+                  "x": 20.6919739775524,
+                  "y": 11.372641650943226
+                },
+                "bulletId": "b365"
+              },
+              "A": {
+                "tick": 1017,
+                "lane": "A",
+                "enemyId": "e346",
+                "type": "heavy",
+                "position": {
+                  "x": 7.287157566502992,
+                  "y": 11.374118586963494
+                },
+                "bulletId": "b369"
+              }
+            },
+            "firstDamage": {
+              "tick": 867,
+              "hpBefore": 208,
+              "hpAfter": 188
+            },
+            "phase": "lost",
+            "baseHp": 0,
+            "playerHp": 60,
+            "playerAlive": true,
+            "wrecksAfter": [
+              {
+                "id": "w258",
+                "type": "heavy",
+                "hp": 120,
+                "expiresAfterWave": 9
+              },
+              {
+                "id": "w266",
+                "type": "medium",
+                "hp": 60,
+                "expiresAfterWave": 8
+              },
+              {
+                "id": "w280",
+                "type": "medium",
+                "hp": 60,
+                "expiresAfterWave": 8
+              },
+              {
+                "id": "w330",
+                "type": "medium",
+                "hp": 60,
+                "expiresAfterWave": 8
+              },
+              {
+                "id": "w337",
+                "type": "heavy",
+                "hp": 120,
+                "expiresAfterWave": 9
+              }
+            ],
+            "removed": [],
+            "routeDecisions": {
+              "detour": 15,
+              "unreachable": 1
+            },
+            "pending": [
+              {
+                "at": 19.03333333333333,
+                "lane": "C",
+                "type": "light",
+                "groupIndex": 2,
+                "first": false
               }
             ]
           }
@@ -4206,6 +5777,109 @@
                 "reinforced": false
               }
             ]
+          },
+          "battle": {
+            "horizonTicks": 7200,
+            "observedTicks": 1207,
+            "input": {
+              "stepSeconds": 0.016666666666666666,
+              "held": {}
+            },
+            "firstBaseShot": {
+              "tick": 723,
+              "lane": "B",
+              "enemyId": "e352",
+              "type": "medium",
+              "position": {
+                "x": 19.879777547467544,
+                "y": 12.364050444745484
+              },
+              "bulletId": "b362"
+            },
+            "firstShots": {
+              "B": {
+                "tick": 723,
+                "lane": "B",
+                "enemyId": "e352",
+                "type": "medium",
+                "position": {
+                  "x": 19.879777547467544,
+                  "y": 12.364050444745484
+                },
+                "bulletId": "b362"
+              },
+              "C": {
+                "tick": 832,
+                "lane": "C",
+                "enemyId": "e358",
+                "type": "heavy",
+                "position": {
+                  "x": 14.370030764147385,
+                  "y": 6.803774286112555
+                },
+                "bulletId": "b366"
+              },
+              "A": {
+                "tick": 1017,
+                "lane": "A",
+                "enemyId": "e346",
+                "type": "heavy",
+                "position": {
+                  "x": 7.287157566502992,
+                  "y": 11.374118586963494
+                },
+                "bulletId": "b376"
+              }
+            },
+            "firstDamage": {
+              "tick": 752,
+              "hpBefore": 240,
+              "hpAfter": 228
+            },
+            "phase": "lost",
+            "baseHp": 0,
+            "playerHp": 60,
+            "playerAlive": true,
+            "wrecksAfter": [
+              {
+                "id": "w266",
+                "type": "medium",
+                "hp": 60,
+                "expiresAfterWave": 8
+              },
+              {
+                "id": "w280",
+                "type": "medium",
+                "hp": 60,
+                "expiresAfterWave": 8
+              },
+              {
+                "id": "w330",
+                "type": "medium",
+                "hp": 60,
+                "expiresAfterWave": 8
+              },
+              {
+                "id": "w337",
+                "type": "heavy",
+                "hp": 120,
+                "expiresAfterWave": 9
+              }
+            ],
+            "removed": [],
+            "routeDecisions": {
+              "detour": 15,
+              "unreachable": 3
+            },
+            "pending": [
+              {
+                "at": 19.03333333333333,
+                "lane": "C",
+                "type": "light",
+                "groupIndex": 2,
+                "first": false
+              }
+            ]
           }
         },
         "noWrecks": {
@@ -4266,9 +5940,142 @@
             "baseHp": 240,
             "module": "barrel",
             "wrecks": []
+          },
+          "battle": {
+            "horizonTicks": 7200,
+            "observedTicks": 996,
+            "input": {
+              "stepSeconds": 0.016666666666666666,
+              "held": {}
+            },
+            "firstBaseShot": {
+              "tick": 530,
+              "lane": "A",
+              "enemyId": "e346",
+              "type": "heavy",
+              "position": {
+                "x": 7.374851816783458,
+                "y": 11.19472315199114
+              },
+              "bulletId": "b352"
+            },
+            "firstShots": {
+              "A": {
+                "tick": 530,
+                "lane": "A",
+                "enemyId": "e346",
+                "type": "heavy",
+                "position": {
+                  "x": 7.374851816783458,
+                  "y": 11.19472315199114
+                },
+                "bulletId": "b352"
+              },
+              "B": {
+                "tick": 709,
+                "lane": "B",
+                "enemyId": "e351",
+                "type": "light",
+                "position": {
+                  "x": 20.64199994912842,
+                  "y": 11.202821028058327
+                },
+                "bulletId": "b359"
+              },
+              "C": {
+                "tick": 832,
+                "lane": "C",
+                "enemyId": "e353",
+                "type": "heavy",
+                "position": {
+                  "x": 13.876390010802407,
+                  "y": 6.815229535496533
+                },
+                "bulletId": "b366"
+              }
+            },
+            "firstDamage": {
+              "tick": 565,
+              "hpBefore": 240,
+              "hpAfter": 220
+            },
+            "phase": "lost",
+            "baseHp": 0,
+            "playerHp": 60,
+            "playerAlive": true,
+            "wrecksAfter": [],
+            "removed": [],
+            "routeDecisions": {},
+            "pending": [
+              {
+                "at": 19.03333333333333,
+                "lane": "C",
+                "type": "light",
+                "groupIndex": 2,
+                "first": false
+              }
+            ]
           }
         }
-      }
+      },
+      "resourceUpperBound": {
+        "wave": 8,
+        "medium": 3,
+        "heavy": 2,
+        "available": [
+          {
+            "type": "heavy",
+            "lane": "B",
+            "sourceWave": 7,
+            "throughWave": 9
+          },
+          {
+            "type": "medium",
+            "lane": "B",
+            "sourceWave": 7,
+            "throughWave": 8
+          },
+          {
+            "type": "medium",
+            "lane": "C",
+            "sourceWave": 7,
+            "throughWave": 8
+          },
+          {
+            "type": "medium",
+            "lane": "A",
+            "sourceWave": 7,
+            "throughWave": 8
+          },
+          {
+            "type": "heavy",
+            "lane": "A",
+            "sourceWave": 7,
+            "throughWave": 9
+          }
+        ]
+      },
+      "recordedExpiry": [
+        {
+          "sequence": 213,
+          "type": "wreck_removed",
+          "wave": 7,
+          "preparationSeconds": 12.400000000000196,
+          "battleSeconds": 137.60000000000164,
+          "wreck": {
+            "id": "w220",
+            "type": "medium",
+            "x": 10.900647491973496,
+            "y": 6.767762245045078,
+            "r": 0.5,
+            "hp": 32,
+            "maxHp": 60,
+            "expiresAfterWave": 7,
+            "reinforced": false
+          },
+          "reason": "expired"
+        }
+      ]
     }
   ],
   "calendarControls": [
@@ -4393,23 +6200,99 @@
           },
           "action": null,
           "outcome": {
-            "ticks": 1301,
-            "phase": "lost",
-            "baseHp": 0,
+            "horizonTicks": 7200,
+            "observedTicks": 1301,
+            "input": {
+              "stepSeconds": 0.016666666666666666,
+              "held": {}
+            },
+            "firstBaseShot": {
+              "tick": 678,
+              "lane": "B",
+              "enemyId": "e363",
+              "type": "light",
+              "position": {
+                "x": 20.713199088370807,
+                "y": 11.34240654067135
+              },
+              "bulletId": "b556"
+            },
+            "firstShots": {
+              "B": {
+                "tick": 678,
+                "lane": "B",
+                "enemyId": "e363",
+                "type": "light",
+                "position": {
+                  "x": 20.713199088370807,
+                  "y": 11.34240654067135
+                },
+                "bulletId": "b556"
+              },
+              "C": {
+                "tick": 680,
+                "lane": "C",
+                "enemyId": "e391",
+                "type": "medium",
+                "position": {
+                  "x": 11.375,
+                  "y": 8.125
+                },
+                "bulletId": "b557"
+              },
+              "A": {
+                "tick": 1218,
+                "lane": "A",
+                "enemyId": "e527",
+                "type": "medium",
+                "position": {
+                  "x": 8.173262745518223,
+                  "y": 11.980071216630863
+                },
+                "bulletId": "b738"
+              }
+            },
             "firstDamage": {
               "tick": 709,
               "hpBefore": 240,
               "hpAfter": 228
             },
+            "phase": "lost",
+            "baseHp": 0,
+            "playerHp": 60,
+            "playerAlive": true,
+            "wrecksAfter": [
+              {
+                "id": "calendar-1",
+                "type": "medium",
+                "hp": 52,
+                "expiresAfterWave": 7
+              },
+              {
+                "id": "calendar-3",
+                "type": "heavy",
+                "hp": 120,
+                "expiresAfterWave": 7
+              }
+            ],
+            "removed": [
+              {
+                "reason": "destroyed_by_enemy",
+                "wreckId": "calendar-2",
+                "battleSeconds": 119.41666666666117
+              },
+              {
+                "reason": "destroyed_by_enemy",
+                "wreckId": "calendar-0",
+                "battleSeconds": 126.68333333332743
+              }
+            ],
             "routeDecisions": {
               "detour": 21,
               "breach": 4,
               "unreachable": 6
             },
-            "wrecksAfter": [
-              "calendar-1",
-              "calendar-3"
-            ]
+            "pending": []
           }
         },
         "oneUsefulSpent": {
@@ -4471,23 +6354,94 @@
             }
           },
           "outcome": {
-            "ticks": 1141,
-            "phase": "lost",
-            "baseHp": 0,
+            "horizonTicks": 7200,
+            "observedTicks": 1141,
+            "input": {
+              "stepSeconds": 0.016666666666666666,
+              "held": {}
+            },
+            "firstBaseShot": {
+              "tick": 678,
+              "lane": "B",
+              "enemyId": "e363",
+              "type": "light",
+              "position": {
+                "x": 20.713199088370807,
+                "y": 11.34240654067135
+              },
+              "bulletId": "b555"
+            },
+            "firstShots": {
+              "B": {
+                "tick": 678,
+                "lane": "B",
+                "enemyId": "e363",
+                "type": "light",
+                "position": {
+                  "x": 20.713199088370807,
+                  "y": 11.34240654067135
+                },
+                "bulletId": "b555"
+              },
+              "C": {
+                "tick": 680,
+                "lane": "C",
+                "enemyId": "e391",
+                "type": "medium",
+                "position": {
+                  "x": 11.375,
+                  "y": 8.125
+                },
+                "bulletId": "b556"
+              },
+              "A": {
+                "tick": 832,
+                "lane": "A",
+                "enemyId": "e527",
+                "type": "medium",
+                "position": {
+                  "x": 8.190704975474029,
+                  "y": 11.99359146069006
+                },
+                "bulletId": "b563"
+              }
+            },
             "firstDamage": {
               "tick": 709,
               "hpBefore": 240,
               "hpAfter": 228
             },
+            "phase": "lost",
+            "baseHp": 0,
+            "playerHp": 60,
+            "playerAlive": true,
+            "wrecksAfter": [
+              {
+                "id": "calendar-1",
+                "type": "medium",
+                "hp": 52,
+                "expiresAfterWave": 7
+              },
+              {
+                "id": "calendar-3",
+                "type": "heavy",
+                "hp": 120,
+                "expiresAfterWave": 7
+              }
+            ],
+            "removed": [
+              {
+                "reason": "destroyed_by_enemy",
+                "wreckId": "calendar-2",
+                "battleSeconds": 119.41666666666117
+              }
+            ],
             "routeDecisions": {
               "detour": 13,
               "breach": 2,
               "unreachable": 5
             },
-            "wrecksAfter": [
-              "calendar-1",
-              "calendar-3"
-            ]
+            "pending": []
           }
         },
         "oneOlderExpired": {
@@ -4565,22 +6519,93 @@
             }
           },
           "outcome": {
-            "ticks": 1229,
-            "phase": "lost",
-            "baseHp": 0,
+            "horizonTicks": 7200,
+            "observedTicks": 1229,
+            "input": {
+              "stepSeconds": 0.016666666666666666,
+              "held": {}
+            },
+            "firstBaseShot": {
+              "tick": 545,
+              "lane": "C",
+              "enemyId": "e391",
+              "type": "medium",
+              "position": {
+                "x": 13.876134919872529,
+                "y": 7.817119086501111
+              },
+              "bulletId": "b549"
+            },
+            "firstShots": {
+              "C": {
+                "tick": 545,
+                "lane": "C",
+                "enemyId": "e391",
+                "type": "medium",
+                "position": {
+                  "x": 13.876134919872529,
+                  "y": 7.817119086501111
+                },
+                "bulletId": "b549"
+              },
+              "B": {
+                "tick": 678,
+                "lane": "B",
+                "enemyId": "e363",
+                "type": "light",
+                "position": {
+                  "x": 20.713199088370807,
+                  "y": 11.34240654067135
+                },
+                "bulletId": "b558"
+              },
+              "A": {
+                "tick": 1218,
+                "lane": "A",
+                "enemyId": "e527",
+                "type": "medium",
+                "position": {
+                  "x": 8.173262745518223,
+                  "y": 11.980071216630863
+                },
+                "bulletId": "b740"
+              }
+            },
             "firstDamage": {
               "tick": 574,
               "hpBefore": 240,
               "hpAfter": 228
             },
+            "phase": "lost",
+            "baseHp": 0,
+            "playerHp": 60,
+            "playerAlive": true,
+            "wrecksAfter": [
+              {
+                "id": "calendar-3",
+                "type": "heavy",
+                "hp": 120,
+                "expiresAfterWave": 7
+              }
+            ],
+            "removed": [
+              {
+                "reason": "destroyed_by_enemy",
+                "wreckId": "calendar-2",
+                "battleSeconds": 119.43333333332784
+              },
+              {
+                "reason": "destroyed_by_enemy",
+                "wreckId": "calendar-0",
+                "battleSeconds": 126.69999999999409
+              }
+            ],
             "routeDecisions": {
               "detour": 22,
               "breach": 3,
               "unreachable": 6
             },
-            "wrecksAfter": [
-              "calendar-3"
-            ]
+            "pending": []
           }
         },
         "noWrecks": {
@@ -4595,16 +6620,71 @@
           },
           "action": null,
           "outcome": {
-            "ticks": 994,
-            "phase": "lost",
-            "baseHp": 0,
+            "horizonTicks": 7200,
+            "observedTicks": 994,
+            "input": {
+              "stepSeconds": 0.016666666666666666,
+              "held": {}
+            },
+            "firstBaseShot": {
+              "tick": 371,
+              "lane": "B",
+              "enemyId": "e363",
+              "type": "light",
+              "position": {
+                "x": 20.67550067292704,
+                "y": 11.288311268386543
+              },
+              "bulletId": "b373"
+            },
+            "firstShots": {
+              "B": {
+                "tick": 371,
+                "lane": "B",
+                "enemyId": "e363",
+                "type": "light",
+                "position": {
+                  "x": 20.67550067292704,
+                  "y": 11.288311268386543
+                },
+                "bulletId": "b373"
+              },
+              "C": {
+                "tick": 545,
+                "lane": "C",
+                "enemyId": "e371",
+                "type": "medium",
+                "position": {
+                  "x": 13.876134919872529,
+                  "y": 7.817119086501111
+                },
+                "bulletId": "b379"
+              },
+              "A": {
+                "tick": 832,
+                "lane": "A",
+                "enemyId": "e375",
+                "type": "medium",
+                "position": {
+                  "x": 8.190704975474029,
+                  "y": 11.99359146069006
+                },
+                "bulletId": "b393"
+              }
+            },
             "firstDamage": {
               "tick": 406,
               "hpBefore": 240,
               "hpAfter": 232
             },
+            "phase": "lost",
+            "baseHp": 0,
+            "playerHp": 60,
+            "playerAlive": true,
+            "wrecksAfter": [],
+            "removed": [],
             "routeDecisions": {},
-            "wrecksAfter": []
+            "pending": []
           }
         }
       }
@@ -4754,25 +6834,113 @@
           },
           "action": null,
           "outcome": {
-            "ticks": 1110,
-            "phase": "lost",
-            "baseHp": 0,
+            "horizonTicks": 7200,
+            "observedTicks": 1110,
+            "input": {
+              "stepSeconds": 0.016666666666666666,
+              "held": {}
+            },
+            "firstBaseShot": {
+              "tick": 919,
+              "lane": "A",
+              "enemyId": "e642",
+              "type": "light",
+              "position": {
+                "x": 7.125,
+                "y": 12.375
+              },
+              "bulletId": "b658"
+            },
+            "firstShots": {
+              "A": {
+                "tick": 919,
+                "lane": "A",
+                "enemyId": "e642",
+                "type": "light",
+                "position": {
+                  "x": 7.125,
+                  "y": 12.375
+                },
+                "bulletId": "b658"
+              },
+              "B": {
+                "tick": 949,
+                "lane": "B",
+                "enemyId": "e646",
+                "type": "light",
+                "position": {
+                  "x": 20.6919739775524,
+                  "y": 11.372641650943226
+                },
+                "bulletId": "b659"
+              },
+              "C": {
+                "tick": 1047,
+                "lane": "C",
+                "enemyId": "e647",
+                "type": "heavy",
+                "position": {
+                  "x": 10.622254338631722,
+                  "y": 7.347317879716743
+                },
+                "bulletId": "b666"
+              }
+            },
             "firstDamage": {
               "tick": 954,
               "hpBefore": 108,
               "hpAfter": 100
             },
+            "phase": "lost",
+            "baseHp": 0,
+            "playerHp": 0,
+            "playerAlive": false,
+            "wrecksAfter": [
+              {
+                "id": "calendar-0",
+                "type": "medium",
+                "hp": 60,
+                "expiresAfterWave": 8
+              },
+              {
+                "id": "calendar-1",
+                "type": "medium",
+                "hp": 52,
+                "expiresAfterWave": 8
+              },
+              {
+                "id": "calendar-2",
+                "type": "medium",
+                "hp": 60,
+                "expiresAfterWave": 8
+              },
+              {
+                "id": "calendar-3",
+                "type": "heavy",
+                "hp": 120,
+                "expiresAfterWave": 9
+              },
+              {
+                "id": "calendar-4",
+                "type": "heavy",
+                "hp": 120,
+                "expiresAfterWave": 9
+              }
+            ],
+            "removed": [],
             "routeDecisions": {
               "detour": 15,
               "unreachable": 1,
               "breach": 1
             },
-            "wrecksAfter": [
-              "calendar-0",
-              "calendar-1",
-              "calendar-2",
-              "calendar-3",
-              "calendar-4"
+            "pending": [
+              {
+                "at": 19.03333333333333,
+                "lane": "C",
+                "type": "light",
+                "groupIndex": 2,
+                "first": false
+              }
             ]
           }
         },
@@ -4848,24 +7016,107 @@
             }
           },
           "outcome": {
-            "ticks": 1082,
-            "phase": "lost",
-            "baseHp": 0,
+            "horizonTicks": 7200,
+            "observedTicks": 1082,
+            "input": {
+              "stepSeconds": 0.016666666666666666,
+              "held": {}
+            },
+            "firstBaseShot": {
+              "tick": 723,
+              "lane": "B",
+              "enemyId": "e644",
+              "type": "medium",
+              "position": {
+                "x": 19.879777547467544,
+                "y": 12.364050444745484
+              },
+              "bulletId": "b652"
+            },
+            "firstShots": {
+              "B": {
+                "tick": 723,
+                "lane": "B",
+                "enemyId": "e644",
+                "type": "medium",
+                "position": {
+                  "x": 19.879777547467544,
+                  "y": 12.364050444745484
+                },
+                "bulletId": "b652"
+              },
+              "A": {
+                "tick": 919,
+                "lane": "A",
+                "enemyId": "e642",
+                "type": "light",
+                "position": {
+                  "x": 7.125,
+                  "y": 12.375
+                },
+                "bulletId": "b663"
+              },
+              "C": {
+                "tick": 1047,
+                "lane": "C",
+                "enemyId": "e647",
+                "type": "heavy",
+                "position": {
+                  "x": 10.622254338631722,
+                  "y": 7.347317879716743
+                },
+                "bulletId": "b671"
+              }
+            },
             "firstDamage": {
               "tick": 752,
               "hpBefore": 133,
               "hpAfter": 121
             },
+            "phase": "lost",
+            "baseHp": 0,
+            "playerHp": 0,
+            "playerAlive": false,
+            "wrecksAfter": [
+              {
+                "id": "calendar-1",
+                "type": "medium",
+                "hp": 52,
+                "expiresAfterWave": 8
+              },
+              {
+                "id": "calendar-2",
+                "type": "medium",
+                "hp": 60,
+                "expiresAfterWave": 8
+              },
+              {
+                "id": "calendar-3",
+                "type": "heavy",
+                "hp": 120,
+                "expiresAfterWave": 9
+              },
+              {
+                "id": "calendar-4",
+                "type": "heavy",
+                "hp": 120,
+                "expiresAfterWave": 9
+              }
+            ],
+            "removed": [],
             "routeDecisions": {
               "detour": 16,
               "unreachable": 3,
               "breach": 1
             },
-            "wrecksAfter": [
-              "calendar-1",
-              "calendar-2",
-              "calendar-3",
-              "calendar-4"
+            "pending": [
+              {
+                "at": 19.03333333333333,
+                "lane": "C",
+                "type": "light",
+                "groupIndex": 2,
+                "first": false
+              }
             ]
           }
         },
@@ -4957,24 +7208,107 @@
             }
           },
           "outcome": {
-            "ticks": 1110,
-            "phase": "lost",
-            "baseHp": 0,
+            "horizonTicks": 7200,
+            "observedTicks": 1110,
+            "input": {
+              "stepSeconds": 0.016666666666666666,
+              "held": {}
+            },
+            "firstBaseShot": {
+              "tick": 919,
+              "lane": "A",
+              "enemyId": "e642",
+              "type": "light",
+              "position": {
+                "x": 7.125,
+                "y": 12.375
+              },
+              "bulletId": "b658"
+            },
+            "firstShots": {
+              "A": {
+                "tick": 919,
+                "lane": "A",
+                "enemyId": "e642",
+                "type": "light",
+                "position": {
+                  "x": 7.125,
+                  "y": 12.375
+                },
+                "bulletId": "b658"
+              },
+              "B": {
+                "tick": 949,
+                "lane": "B",
+                "enemyId": "e646",
+                "type": "light",
+                "position": {
+                  "x": 20.6919739775524,
+                  "y": 11.372641650943226
+                },
+                "bulletId": "b659"
+              },
+              "C": {
+                "tick": 1047,
+                "lane": "C",
+                "enemyId": "e647",
+                "type": "heavy",
+                "position": {
+                  "x": 10.622254338631722,
+                  "y": 7.347317879716743
+                },
+                "bulletId": "b666"
+              }
+            },
             "firstDamage": {
               "tick": 954,
               "hpBefore": 108,
               "hpAfter": 100
             },
+            "phase": "lost",
+            "baseHp": 0,
+            "playerHp": 0,
+            "playerAlive": false,
+            "wrecksAfter": [
+              {
+                "id": "calendar-0",
+                "type": "medium",
+                "hp": 60,
+                "expiresAfterWave": 8
+              },
+              {
+                "id": "calendar-1",
+                "type": "medium",
+                "hp": 52,
+                "expiresAfterWave": 8
+              },
+              {
+                "id": "calendar-3",
+                "type": "heavy",
+                "hp": 120,
+                "expiresAfterWave": 9
+              },
+              {
+                "id": "calendar-4",
+                "type": "heavy",
+                "hp": 120,
+                "expiresAfterWave": 9
+              }
+            ],
+            "removed": [],
             "routeDecisions": {
               "detour": 15,
               "unreachable": 1,
               "breach": 1
             },
-            "wrecksAfter": [
-              "calendar-0",
-              "calendar-1",
-              "calendar-3",
-              "calendar-4"
+            "pending": [
+              {
+                "at": 19.03333333333333,
+                "lane": "C",
+                "type": "light",
+                "groupIndex": 2,
+                "first": false
+              }
             ]
           }
         },
@@ -4990,16 +7324,86 @@
           },
           "action": null,
           "outcome": {
-            "ticks": 867,
-            "phase": "lost",
-            "baseHp": 0,
+            "horizonTicks": 7200,
+            "observedTicks": 867,
+            "input": {
+              "stepSeconds": 0.016666666666666666,
+              "held": {}
+            },
+            "firstBaseShot": {
+              "tick": 584,
+              "lane": "A",
+              "enemyId": "e641",
+              "type": "heavy",
+              "position": {
+                "x": 7.374851816783458,
+                "y": 11.19472315199114
+              },
+              "bulletId": "b650"
+            },
+            "firstShots": {
+              "A": {
+                "tick": 584,
+                "lane": "A",
+                "enemyId": "e641",
+                "type": "heavy",
+                "position": {
+                  "x": 7.374851816783458,
+                  "y": 11.19472315199114
+                },
+                "bulletId": "b650"
+              },
+              "B": {
+                "tick": 709,
+                "lane": "B",
+                "enemyId": "e648",
+                "type": "light",
+                "position": {
+                  "x": 20.64199994912842,
+                  "y": 11.202821028058327
+                },
+                "bulletId": "b657"
+              },
+              "C": {
+                "tick": 832,
+                "lane": "C",
+                "enemyId": "e649",
+                "type": "heavy",
+                "position": {
+                  "x": 13.876390010802407,
+                  "y": 6.815229535496533
+                },
+                "bulletId": "b664"
+              }
+            },
             "firstDamage": {
               "tick": 619,
               "hpBefore": 108,
               "hpAfter": 88
             },
+            "phase": "lost",
+            "baseHp": 0,
+            "playerHp": 0,
+            "playerAlive": false,
+            "wrecksAfter": [],
+            "removed": [],
             "routeDecisions": {},
-            "wrecksAfter": []
+            "pending": [
+              {
+                "at": 16.53333333333333,
+                "lane": "C",
+                "type": "light",
+                "groupIndex": 2,
+                "first": false
+              },
+              {
+                "at": 19.03333333333333,
+                "lane": "C",
+                "type": "light",
+                "groupIndex": 2,
+                "first": false
+              }
+            ]
           }
         }
       }
@@ -5114,22 +7518,87 @@
           },
           "action": null,
           "outcome": {
-            "ticks": 1538,
-            "phase": "lost",
-            "baseHp": 0,
+            "horizonTicks": 7200,
+            "observedTicks": 1538,
+            "input": {
+              "stepSeconds": 0.016666666666666666,
+              "held": {}
+            },
+            "firstBaseShot": {
+              "tick": 794,
+              "lane": "A",
+              "enemyId": "e632",
+              "type": "medium",
+              "position": {
+                "x": 0.875,
+                "y": 5.875
+              },
+              "bulletId": "b825"
+            },
+            "firstShots": {
+              "A": {
+                "tick": 794,
+                "lane": "A",
+                "enemyId": "e632",
+                "type": "medium",
+                "position": {
+                  "x": 0.875,
+                  "y": 5.875
+                },
+                "bulletId": "b825"
+              },
+              "B": {
+                "tick": 1083,
+                "lane": "B",
+                "enemyId": "e412",
+                "type": "light",
+                "position": {
+                  "x": 10.660176301145471,
+                  "y": 8.364074084489507
+                },
+                "bulletId": "b906"
+              }
+            },
             "firstDamage": {
               "tick": 823,
               "hpBefore": 204,
               "hpAfter": 192
             },
+            "phase": "lost",
+            "baseHp": 0,
+            "playerHp": 60,
+            "playerAlive": true,
+            "wrecksAfter": [
+              {
+                "id": "calendar-3",
+                "type": "heavy",
+                "hp": 40,
+                "expiresAfterWave": 7
+              }
+            ],
+            "removed": [
+              {
+                "reason": "destroyed_by_enemy",
+                "wreckId": "calendar-2",
+                "battleSeconds": 130.6499999999961
+              },
+              {
+                "reason": "destroyed_by_enemy",
+                "wreckId": "calendar-1",
+                "battleSeconds": 132.99999999999798
+              },
+              {
+                "reason": "destroyed_by_enemy",
+                "wreckId": "calendar-0",
+                "battleSeconds": 136.45000000000073
+              }
+            ],
             "routeDecisions": {
               "breach": 13,
               "detour": 26,
               "unreachable": 4
             },
-            "wrecksAfter": [
-              "calendar-3"
-            ]
+            "pending": []
           }
         },
         "oneUsefulSpent": {
@@ -5191,21 +7660,96 @@
             }
           },
           "outcome": {
-            "ticks": 1706,
-            "phase": "lost",
-            "baseHp": 0,
+            "horizonTicks": 7200,
+            "observedTicks": 1706,
+            "input": {
+              "stepSeconds": 0.016666666666666666,
+              "held": {}
+            },
+            "firstBaseShot": {
+              "tick": 678,
+              "lane": "A",
+              "enemyId": "e632",
+              "type": "medium",
+              "position": {
+                "x": 5.881151411318764,
+                "y": 5.380173829513334
+              },
+              "bulletId": "b808"
+            },
+            "firstShots": {
+              "A": {
+                "tick": 678,
+                "lane": "A",
+                "enemyId": "e632",
+                "type": "medium",
+                "position": {
+                  "x": 5.881151411318764,
+                  "y": 5.380173829513334
+                },
+                "bulletId": "b808"
+              },
+              "B": {
+                "tick": 1083,
+                "lane": "B",
+                "enemyId": "e412",
+                "type": "light",
+                "position": {
+                  "x": 10.660176301145471,
+                  "y": 8.364074084489507
+                },
+                "bulletId": "b1105"
+              }
+            },
             "firstDamage": {
               "tick": 707,
               "hpBefore": 229,
               "hpAfter": 217
             },
+            "phase": "lost",
+            "baseHp": 0,
+            "playerHp": 60,
+            "playerAlive": true,
+            "wrecksAfter": [
+              {
+                "id": "calendar-3",
+                "type": "heavy",
+                "hp": 20,
+                "expiresAfterWave": 7
+              }
+            ],
+            "removed": [
+              {
+                "reason": "destroyed_by_enemy",
+                "wreckId": "calendar-2",
+                "battleSeconds": 130.6499999999961
+              },
+              {
+                "reason": "destroyed_by_enemy",
+                "wreckId": "calendar-1",
+                "battleSeconds": 132.99999999999798
+              }
+            ],
             "routeDecisions": {
               "breach": 11,
               "detour": 16,
               "unreachable": 2
             },
-            "wrecksAfter": [
-              "calendar-3"
+            "pending": [
+              {
+                "at": 13.516666666666667,
+                "lane": "A",
+                "type": "light",
+                "groupIndex": 2,
+                "first": false
+              },
+              {
+                "at": 16.016666666666666,
+                "lane": "A",
+                "type": "light",
+                "groupIndex": 2,
+                "first": false
+              }
             ]
           }
         },
@@ -5284,22 +7828,82 @@
             }
           },
           "outcome": {
-            "ticks": 1378,
-            "phase": "lost",
-            "baseHp": 0,
+            "horizonTicks": 7200,
+            "observedTicks": 1378,
+            "input": {
+              "stepSeconds": 0.016666666666666666,
+              "held": {}
+            },
+            "firstBaseShot": {
+              "tick": 567,
+              "lane": "B",
+              "enemyId": "e412",
+              "type": "light",
+              "position": {
+                "x": 10.672337803148347,
+                "y": 8.346197870195706
+              },
+              "bulletId": "b423"
+            },
+            "firstShots": {
+              "B": {
+                "tick": 567,
+                "lane": "B",
+                "enemyId": "e412",
+                "type": "light",
+                "position": {
+                  "x": 10.672337803148347,
+                  "y": 8.346197870195706
+                },
+                "bulletId": "b423"
+              },
+              "A": {
+                "tick": 794,
+                "lane": "A",
+                "enemyId": "e421",
+                "type": "medium",
+                "position": {
+                  "x": 0.875,
+                  "y": 5.875
+                },
+                "bulletId": "b430"
+              }
+            },
             "firstDamage": {
               "tick": 602,
               "hpBefore": 204,
               "hpAfter": 196
             },
+            "phase": "lost",
+            "baseHp": 0,
+            "playerHp": 60,
+            "playerAlive": true,
+            "wrecksAfter": [
+              {
+                "id": "calendar-3",
+                "type": "heavy",
+                "hp": 120,
+                "expiresAfterWave": 7
+              }
+            ],
+            "removed": [
+              {
+                "reason": "destroyed_by_enemy",
+                "wreckId": "calendar-2",
+                "battleSeconds": 129.01666666666148
+              },
+              {
+                "reason": "destroyed_by_enemy",
+                "wreckId": "calendar-0",
+                "battleSeconds": 136.4666666666674
+              }
+            ],
             "routeDecisions": {
               "detour": 16,
               "breach": 10,
               "unreachable": 5
             },
-            "wrecksAfter": [
-              "calendar-3"
-            ]
+            "pending": []
           }
         },
         "noWrecks": {
@@ -5314,16 +7918,71 @@
           },
           "action": null,
           "outcome": {
-            "ticks": 1251,
-            "phase": "lost",
-            "baseHp": 0,
+            "horizonTicks": 7200,
+            "observedTicks": 1251,
+            "input": {
+              "stepSeconds": 0.016666666666666666,
+              "held": {}
+            },
+            "firstBaseShot": {
+              "tick": 376,
+              "lane": "B",
+              "enemyId": "e412",
+              "type": "light",
+              "position": {
+                "x": 10.997797003214071,
+                "y": 11.376828410080645
+              },
+              "bulletId": "b415"
+            },
+            "firstShots": {
+              "B": {
+                "tick": 376,
+                "lane": "B",
+                "enemyId": "e412",
+                "type": "light",
+                "position": {
+                  "x": 10.997797003214071,
+                  "y": 11.376828410080645
+                },
+                "bulletId": "b415"
+              },
+              "A": {
+                "tick": 678,
+                "lane": "A",
+                "enemyId": "e419",
+                "type": "medium",
+                "position": {
+                  "x": 5.881151411318764,
+                  "y": 5.380173829513334
+                },
+                "bulletId": "b424"
+              },
+              "C": {
+                "tick": 1088,
+                "lane": "C",
+                "enemyId": "e418",
+                "type": "medium",
+                "position": {
+                  "x": 9.683690706639867,
+                  "y": 8.592709888520073
+                },
+                "bulletId": "b438"
+              }
+            },
             "firstDamage": {
               "tick": 411,
               "hpBefore": 204,
               "hpAfter": 196
             },
+            "phase": "lost",
+            "baseHp": 0,
+            "playerHp": 60,
+            "playerAlive": true,
+            "wrecksAfter": [],
+            "removed": [],
             "routeDecisions": {},
-            "wrecksAfter": []
+            "pending": []
           }
         }
       }
@@ -5473,24 +8132,105 @@
           },
           "action": null,
           "outcome": {
-            "ticks": 1529,
-            "phase": "lost",
-            "baseHp": 0,
+            "horizonTicks": 7200,
+            "observedTicks": 1529,
+            "input": {
+              "stepSeconds": 0.016666666666666666,
+              "held": {}
+            },
+            "firstBaseShot": {
+              "tick": 1079,
+              "lane": "C",
+              "enemyId": "e1056",
+              "type": "light",
+              "position": {
+                "x": 10.653064082536583,
+                "y": 8.348323590984128
+              },
+              "bulletId": "b1155"
+            },
+            "firstShots": {
+              "C": {
+                "tick": 1079,
+                "lane": "C",
+                "enemyId": "e1056",
+                "type": "light",
+                "position": {
+                  "x": 10.653064082536583,
+                  "y": 8.348323590984128
+                },
+                "bulletId": "b1155"
+              },
+              "A": {
+                "tick": 1190,
+                "lane": "A",
+                "enemyId": "e1151",
+                "type": "heavy",
+                "position": {
+                  "x": 0.6596527107645931,
+                  "y": 5.133686490554697
+                },
+                "bulletId": "b1158"
+              },
+              "B": {
+                "tick": 1398,
+                "lane": "B",
+                "enemyId": "e1147",
+                "type": "medium",
+                "position": {
+                  "x": 2.2367872484443585,
+                  "y": 16.87466046758237
+                },
+                "bulletId": "b1179"
+              }
+            },
             "firstDamage": {
               "tick": 1114,
               "hpBefore": 164,
               "hpAfter": 156
             },
+            "phase": "lost",
+            "baseHp": 0,
+            "playerHp": 60,
+            "playerAlive": true,
+            "wrecksAfter": [
+              {
+                "id": "calendar-0",
+                "type": "medium",
+                "hp": 60,
+                "expiresAfterWave": 8
+              },
+              {
+                "id": "calendar-3",
+                "type": "heavy",
+                "hp": 120,
+                "expiresAfterWave": 9
+              },
+              {
+                "id": "calendar-4",
+                "type": "heavy",
+                "hp": 120,
+                "expiresAfterWave": 9
+              }
+            ],
+            "removed": [
+              {
+                "reason": "destroyed_by_enemy",
+                "wreckId": "calendar-1",
+                "battleSeconds": 144.31666666667365
+              },
+              {
+                "reason": "destroyed_by_enemy",
+                "wreckId": "calendar-2",
+                "battleSeconds": 162.2166666666879
+              }
+            ],
             "routeDecisions": {
               "breach": 4,
               "detour": 23,
               "unreachable": 6
             },
-            "wrecksAfter": [
-              "calendar-0",
-              "calendar-3",
-              "calendar-4"
-            ]
+            "pending": []
           }
         },
         "oneUsefulSpent": {
@@ -5565,22 +8305,98 @@
             }
           },
           "outcome": {
-            "ticks": 1786,
-            "phase": "lost",
-            "baseHp": 0,
+            "horizonTicks": 7200,
+            "observedTicks": 1786,
+            "input": {
+              "stepSeconds": 0.016666666666666666,
+              "held": {}
+            },
+            "firstBaseShot": {
+              "tick": 1079,
+              "lane": "C",
+              "enemyId": "e1056",
+              "type": "light",
+              "position": {
+                "x": 10.653064082536583,
+                "y": 8.348323590984128
+              },
+              "bulletId": "b1156"
+            },
+            "firstShots": {
+              "C": {
+                "tick": 1079,
+                "lane": "C",
+                "enemyId": "e1056",
+                "type": "light",
+                "position": {
+                  "x": 10.653064082536583,
+                  "y": 8.348323590984128
+                },
+                "bulletId": "b1156"
+              },
+              "A": {
+                "tick": 1190,
+                "lane": "A",
+                "enemyId": "e1151",
+                "type": "heavy",
+                "position": {
+                  "x": 0.6596527107645931,
+                  "y": 5.133686490554697
+                },
+                "bulletId": "b1161"
+              },
+              "B": {
+                "tick": 1778,
+                "lane": "B",
+                "enemyId": "e1152",
+                "type": "light",
+                "position": {
+                  "x": 10.996493255216862,
+                  "y": 11.375472783345238
+                },
+                "bulletId": "b1264"
+              }
+            },
             "firstDamage": {
               "tick": 1114,
               "hpBefore": 189,
               "hpAfter": 181
             },
+            "phase": "lost",
+            "baseHp": 0,
+            "playerHp": 60,
+            "playerAlive": true,
+            "wrecksAfter": [
+              {
+                "id": "calendar-4",
+                "type": "heavy",
+                "hp": 120,
+                "expiresAfterWave": 9
+              }
+            ],
+            "removed": [
+              {
+                "reason": "destroyed_by_enemy",
+                "wreckId": "calendar-1",
+                "battleSeconds": 144.31666666667365
+              },
+              {
+                "reason": "destroyed_by_enemy",
+                "wreckId": "calendar-2",
+                "battleSeconds": 162.2166666666879
+              },
+              {
+                "reason": "destroyed_by_enemy",
+                "wreckId": "calendar-3",
+                "battleSeconds": 166.15000000002436
+              }
+            ],
             "routeDecisions": {
               "breach": 8,
               "detour": 36,
               "unreachable": 6
             },
-            "wrecksAfter": [
-              "calendar-4"
-            ]
+            "pending": []
           }
         },
         "oneOlderExpired": {
@@ -5671,23 +8487,121 @@
             }
           },
           "outcome": {
-            "ticks": 1499,
-            "phase": "lost",
-            "baseHp": 0,
+            "horizonTicks": 7200,
+            "observedTicks": 1499,
+            "input": {
+              "stepSeconds": 0.016666666666666666,
+              "held": {}
+            },
+            "firstBaseShot": {
+              "tick": 992,
+              "lane": "A",
+              "enemyId": "e1151",
+              "type": "heavy",
+              "position": {
+                "x": 5.875182114225499,
+                "y": 4.369572996080132
+              },
+              "bulletId": "b1155"
+            },
+            "firstShots": {
+              "A": {
+                "tick": 992,
+                "lane": "A",
+                "enemyId": "e1151",
+                "type": "heavy",
+                "position": {
+                  "x": 5.875182114225499,
+                  "y": 4.369572996080132
+                },
+                "bulletId": "b1155"
+              },
+              "C": {
+                "tick": 1079,
+                "lane": "C",
+                "enemyId": "e1056",
+                "type": "light",
+                "position": {
+                  "x": 10.653064082536583,
+                  "y": 8.348323590984128
+                },
+                "bulletId": "b1156"
+              },
+              "B": {
+                "tick": 1398,
+                "lane": "B",
+                "enemyId": "e1147",
+                "type": "medium",
+                "position": {
+                  "x": 2.2367872484443585,
+                  "y": 16.87466046758237
+                },
+                "bulletId": "b1474"
+              }
+            },
             "firstDamage": {
               "tick": 1027,
               "hpBefore": 164,
               "hpAfter": 144
             },
+            "phase": "lost",
+            "baseHp": 0,
+            "playerHp": 60,
+            "playerAlive": true,
+            "wrecksAfter": [
+              {
+                "id": "calendar-0",
+                "type": "medium",
+                "hp": 60,
+                "expiresAfterWave": 8
+              },
+              {
+                "id": "calendar-3",
+                "type": "heavy",
+                "hp": 120,
+                "expiresAfterWave": 9
+              },
+              {
+                "id": "calendar-4",
+                "type": "heavy",
+                "hp": 120,
+                "expiresAfterWave": 9
+              }
+            ],
+            "removed": [
+              {
+                "reason": "destroyed_by_enemy",
+                "wreckId": "calendar-1",
+                "battleSeconds": 144.33333333334033
+              }
+            ],
             "routeDecisions": {
               "breach": 2,
               "detour": 11,
               "unreachable": 3
             },
-            "wrecksAfter": [
-              "calendar-0",
-              "calendar-3",
-              "calendar-4"
+            "pending": [
+              {
+                "at": 18.15,
+                "lane": "A",
+                "type": "medium",
+                "groupIndex": 0,
+                "first": false
+              },
+              {
+                "at": 20.65,
+                "lane": "A",
+                "type": "light",
+                "groupIndex": 0,
+                "first": false
+              },
+              {
+                "at": 23.15,
+                "lane": "A",
+                "type": "light",
+                "groupIndex": 0,
+                "first": false
+              }
             ]
           }
         },
@@ -5703,16 +8617,79 @@
           },
           "action": null,
           "outcome": {
-            "ticks": 1261,
-            "phase": "lost",
-            "baseHp": 0,
+            "horizonTicks": 7200,
+            "observedTicks": 1261,
+            "input": {
+              "stepSeconds": 0.016666666666666666,
+              "held": {}
+            },
+            "firstBaseShot": {
+              "tick": 952,
+              "lane": "C",
+              "enemyId": "e1056",
+              "type": "medium",
+              "position": {
+                "x": 9.631891627592218,
+                "y": 8.736005918009052
+              },
+              "bulletId": "b1066"
+            },
+            "firstShots": {
+              "C": {
+                "tick": 952,
+                "lane": "C",
+                "enemyId": "e1056",
+                "type": "medium",
+                "position": {
+                  "x": 9.631891627592218,
+                  "y": 8.736005918009052
+                },
+                "bulletId": "b1066"
+              },
+              "A": {
+                "tick": 996,
+                "lane": "A",
+                "enemyId": "e1061",
+                "type": "heavy",
+                "position": {
+                  "x": 5.91232603761809,
+                  "y": 4.4328035799204155
+                },
+                "bulletId": "b1069"
+              },
+              "B": {
+                "tick": 1112,
+                "lane": "B",
+                "enemyId": "e1058",
+                "type": "medium",
+                "position": {
+                  "x": 9.988452478014324,
+                  "y": 11.376322874808201
+                },
+                "bulletId": "b1075"
+              }
+            },
             "firstDamage": {
               "tick": 981,
               "hpBefore": 164,
               "hpAfter": 152
             },
+            "phase": "lost",
+            "baseHp": 0,
+            "playerHp": 12,
+            "playerAlive": true,
+            "wrecksAfter": [],
+            "removed": [],
             "routeDecisions": {},
-            "wrecksAfter": []
+            "pending": [
+              {
+                "at": 23.15,
+                "lane": "A",
+                "type": "light",
+                "groupIndex": 0,
+                "first": false
+              }
+            ]
           }
         }
       }

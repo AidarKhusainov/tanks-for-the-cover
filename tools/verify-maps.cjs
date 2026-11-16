@@ -202,7 +202,8 @@ function replayPreparation(core, snapshot, htmlSha256) {
       assert.equal(result.ok,true,`${method} failed for ${args.join(', ')}`);
       return {method,args,result};
     });
-    report.branches[name] = {available:true,actions:results,after:status(replay)};
+    const after = status(replay);
+    report.branches[name] = {available:true,actions:results,after,battle:observeIdleBattle(replay)};
   };
   branch('keepRecorded',[]);
   if (wave === 2) {
@@ -256,21 +257,41 @@ function calendarWrecks(core, game) {
 function observeIdleBattle(game) {
   const damage = [];
   const beforeEvents = game._attemptEvents.length;
-  assert(game.startWave());
+  const firstShots = {};
+  let firstBaseShot = null;
   let tick = 0;
+  const shoot = game._shoot;
+  game._shoot = function (shooter, aim, team, speed, shotDamage, range) {
+    const lane = shooter.lane;
+    const line = team === 'enemy' && lane && !firstShots[lane]
+      ? this._firstCollision(shooter.x,shooter.y,aim.x,aim.y,shooter.id)
+      : null;
+    const released = shoot.call(this,shooter,aim,team,speed,shotDamage,range);
+    if (released && line?.kind === 'base' && Math.hypot(aim.x-shooter.x,aim.y-shooter.y)*line.t <= range+1e-7) {
+      const result = {tick,lane,enemyId:shooter.id,type:shooter.type,position:{x:shooter.x,y:shooter.y},
+        bulletId:this.bullets.at(-1).id};
+      firstShots[lane] = result;
+      firstBaseShot ??= result;
+    }
+    return released;
+  };
+  assert(game.startWave());
   while (tick < HORIZON && (game.phase === 'battle' || game.phase === 'settling')) {
     const before = game.base.hp;
-    game.update(STEP,{});
     tick++;
+    game.update(STEP,{});
     if (game.base.hp !== before) damage.push({tick,hpBefore:before,hpAfter:game.base.hp});
   }
-  const decisions = game._attemptEvents.slice(beforeEvents).filter(event => event.type === 'ai_route')
+  const events = game._attemptEvents.slice(beforeEvents);
+  const decisions = events.filter(event => event.type === 'ai_route')
     .reduce((counts,event) => {
       counts[event.decision] = (counts[event.decision] ?? 0) + 1;
       return counts;
     },{});
-  return {observedTicks:tick,damage,decisions,phase:game.phase,baseHp:game.base.hp,playerHp:game.player.hp,
-    wrecksAfter:game.wrecks,pending:game._spawnQueue};
+  return {horizonTicks:HORIZON,observedTicks:tick,input:{stepSeconds:STEP,held:{}},
+    firstBaseShot,firstShots,firstDamage:damage[0] ?? null,damage,decisions,
+    phase:game.phase,baseHp:game.base.hp,playerHp:game.player.hp,playerAlive:game.player.alive,
+    wrecksAfter:game.wrecks,removed:events.filter(event => event.type === 'wreck_removed'),pending:game._spawnQueue};
 }
 
 function replayCalendarVariants(core, snapshot, htmlSha256) {
