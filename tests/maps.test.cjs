@@ -165,10 +165,6 @@ function follow(game, points) {
 }
 
 test('both protected returns have an exit traversable with ordinary movement', () => {
-  const exits = {
-    magnetic: [[16.4, 15.85], [13.65, 15.85], [13.65, 17.2], [11.75, 17.2]],
-    city: [[2, 14.8], [2, 11.5]]
-  };
   for (const [id, config] of Object.entries(MAP_CONFIGS)) {
     const game = new Game(config);
     assert(game._positionFree(game.player.x, game.player.y, game.player, true));
@@ -178,8 +174,50 @@ test('both protected returns have an exit traversable with ordinary movement', (
     }
     const { x, y } = game.player;
     assert.equal(game._firstCollision(x, y - 2, x, y, 'enemy').kind, 'wall');
-    follow(game, exits[id]);
+    if (id === 'magnetic') {
+      follow(game, [[16.4, 15.85], [13.65, 15.85], [13.65, 17.2], [11.75, 17.2]]);
+    } else {
+      // Hold each key against the wall, so exiting needs no precisely timed turns.
+      for (const [x, y, ticks] of [[0, -1, 60], [-1, 0, 60], [0, 1, 60], [-1, 0, 36], [0, -1, 54]]) {
+        for (let tick = 0; tick < ticks; tick++) game.update(1 / 60, { x, y });
+      }
+      assert(game.player.x < 2 && game.player.y < 12, 'held WASD movement exits to the west street');
+    }
   }
+});
+
+test('city return and its fallback positions are shielded from the west street', () => {
+  const game = new Game(MAP_CONFIGS.city);
+  assert(game._navigationSegmentFree(1.8, 16.8, 25.5, 16.8, false), 'the outer street stays open');
+  const shooter = { id: 'west-light', x: 1.8, y: 14.8, type: 'light', r: TANK_RADIUS, hp: 20 };
+  assert(game._positionFree(shooter.x, shooter.y, shooter, false));
+  game.enemies.push(shooter);
+  game.phase = 'battle';
+  assert(game._shoot(shooter, game.player, 'enemy', 10, 8, 6));
+  game._updateBullets(.6);
+  assert.equal(game.player.hp, 60, 'a light on the exterior street cannot shoot the returned player');
+
+  const { x, y, w, h } = game.config.PLAYER_RETURN_AREA;
+  for (const point of [
+    game.config.PLAYER_START, { x, y }, { x: x + w, y }, { x, y: y + h }, { x: x + w, y: y + h }
+  ]) {
+    assert(game._positionFree(point.x, point.y, game.player, true));
+    for (const ys of [14.1, 14.8, 15.2, 16.8]) {
+      for (const targetY of [point.y - TANK_RADIUS, point.y, point.y + TANK_RADIUS]) {
+        assert.equal(game._firstCollision(1.8, ys, point.x, targetY, shooter.id)?.kind, 'wall');
+      }
+    }
+  }
+
+  const preferred = game.config.PLAYER_START;
+  game.wrecks = [{ ...preferred, id: 'blocked-return', type: 'medium', hp: 60, r: TANK_RADIUS }];
+  Object.assign(game.player, { alive: false, respawn: 0.1 });
+  game.update(0.11);
+  assert.equal(game.player.alive, true);
+  assert.equal(game.player.hp, 60);
+  const returned = game.player;
+  assert(returned.x >= x && returned.x <= x + w && returned.y >= y && returned.y <= y + h);
+  assert(Math.hypot(returned.x - preferred.x, returned.y - preferred.y) >= 2 * TANK_RADIUS);
 });
 
 function clearSegment(game, a, b) {

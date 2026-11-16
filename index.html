@@ -280,8 +280,8 @@
   const CITY = {
     mapId:'city', mapName:'Город', mapVersion:1, AI_MODE:'roles', SPAWN_INTERVAL:2.5,
     BASE_RECT:{ x:4.1, y:10.3, w:1.8, h:1.8 },
-    PLAYER_START:{ x:5, y:14.8 },
-    PLAYER_RETURN_AREA:{ x:4, y:14, w:2.8, h:1.1 },
+    PLAYER_START:{ x:6.85, y:15.25 },
+    PLAYER_RETURN_AREA:{ x:5.53, y:15.23, w:1.52, h:.06 },
     WALLS:[
       wall(2.8, 3.5, 2.4, 4.5, 'city'),
       wall(6.8, 3.5, 2.8, 4.5, 'city'),
@@ -291,9 +291,11 @@
       wall(12.8, 8.4, 1.6, 5, 'city'),
       wall(8, 15, 16, 1, 'city'),
       wall(3, 13, 5, .4, 'bunker'),
-      wall(7.6, 13, .4, 3, 'bunker'),
-      wall(3, 15.6, 5, .4, 'bunker'),
-      wall(3, 13, .4, 1.2, 'bunker'),
+      wall(7.6, 13, .4, 3.2, 'bunker'),
+      wall(3, 15.8, 5, .4, 'bunker'),
+      wall(3, 13, .4, 1.59, 'bunker'),
+      // The inner wall blocks fire through the west opening and leaves an exit around its north end.
+      wall(4.65, 14.62, .3, 1.18, 'bunker'),
       wall(12.4, 8.4, .4, 6.6, 'city'),
     ],
     SPAWNS:{
