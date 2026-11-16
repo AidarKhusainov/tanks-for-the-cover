@@ -1,0 +1,4027 @@
+{
+  "schemaVersion": 1,
+  "mode": "diagnostic-campaign-calibration",
+  "htmlSha256": "ffdd60f1155686d14cedc57c49157eef076a530d1e8f16f196c1967d9c33a83c",
+  "combatCommit": "16358105cdaf3a94b64122dc87769a451ef3b0d9",
+  "ticksPerSecond": 60,
+  "horizonTicks": 7200,
+  "rules": "Absent measurement player, suppressed automatic respawn, base HP held at 240 after real contact; no wrecks.",
+  "maps": {
+    "magnetic": {
+      "mapVersion": 1,
+      "configurationSha256": "d0dd8e20a07f38aa8d036afd32943510e1e2372f8ab6231327b6c48045c90ff2",
+      "Q": {
+        "C>B": {
+          "start": {
+            "x": 14,
+            "y": 9.45
+          },
+          "end": {
+            "x": 21.6,
+            "y": 10.2
+          },
+          "ticks": 185,
+          "commands": [
+            {
+              "x": 0,
+              "y": 1,
+              "ticks": 41
+            },
+            {
+              "x": 1,
+              "y": 0,
+              "ticks": 114
+            },
+            {
+              "x": 0,
+              "y": -1,
+              "ticks": 30
+            }
+          ],
+          "ok": true,
+          "waypoints": [
+            {
+              "x": 14,
+              "y": 9.45
+            },
+            {
+              "x": 14,
+              "y": 12.2
+            },
+            {
+              "x": 21.6,
+              "y": 12.2
+            },
+            {
+              "x": 21.6,
+              "y": 10.2
+            }
+          ],
+          "arrival": {
+            "x": 21.599999999999973,
+            "y": 10.18333333333333
+          },
+          "seconds": 3.0833333333333335
+        },
+        "B>C": {
+          "start": {
+            "x": 21.6,
+            "y": 10.2
+          },
+          "end": {
+            "x": 14,
+            "y": 9.45
+          },
+          "ticks": 185,
+          "commands": [
+            {
+              "x": 0,
+              "y": 1,
+              "ticks": 30
+            },
+            {
+              "x": -1,
+              "y": 0,
+              "ticks": 114
+            },
+            {
+              "x": 0,
+              "y": -1,
+              "ticks": 41
+            }
+          ],
+          "ok": true,
+          "waypoints": [
+            {
+              "x": 21.6,
+              "y": 10.2
+            },
+            {
+              "x": 21.6,
+              "y": 12.2
+            },
+            {
+              "x": 14,
+              "y": 12.2
+            },
+            {
+              "x": 14,
+              "y": 9.45
+            }
+          ],
+          "arrival": {
+            "x": 14.000000000000028,
+            "y": 9.466666666666669
+          },
+          "seconds": 3.0833333333333335
+        },
+        "A>C": {
+          "start": {
+            "x": 7.6,
+            "y": 10.2
+          },
+          "end": {
+            "x": 14,
+            "y": 9.45
+          },
+          "ticks": 167,
+          "commands": [
+            {
+              "x": 0,
+              "y": 1,
+              "ticks": 30
+            },
+            {
+              "x": 1,
+              "y": 0,
+              "ticks": 96
+            },
+            {
+              "x": 0,
+              "y": -1,
+              "ticks": 41
+            }
+          ],
+          "ok": true,
+          "waypoints": [
+            {
+              "x": 7.6,
+              "y": 10.2
+            },
+            {
+              "x": 7.6,
+              "y": 12.2
+            },
+            {
+              "x": 14,
+              "y": 12.2
+            },
+            {
+              "x": 14,
+              "y": 9.45
+            }
+          ],
+          "arrival": {
+            "x": 13.999999999999977,
+            "y": 9.466666666666669
+          },
+          "seconds": 2.783333333333333
+        },
+        "C>A": {
+          "start": {
+            "x": 14,
+            "y": 9.45
+          },
+          "end": {
+            "x": 7.6,
+            "y": 10.2
+          },
+          "ticks": 167,
+          "commands": [
+            {
+              "x": 0,
+              "y": 1,
+              "ticks": 41
+            },
+            {
+              "x": -1,
+              "y": 0,
+              "ticks": 96
+            },
+            {
+              "x": 0,
+              "y": -1,
+              "ticks": 30
+            }
+          ],
+          "ok": true,
+          "waypoints": [
+            {
+              "x": 14,
+              "y": 9.45
+            },
+            {
+              "x": 14,
+              "y": 12.2
+            },
+            {
+              "x": 7.6,
+              "y": 12.2
+            },
+            {
+              "x": 7.6,
+              "y": 10.2
+            }
+          ],
+          "arrival": {
+            "x": 7.600000000000023,
+            "y": 10.18333333333333
+          },
+          "seconds": 2.783333333333333
+        },
+        "A>B": {
+          "start": {
+            "x": 7.6,
+            "y": 10.2
+          },
+          "end": {
+            "x": 21.6,
+            "y": 10.2
+          },
+          "ticks": 270,
+          "commands": [
+            {
+              "x": 0,
+              "y": 1,
+              "ticks": 30
+            },
+            {
+              "x": 1,
+              "y": 0,
+              "ticks": 210
+            },
+            {
+              "x": 0,
+              "y": -1,
+              "ticks": 30
+            }
+          ],
+          "ok": true,
+          "waypoints": [
+            {
+              "x": 7.6,
+              "y": 10.2
+            },
+            {
+              "x": 7.6,
+              "y": 12.2
+            },
+            {
+              "x": 21.6,
+              "y": 12.2
+            },
+            {
+              "x": 21.6,
+              "y": 10.2
+            }
+          ],
+          "arrival": {
+            "x": 21.59999999999995,
+            "y": 10.2
+          },
+          "seconds": 4.5
+        }
+      },
+      "waves": [
+        {
+          "wave": 1,
+          "arrows": [],
+          "initialS": {
+            "A": 0
+          },
+          "corrections": [],
+          "groups": [
+            {
+              "lane": "A",
+              "types": [
+                "light",
+                "medium",
+                "light",
+                "light"
+              ],
+              "N": 4,
+              "J": 6,
+              "K": 540,
+              "T": 225,
+              "S": 0,
+              "F": 225,
+              "FMinusStartPlusSolo": 0,
+              "solo": {
+                "shot": {
+                  "tick": 225,
+                  "enemyId": "e1",
+                  "type": "light",
+                  "position": {
+                    "x": 7.374876986748812,
+                    "y": 11.203043472305644
+                  },
+                  "aim": {
+                    "x": 13.1,
+                    "y": 12.861552981180866
+                  },
+                  "distanceToBase": 5.960510658315098,
+                  "range": 6,
+                  "bulletId": "b3"
+                },
+                "hit": {
+                  "tick": 260,
+                  "bulletId": "b3",
+                  "enemyId": "e1",
+                  "position": {
+                    "x": 13.1,
+                    "y": 12.861552981180848
+                  }
+                },
+                "spawnTicks": [
+                  0,
+                  150,
+                  300,
+                  450
+                ]
+              },
+              "combined": {
+                "shot": {
+                  "tick": 225,
+                  "enemyId": "e1",
+                  "type": "light",
+                  "position": {
+                    "x": 7.374876986748812,
+                    "y": 11.203043472305644
+                  },
+                  "aim": {
+                    "x": 13.1,
+                    "y": 12.861552981180866
+                  },
+                  "distanceToBase": 5.960510658315098,
+                  "range": 6,
+                  "bulletId": "b3"
+                },
+                "hit": {
+                  "tick": 260,
+                  "bulletId": "b3",
+                  "enemyId": "e1",
+                  "position": {
+                    "x": 13.1,
+                    "y": 12.861552981180848
+                  }
+                },
+                "spawnTicks": [
+                  0,
+                  150,
+                  300,
+                  450
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "wave": 2,
+          "arrows": [],
+          "initialS": {
+            "A": 0
+          },
+          "corrections": [],
+          "groups": [
+            {
+              "lane": "A",
+              "types": [
+                "medium",
+                "light",
+                "medium",
+                "light",
+                "light"
+              ],
+              "N": 5,
+              "J": 9,
+              "K": 744,
+              "T": 374,
+              "S": 0,
+              "F": 374,
+              "FMinusStartPlusSolo": 0,
+              "solo": {
+                "shot": {
+                  "tick": 374,
+                  "enemyId": "e2",
+                  "type": "light",
+                  "position": {
+                    "x": 7.374876986748812,
+                    "y": 11.203043472305644
+                  },
+                  "aim": {
+                    "x": 13.1,
+                    "y": 12.861552981180866
+                  },
+                  "distanceToBase": 5.960510658315098,
+                  "range": 6,
+                  "bulletId": "b4"
+                },
+                "hit": {
+                  "tick": 407,
+                  "bulletId": "b5",
+                  "enemyId": "e1",
+                  "position": {
+                    "x": 13.1,
+                    "y": 12.800000000000013
+                  }
+                },
+                "spawnTicks": [
+                  0,
+                  150,
+                  300,
+                  450,
+                  600
+                ]
+              },
+              "combined": {
+                "shot": {
+                  "tick": 374,
+                  "enemyId": "e2",
+                  "type": "light",
+                  "position": {
+                    "x": 7.374876986748812,
+                    "y": 11.203043472305644
+                  },
+                  "aim": {
+                    "x": 13.1,
+                    "y": 12.861552981180866
+                  },
+                  "distanceToBase": 5.960510658315098,
+                  "range": 6,
+                  "bulletId": "b4"
+                },
+                "hit": {
+                  "tick": 407,
+                  "bulletId": "b5",
+                  "enemyId": "e1",
+                  "position": {
+                    "x": 13.1,
+                    "y": 12.800000000000013
+                  }
+                },
+                "spawnTicks": [
+                  0,
+                  150,
+                  300,
+                  450,
+                  600
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "wave": 3,
+          "arrows": [],
+          "initialS": {
+            "C": 0
+          },
+          "corrections": [],
+          "groups": [
+            {
+              "lane": "C",
+              "types": [
+                "light",
+                "medium",
+                "light",
+                "medium",
+                "light",
+                "light"
+              ],
+              "N": 6,
+              "J": 10,
+              "K": 912,
+              "T": 124,
+              "S": 0,
+              "F": 124,
+              "FMinusStartPlusSolo": 0,
+              "solo": {
+                "shot": {
+                  "tick": 124,
+                  "enemyId": "e1",
+                  "type": "light",
+                  "position": {
+                    "x": 13.87608001709909,
+                    "y": 6.828559264739163
+                  },
+                  "aim": {
+                    "x": 13.87608001709909,
+                    "y": 12.8
+                  },
+                  "distanceToBase": 5.971440735260837,
+                  "range": 6,
+                  "bulletId": "b2"
+                },
+                "hit": {
+                  "tick": 159,
+                  "bulletId": "b2",
+                  "enemyId": "e1",
+                  "position": {
+                    "x": 13.87608001709909,
+                    "y": 12.8
+                  }
+                },
+                "spawnTicks": [
+                  0,
+                  150,
+                  300,
+                  450,
+                  600,
+                  750
+                ]
+              },
+              "combined": {
+                "shot": {
+                  "tick": 124,
+                  "enemyId": "e1",
+                  "type": "light",
+                  "position": {
+                    "x": 13.87608001709909,
+                    "y": 6.828559264739163
+                  },
+                  "aim": {
+                    "x": 13.87608001709909,
+                    "y": 12.8
+                  },
+                  "distanceToBase": 5.971440735260837,
+                  "range": 6,
+                  "bulletId": "b2"
+                },
+                "hit": {
+                  "tick": 159,
+                  "bulletId": "b2",
+                  "enemyId": "e1",
+                  "position": {
+                    "x": 13.87608001709909,
+                    "y": 12.8
+                  }
+                },
+                "spawnTicks": [
+                  0,
+                  150,
+                  300,
+                  450,
+                  600,
+                  750
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "wave": 4,
+          "arrows": [
+            {
+              "from": "C",
+              "to": "B",
+              "mode": "U",
+              "Qticks": 185,
+              "G": 905,
+              "L": 905,
+              "U": 965,
+              "actual": 949,
+              "offsetFromG": 44,
+              "inWindow": true
+            }
+          ],
+          "initialS": {
+            "C": 0,
+            "B": 903
+          },
+          "corrections": [
+            {
+              "pass": 1,
+              "from": "C",
+              "to": "B",
+              "actual": 904,
+              "midpoint": 935,
+              "delta": 45,
+              "before": {
+                "C": 0,
+                "B": 903
+              },
+              "after": {
+                "C": 0,
+                "B": 948
+              }
+            }
+          ],
+          "groups": [
+            {
+              "lane": "C",
+              "types": [
+                "medium",
+                "heavy",
+                "light",
+                "light"
+              ],
+              "N": 4,
+              "J": 11,
+              "K": 630,
+              "T": 224,
+              "S": 0,
+              "F": 224,
+              "FMinusStartPlusSolo": 0,
+              "solo": {
+                "shot": {
+                  "tick": 224,
+                  "enemyId": "e1",
+                  "type": "medium",
+                  "position": {
+                    "x": 13.876134919872529,
+                    "y": 7.817119086501111
+                  },
+                  "aim": {
+                    "x": 13.876134919872529,
+                    "y": 12.8
+                  },
+                  "distanceToBase": 4.98288091349889,
+                  "range": 5,
+                  "bulletId": "b3"
+                },
+                "hit": {
+                  "tick": 253,
+                  "bulletId": "b3",
+                  "enemyId": "e1",
+                  "position": {
+                    "x": 13.876134919872529,
+                    "y": 12.8
+                  }
+                },
+                "spawnTicks": [
+                  0,
+                  150,
+                  300,
+                  450
+                ]
+              },
+              "combined": {
+                "shot": {
+                  "tick": 224,
+                  "enemyId": "e1",
+                  "type": "medium",
+                  "position": {
+                    "x": 13.876134919872529,
+                    "y": 7.817119086501111
+                  },
+                  "aim": {
+                    "x": 13.876134919872529,
+                    "y": 12.8
+                  },
+                  "distanceToBase": 4.98288091349889,
+                  "range": 5,
+                  "bulletId": "b3"
+                },
+                "hit": {
+                  "tick": 253,
+                  "bulletId": "b3",
+                  "enemyId": "e1",
+                  "position": {
+                    "x": 13.876134919872529,
+                    "y": 12.8
+                  }
+                },
+                "spawnTicks": [
+                  0,
+                  150,
+                  300,
+                  450
+                ]
+              }
+            },
+            {
+              "lane": "B",
+              "types": [
+                "light",
+                "medium",
+                "light",
+                "medium"
+              ],
+              "N": 4,
+              "J": 8,
+              "K": 576,
+              "T": 226,
+              "S": 948,
+              "F": 1173,
+              "FMinusStartPlusSolo": -1,
+              "solo": {
+                "shot": {
+                  "tick": 226,
+                  "enemyId": "e1",
+                  "type": "light",
+                  "position": {
+                    "x": 20.64199994912842,
+                    "y": 11.202821028058327
+                  },
+                  "aim": {
+                    "x": 14.9,
+                    "y": 12.840504735899824
+                  },
+                  "distanceToBase": 5.970977419377855,
+                  "range": 6,
+                  "bulletId": "b3"
+                },
+                "hit": {
+                  "tick": 261,
+                  "bulletId": "b3",
+                  "enemyId": "e1",
+                  "position": {
+                    "x": 14.9,
+                    "y": 12.840504735899847
+                  }
+                },
+                "spawnTicks": [
+                  0,
+                  150,
+                  300,
+                  450
+                ]
+              },
+              "combined": {
+                "shot": {
+                  "tick": 1173,
+                  "enemyId": "e27",
+                  "type": "light",
+                  "position": {
+                    "x": 20.64199994912842,
+                    "y": 11.202821028058327
+                  },
+                  "aim": {
+                    "x": 14.9,
+                    "y": 12.840504735899824
+                  },
+                  "distanceToBase": 5.970977419377855,
+                  "range": 6,
+                  "bulletId": "b36"
+                },
+                "hit": {
+                  "tick": 1208,
+                  "bulletId": "b36",
+                  "enemyId": "e27",
+                  "position": {
+                    "x": 14.9,
+                    "y": 12.840504735899847
+                  }
+                },
+                "spawnTicks": [
+                  948,
+                  1098,
+                  1248,
+                  1398
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "wave": 5,
+          "arrows": [
+            {
+              "from": "B",
+              "to": "C",
+              "mode": "U",
+              "Qticks": 185,
+              "G": 905,
+              "L": 905,
+              "U": 965,
+              "actual": 949,
+              "offsetFromG": 44,
+              "inWindow": true
+            }
+          ],
+          "initialS": {
+            "B": 0,
+            "C": 1171
+          },
+          "corrections": [
+            {
+              "pass": 1,
+              "from": "B",
+              "to": "C",
+              "actual": 904,
+              "midpoint": 935,
+              "delta": 45,
+              "before": {
+                "B": 0,
+                "C": 1171
+              },
+              "after": {
+                "B": 0,
+                "C": 1216
+              }
+            }
+          ],
+          "groups": [
+            {
+              "lane": "B",
+              "types": [
+                "medium",
+                "heavy",
+                "light",
+                "light"
+              ],
+              "N": 4,
+              "J": 11,
+              "K": 630,
+              "T": 390,
+              "S": 0,
+              "F": 390,
+              "FMinusStartPlusSolo": 0,
+              "solo": {
+                "shot": {
+                  "tick": 390,
+                  "enemyId": "e1",
+                  "type": "medium",
+                  "position": {
+                    "x": 19.879777547467544,
+                    "y": 12.364050444745484
+                  },
+                  "aim": {
+                    "x": 14.9,
+                    "y": 12.8
+                  },
+                  "distanceToBase": 4.998823505284867,
+                  "range": 5,
+                  "bulletId": "b4"
+                },
+                "hit": {
+                  "tick": 419,
+                  "bulletId": "b4",
+                  "enemyId": "e1",
+                  "position": {
+                    "x": 14.9,
+                    "y": 12.800000000000008
+                  }
+                },
+                "spawnTicks": [
+                  0,
+                  150,
+                  300,
+                  450
+                ]
+              },
+              "combined": {
+                "shot": {
+                  "tick": 390,
+                  "enemyId": "e1",
+                  "type": "medium",
+                  "position": {
+                    "x": 19.879777547467544,
+                    "y": 12.364050444745484
+                  },
+                  "aim": {
+                    "x": 14.9,
+                    "y": 12.8
+                  },
+                  "distanceToBase": 4.998823505284867,
+                  "range": 5,
+                  "bulletId": "b4"
+                },
+                "hit": {
+                  "tick": 419,
+                  "bulletId": "b4",
+                  "enemyId": "e1",
+                  "position": {
+                    "x": 14.9,
+                    "y": 12.800000000000008
+                  }
+                },
+                "spawnTicks": [
+                  0,
+                  150,
+                  300,
+                  450
+                ]
+              }
+            },
+            {
+              "lane": "C",
+              "types": [
+                "light",
+                "medium",
+                "light",
+                "light"
+              ],
+              "N": 4,
+              "J": 6,
+              "K": 540,
+              "T": 124,
+              "S": 1216,
+              "F": 1339,
+              "FMinusStartPlusSolo": -1,
+              "solo": {
+                "shot": {
+                  "tick": 124,
+                  "enemyId": "e1",
+                  "type": "light",
+                  "position": {
+                    "x": 13.87608001709909,
+                    "y": 6.828559264739163
+                  },
+                  "aim": {
+                    "x": 13.87608001709909,
+                    "y": 12.8
+                  },
+                  "distanceToBase": 5.971440735260837,
+                  "range": 6,
+                  "bulletId": "b2"
+                },
+                "hit": {
+                  "tick": 159,
+                  "bulletId": "b2",
+                  "enemyId": "e1",
+                  "position": {
+                    "x": 13.87608001709909,
+                    "y": 12.8
+                  }
+                },
+                "spawnTicks": [
+                  0,
+                  150,
+                  300,
+                  450
+                ]
+              },
+              "combined": {
+                "shot": {
+                  "tick": 1339,
+                  "enemyId": "e29",
+                  "type": "light",
+                  "position": {
+                    "x": 13.87608001709909,
+                    "y": 6.828559264739163
+                  },
+                  "aim": {
+                    "x": 13.87608001709909,
+                    "y": 12.8
+                  },
+                  "distanceToBase": 5.971440735260837,
+                  "range": 6,
+                  "bulletId": "b35"
+                },
+                "hit": {
+                  "tick": 1374,
+                  "bulletId": "b35",
+                  "enemyId": "e29",
+                  "position": {
+                    "x": 13.87608001709909,
+                    "y": 12.8
+                  }
+                },
+                "spawnTicks": [
+                  1216,
+                  1366,
+                  1516,
+                  1666
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "wave": 6,
+          "arrows": [
+            {
+              "from": "A",
+              "to": "C",
+              "mode": "D",
+              "Qticks": 167,
+              "G": 257,
+              "L": 257,
+              "U": 317,
+              "actual": 301,
+              "offsetFromG": 44,
+              "inWindow": true
+            },
+            {
+              "from": "C",
+              "to": "B",
+              "mode": "U",
+              "Qticks": 185,
+              "G": 815,
+              "L": 815,
+              "U": 875,
+              "actual": 845,
+              "offsetFromG": 30,
+              "inWindow": true
+            }
+          ],
+          "initialS": {
+            "A": 0,
+            "C": 258,
+            "B": 921
+          },
+          "corrections": [
+            {
+              "pass": 1,
+              "from": "A",
+              "to": "C",
+              "actual": 256,
+              "midpoint": 287,
+              "delta": 45,
+              "before": {
+                "A": 0,
+                "C": 258,
+                "B": 921
+              },
+              "after": {
+                "A": 0,
+                "C": 303,
+                "B": 921
+              }
+            },
+            {
+              "pass": 1,
+              "from": "C",
+              "to": "B",
+              "actual": 770,
+              "midpoint": 845,
+              "delta": 75,
+              "before": {
+                "A": 0,
+                "C": 303,
+                "B": 921
+              },
+              "after": {
+                "A": 0,
+                "C": 303,
+                "B": 996
+              }
+            }
+          ],
+          "groups": [
+            {
+              "lane": "A",
+              "types": [
+                "light",
+                "medium",
+                "light"
+              ],
+              "N": 3,
+              "J": 5,
+              "K": 372,
+              "T": 225,
+              "S": 0,
+              "F": 225,
+              "FMinusStartPlusSolo": 0,
+              "solo": {
+                "shot": {
+                  "tick": 225,
+                  "enemyId": "e1",
+                  "type": "light",
+                  "position": {
+                    "x": 7.374876986748812,
+                    "y": 11.203043472305644
+                  },
+                  "aim": {
+                    "x": 13.1,
+                    "y": 12.861552981180866
+                  },
+                  "distanceToBase": 5.960510658315098,
+                  "range": 6,
+                  "bulletId": "b3"
+                },
+                "hit": {
+                  "tick": 260,
+                  "bulletId": "b3",
+                  "enemyId": "e1",
+                  "position": {
+                    "x": 13.1,
+                    "y": 12.861552981180848
+                  }
+                },
+                "spawnTicks": [
+                  0,
+                  150,
+                  300
+                ]
+              },
+              "combined": {
+                "shot": {
+                  "tick": 225,
+                  "enemyId": "e1",
+                  "type": "light",
+                  "position": {
+                    "x": 7.374876986748812,
+                    "y": 11.203043472305644
+                  },
+                  "aim": {
+                    "x": 13.1,
+                    "y": 12.861552981180866
+                  },
+                  "distanceToBase": 5.960510658315098,
+                  "range": 6,
+                  "bulletId": "b3"
+                },
+                "hit": {
+                  "tick": 260,
+                  "bulletId": "b3",
+                  "enemyId": "e1",
+                  "position": {
+                    "x": 13.1,
+                    "y": 12.861552981180848
+                  }
+                },
+                "spawnTicks": [
+                  0,
+                  150,
+                  300
+                ]
+              }
+            },
+            {
+              "lane": "C",
+              "types": [
+                "medium",
+                "light",
+                "light",
+                "light"
+              ],
+              "N": 4,
+              "J": 6,
+              "K": 540,
+              "T": 224,
+              "S": 303,
+              "F": 526,
+              "FMinusStartPlusSolo": -1,
+              "solo": {
+                "shot": {
+                  "tick": 224,
+                  "enemyId": "e1",
+                  "type": "medium",
+                  "position": {
+                    "x": 13.876134919872529,
+                    "y": 7.817119086501111
+                  },
+                  "aim": {
+                    "x": 13.876134919872529,
+                    "y": 12.8
+                  },
+                  "distanceToBase": 4.98288091349889,
+                  "range": 5,
+                  "bulletId": "b3"
+                },
+                "hit": {
+                  "tick": 253,
+                  "bulletId": "b3",
+                  "enemyId": "e1",
+                  "position": {
+                    "x": 13.876134919872529,
+                    "y": 12.8
+                  }
+                },
+                "spawnTicks": [
+                  0,
+                  150,
+                  300,
+                  450
+                ]
+              },
+              "combined": {
+                "shot": {
+                  "tick": 526,
+                  "enemyId": "e5",
+                  "type": "medium",
+                  "position": {
+                    "x": 13.876134919872529,
+                    "y": 7.817119086501111
+                  },
+                  "aim": {
+                    "x": 13.876134919872529,
+                    "y": 12.8
+                  },
+                  "distanceToBase": 4.98288091349889,
+                  "range": 5,
+                  "bulletId": "b10"
+                },
+                "hit": {
+                  "tick": 555,
+                  "bulletId": "b10",
+                  "enemyId": "e5",
+                  "position": {
+                    "x": 13.876134919872529,
+                    "y": 12.8
+                  }
+                },
+                "spawnTicks": [
+                  303,
+                  453,
+                  603,
+                  753
+                ]
+              }
+            },
+            {
+              "lane": "B",
+              "types": [
+                "medium",
+                "light",
+                "light"
+              ],
+              "N": 3,
+              "J": 5,
+              "K": 372,
+              "T": 376,
+              "S": 996,
+              "F": 1371,
+              "FMinusStartPlusSolo": -1,
+              "solo": {
+                "shot": {
+                  "tick": 376,
+                  "enemyId": "e2",
+                  "type": "light",
+                  "position": {
+                    "x": 20.63884423519919,
+                    "y": 11.200801061874067
+                  },
+                  "aim": {
+                    "x": 14.9,
+                    "y": 12.853715527985077
+                  },
+                  "distanceToBase": 5.972140268627155,
+                  "range": 6,
+                  "bulletId": "b4"
+                },
+                "hit": {
+                  "tick": 411,
+                  "bulletId": "b4",
+                  "enemyId": "e2",
+                  "position": {
+                    "x": 14.9,
+                    "y": 12.853715527985084
+                  }
+                },
+                "spawnTicks": [
+                  0,
+                  150,
+                  300
+                ]
+              },
+              "combined": {
+                "shot": {
+                  "tick": 1371,
+                  "enemyId": "e47",
+                  "type": "light",
+                  "position": {
+                    "x": 20.64199994912842,
+                    "y": 11.202821028058327
+                  },
+                  "aim": {
+                    "x": 14.9,
+                    "y": 12.840504735899824
+                  },
+                  "distanceToBase": 5.970977419377855,
+                  "range": 6,
+                  "bulletId": "b64"
+                },
+                "hit": {
+                  "tick": 1406,
+                  "bulletId": "b64",
+                  "enemyId": "e47",
+                  "position": {
+                    "x": 14.9,
+                    "y": 12.840504735899847
+                  }
+                },
+                "spawnTicks": [
+                  996,
+                  1146,
+                  1296
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "wave": 7,
+          "arrows": [
+            {
+              "from": "B",
+              "to": "C",
+              "mode": "D",
+              "Qticks": 185,
+              "G": 275,
+              "L": 275,
+              "U": 335,
+              "actual": 319,
+              "offsetFromG": 44,
+              "inWindow": true
+            },
+            {
+              "from": "C",
+              "to": "A",
+              "mode": "D",
+              "Qticks": 167,
+              "G": 257,
+              "L": 257,
+              "U": 317,
+              "actual": 287,
+              "offsetFromG": 30,
+              "inWindow": true
+            }
+          ],
+          "initialS": {
+            "B": 0,
+            "C": 277,
+            "A": 380
+          },
+          "corrections": [
+            {
+              "pass": 1,
+              "from": "B",
+              "to": "C",
+              "actual": 274,
+              "midpoint": 305,
+              "delta": 45,
+              "before": {
+                "B": 0,
+                "C": 277,
+                "A": 380
+              },
+              "after": {
+                "B": 0,
+                "C": 322,
+                "A": 380
+              }
+            },
+            {
+              "pass": 1,
+              "from": "C",
+              "to": "A",
+              "actual": 212,
+              "midpoint": 287,
+              "delta": 75,
+              "before": {
+                "B": 0,
+                "C": 322,
+                "A": 380
+              },
+              "after": {
+                "B": 0,
+                "C": 322,
+                "A": 455
+              }
+            }
+          ],
+          "groups": [
+            {
+              "lane": "B",
+              "types": [
+                "light",
+                "heavy",
+                "medium",
+                "light"
+              ],
+              "N": 4,
+              "J": 11,
+              "K": 630,
+              "T": 226,
+              "S": 0,
+              "F": 226,
+              "FMinusStartPlusSolo": 0,
+              "solo": {
+                "shot": {
+                  "tick": 226,
+                  "enemyId": "e1",
+                  "type": "light",
+                  "position": {
+                    "x": 20.64199994912842,
+                    "y": 11.202821028058327
+                  },
+                  "aim": {
+                    "x": 14.9,
+                    "y": 12.840504735899824
+                  },
+                  "distanceToBase": 5.970977419377855,
+                  "range": 6,
+                  "bulletId": "b3"
+                },
+                "hit": {
+                  "tick": 261,
+                  "bulletId": "b3",
+                  "enemyId": "e1",
+                  "position": {
+                    "x": 14.9,
+                    "y": 12.840504735899847
+                  }
+                },
+                "spawnTicks": [
+                  0,
+                  150,
+                  300,
+                  450
+                ]
+              },
+              "combined": {
+                "shot": {
+                  "tick": 226,
+                  "enemyId": "e1",
+                  "type": "light",
+                  "position": {
+                    "x": 20.64199994912842,
+                    "y": 11.202821028058327
+                  },
+                  "aim": {
+                    "x": 14.9,
+                    "y": 12.840504735899824
+                  },
+                  "distanceToBase": 5.970977419377855,
+                  "range": 6,
+                  "bulletId": "b3"
+                },
+                "hit": {
+                  "tick": 261,
+                  "bulletId": "b3",
+                  "enemyId": "e1",
+                  "position": {
+                    "x": 14.9,
+                    "y": 12.840504735899847
+                  }
+                },
+                "spawnTicks": [
+                  0,
+                  150,
+                  300,
+                  450
+                ]
+              }
+            },
+            {
+              "lane": "C",
+              "types": [
+                "medium",
+                "light",
+                "light"
+              ],
+              "N": 3,
+              "J": 5,
+              "K": 372,
+              "T": 224,
+              "S": 322,
+              "F": 545,
+              "FMinusStartPlusSolo": -1,
+              "solo": {
+                "shot": {
+                  "tick": 224,
+                  "enemyId": "e1",
+                  "type": "medium",
+                  "position": {
+                    "x": 13.876134919872529,
+                    "y": 7.817119086501111
+                  },
+                  "aim": {
+                    "x": 13.876134919872529,
+                    "y": 12.8
+                  },
+                  "distanceToBase": 4.98288091349889,
+                  "range": 5,
+                  "bulletId": "b3"
+                },
+                "hit": {
+                  "tick": 253,
+                  "bulletId": "b3",
+                  "enemyId": "e1",
+                  "position": {
+                    "x": 13.876134919872529,
+                    "y": 12.8
+                  }
+                },
+                "spawnTicks": [
+                  0,
+                  150,
+                  300
+                ]
+              },
+              "combined": {
+                "shot": {
+                  "tick": 545,
+                  "enemyId": "e6",
+                  "type": "medium",
+                  "position": {
+                    "x": 13.876134919872529,
+                    "y": 7.817119086501111
+                  },
+                  "aim": {
+                    "x": 13.876134919872529,
+                    "y": 12.8
+                  },
+                  "distanceToBase": 4.98288091349889,
+                  "range": 5,
+                  "bulletId": "b12"
+                },
+                "hit": {
+                  "tick": 574,
+                  "bulletId": "b12",
+                  "enemyId": "e6",
+                  "position": {
+                    "x": 13.876134919872529,
+                    "y": 12.8
+                  }
+                },
+                "spawnTicks": [
+                  322,
+                  472,
+                  622
+                ]
+              }
+            },
+            {
+              "lane": "A",
+              "types": [
+                "medium",
+                "heavy",
+                "light",
+                "light"
+              ],
+              "N": 4,
+              "J": 11,
+              "K": 630,
+              "T": 378,
+              "S": 455,
+              "F": 832,
+              "FMinusStartPlusSolo": -1,
+              "solo": {
+                "shot": {
+                  "tick": 378,
+                  "enemyId": "e1",
+                  "type": "medium",
+                  "position": {
+                    "x": 8.190704975474029,
+                    "y": 11.99359146069006
+                  },
+                  "aim": {
+                    "x": 13.1,
+                    "y": 12.8
+                  },
+                  "distanceToBase": 4.975085162095966,
+                  "range": 5,
+                  "bulletId": "b4"
+                },
+                "hit": {
+                  "tick": 407,
+                  "bulletId": "b4",
+                  "enemyId": "e1",
+                  "position": {
+                    "x": 13.1,
+                    "y": 12.800000000000013
+                  }
+                },
+                "spawnTicks": [
+                  0,
+                  150,
+                  300,
+                  450
+                ]
+              },
+              "combined": {
+                "shot": {
+                  "tick": 832,
+                  "enemyId": "e9",
+                  "type": "medium",
+                  "position": {
+                    "x": 8.190704975474029,
+                    "y": 11.99359146069006
+                  },
+                  "aim": {
+                    "x": 13.1,
+                    "y": 12.8
+                  },
+                  "distanceToBase": 4.975085162095966,
+                  "range": 5,
+                  "bulletId": "b27"
+                },
+                "hit": {
+                  "tick": 861,
+                  "bulletId": "b27",
+                  "enemyId": "e9",
+                  "position": {
+                    "x": 13.1,
+                    "y": 12.800000000000013
+                  }
+                },
+                "spawnTicks": [
+                  455,
+                  605,
+                  755,
+                  905
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "wave": 8,
+          "arrows": [
+            {
+              "from": "A",
+              "to": "B",
+              "mode": "F",
+              "Qticks": 270,
+              "G": 135,
+              "L": 135,
+              "U": 195,
+              "actual": 179,
+              "offsetFromG": 44,
+              "inWindow": true
+            },
+            {
+              "from": "B",
+              "to": "C",
+              "mode": "F",
+              "Qticks": 185,
+              "G": 92.5,
+              "L": 93,
+              "U": 153,
+              "actual": 123,
+              "offsetFromG": 30.5,
+              "inWindow": true
+            }
+          ],
+          "initialS": {
+            "A": 0,
+            "B": 289,
+            "C": 467
+          },
+          "corrections": [
+            {
+              "pass": 1,
+              "from": "A",
+              "to": "B",
+              "actual": 134,
+              "midpoint": 165,
+              "delta": 45,
+              "before": {
+                "A": 0,
+                "B": 289,
+                "C": 467
+              },
+              "after": {
+                "A": 0,
+                "B": 334,
+                "C": 467
+              }
+            },
+            {
+              "pass": 1,
+              "from": "B",
+              "to": "C",
+              "actual": 48,
+              "midpoint": 123,
+              "delta": 75,
+              "before": {
+                "A": 0,
+                "B": 334,
+                "C": 467
+              },
+              "after": {
+                "A": 0,
+                "B": 334,
+                "C": 542
+              }
+            }
+          ],
+          "groups": [
+            {
+              "lane": "A",
+              "types": [
+                "heavy",
+                "light",
+                "medium",
+                "light",
+                "light"
+              ],
+              "N": 5,
+              "J": 12,
+              "K": 798,
+              "T": 530,
+              "S": 0,
+              "F": 530,
+              "FMinusStartPlusSolo": 0,
+              "solo": {
+                "shot": {
+                  "tick": 530,
+                  "enemyId": "e1",
+                  "type": "heavy",
+                  "position": {
+                    "x": 7.374851816783458,
+                    "y": 11.19472315199114
+                  },
+                  "aim": {
+                    "x": 13.1,
+                    "y": 12.899666024074694
+                  },
+                  "distanceToBase": 5.973621340263892,
+                  "range": 6,
+                  "bulletId": "b5"
+                },
+                "hit": {
+                  "tick": 565,
+                  "bulletId": "b5",
+                  "enemyId": "e1",
+                  "position": {
+                    "x": 13.1,
+                    "y": 12.899666024074715
+                  }
+                },
+                "spawnTicks": [
+                  0,
+                  150,
+                  300,
+                  450,
+                  600
+                ]
+              },
+              "combined": {
+                "shot": {
+                  "tick": 530,
+                  "enemyId": "e1",
+                  "type": "heavy",
+                  "position": {
+                    "x": 7.374851816783458,
+                    "y": 11.19472315199114
+                  },
+                  "aim": {
+                    "x": 13.1,
+                    "y": 12.899666024074694
+                  },
+                  "distanceToBase": 5.973621340263892,
+                  "range": 6,
+                  "bulletId": "b7"
+                },
+                "hit": {
+                  "tick": 565,
+                  "bulletId": "b7",
+                  "enemyId": "e1",
+                  "position": {
+                    "x": 13.1,
+                    "y": 12.899666024074715
+                  }
+                },
+                "spawnTicks": [
+                  0,
+                  150,
+                  300,
+                  450,
+                  600
+                ]
+              }
+            },
+            {
+              "lane": "B",
+              "types": [
+                "medium",
+                "light",
+                "light",
+                "light"
+              ],
+              "N": 4,
+              "J": 6,
+              "K": 540,
+              "T": 376,
+              "S": 334,
+              "F": 709,
+              "FMinusStartPlusSolo": -1,
+              "solo": {
+                "shot": {
+                  "tick": 376,
+                  "enemyId": "e2",
+                  "type": "light",
+                  "position": {
+                    "x": 20.63884423519919,
+                    "y": 11.200801061874067
+                  },
+                  "aim": {
+                    "x": 14.9,
+                    "y": 12.853715527985077
+                  },
+                  "distanceToBase": 5.972140268627155,
+                  "range": 6,
+                  "bulletId": "b4"
+                },
+                "hit": {
+                  "tick": 411,
+                  "bulletId": "b4",
+                  "enemyId": "e2",
+                  "position": {
+                    "x": 14.9,
+                    "y": 12.853715527985084
+                  }
+                },
+                "spawnTicks": [
+                  0,
+                  150,
+                  300,
+                  450
+                ]
+              },
+              "combined": {
+                "shot": {
+                  "tick": 709,
+                  "enemyId": "e6",
+                  "type": "light",
+                  "position": {
+                    "x": 20.64199994912842,
+                    "y": 11.202821028058327
+                  },
+                  "aim": {
+                    "x": 14.9,
+                    "y": 12.840504735899824
+                  },
+                  "distanceToBase": 5.970977419377855,
+                  "range": 6,
+                  "bulletId": "b14"
+                },
+                "hit": {
+                  "tick": 744,
+                  "bulletId": "b14",
+                  "enemyId": "e6",
+                  "position": {
+                    "x": 14.9,
+                    "y": 12.840504735899847
+                  }
+                },
+                "spawnTicks": [
+                  334,
+                  484,
+                  634,
+                  784
+                ]
+              }
+            },
+            {
+              "lane": "C",
+              "types": [
+                "heavy",
+                "light",
+                "medium",
+                "light",
+                "light"
+              ],
+              "N": 5,
+              "J": 12,
+              "K": 798,
+              "T": 291,
+              "S": 542,
+              "F": 832,
+              "FMinusStartPlusSolo": -1,
+              "solo": {
+                "shot": {
+                  "tick": 291,
+                  "enemyId": "e1",
+                  "type": "heavy",
+                  "position": {
+                    "x": 13.876390010802407,
+                    "y": 6.815229535496533
+                  },
+                  "aim": {
+                    "x": 13.876390010802407,
+                    "y": 12.8
+                  },
+                  "distanceToBase": 5.984770464503468,
+                  "range": 6,
+                  "bulletId": "b3"
+                },
+                "hit": {
+                  "tick": 326,
+                  "bulletId": "b3",
+                  "enemyId": "e1",
+                  "position": {
+                    "x": 13.876390010802407,
+                    "y": 12.8
+                  }
+                },
+                "spawnTicks": [
+                  0,
+                  150,
+                  300,
+                  450,
+                  600
+                ]
+              },
+              "combined": {
+                "shot": {
+                  "tick": 832,
+                  "enemyId": "e8",
+                  "type": "heavy",
+                  "position": {
+                    "x": 13.876390010802407,
+                    "y": 6.815229535496533
+                  },
+                  "aim": {
+                    "x": 13.876390010802407,
+                    "y": 12.8
+                  },
+                  "distanceToBase": 5.984770464503468,
+                  "range": 6,
+                  "bulletId": "b21"
+                },
+                "hit": {
+                  "tick": 867,
+                  "bulletId": "b21",
+                  "enemyId": "e8",
+                  "position": {
+                    "x": 13.876390010802407,
+                    "y": 12.8
+                  }
+                },
+                "spawnTicks": [
+                  542,
+                  692,
+                  842,
+                  992,
+                  1142
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "city": {
+      "mapVersion": 1,
+      "configurationSha256": "bac84b3da51c3e6c64b239c623b114cc00eaf488e9a2ec801a3bfd7503181a6f",
+      "Q": {
+        "C>B": {
+          "start": {
+            "x": 20.8,
+            "y": 5
+          },
+          "end": {
+            "x": 15.2,
+            "y": 7.5
+          },
+          "ticks": 122,
+          "commands": [
+            {
+              "x": -1,
+              "y": 0,
+              "ticks": 84
+            },
+            {
+              "x": 0,
+              "y": 1,
+              "ticks": 38
+            }
+          ],
+          "ok": true,
+          "waypoints": [
+            {
+              "x": 20.8,
+              "y": 5
+            },
+            {
+              "x": 15.2,
+              "y": 5
+            },
+            {
+              "x": 15.2,
+              "y": 7.5
+            }
+          ],
+          "arrival": {
+            "x": 15.20000000000002,
+            "y": 7.533333333333324
+          },
+          "seconds": 2.033333333333333
+        },
+        "C>A": {
+          "start": {
+            "x": 20.8,
+            "y": 5
+          },
+          "end": {
+            "x": 6,
+            "y": 9.5
+          },
+          "ticks": 290,
+          "commands": [
+            {
+              "x": -1,
+              "y": 0,
+              "ticks": 135
+            },
+            {
+              "x": 0,
+              "y": 1,
+              "ticks": 68
+            },
+            {
+              "x": -1,
+              "y": 0,
+              "ticks": 43
+            },
+            {
+              "x": -1,
+              "y": -1,
+              "ticks": 1
+            },
+            {
+              "x": -1,
+              "y": 0,
+              "ticks": 43
+            }
+          ],
+          "ok": true,
+          "waypoints": [
+            {
+              "x": 20.8,
+              "y": 5
+            },
+            {
+              "x": 11.8,
+              "y": 5
+            },
+            {
+              "x": 11.8,
+              "y": 9.5
+            },
+            {
+              "x": 6,
+              "y": 9.5
+            }
+          ],
+          "arrival": {
+            "x": 6.019526214587616,
+            "y": 9.486192881254214
+          },
+          "seconds": 4.833333333333333
+        },
+        "A>B": {
+          "start": {
+            "x": 6,
+            "y": 9.5
+          },
+          "end": {
+            "x": 15.2,
+            "y": 7.5
+          },
+          "ticks": 168,
+          "commands": [
+            {
+              "x": 1,
+              "y": 0,
+              "ticks": 87
+            },
+            {
+              "x": 0,
+              "y": -1,
+              "ticks": 30
+            },
+            {
+              "x": 1,
+              "y": 0,
+              "ticks": 51
+            }
+          ],
+          "ok": true,
+          "waypoints": [
+            {
+              "x": 6,
+              "y": 9.5
+            },
+            {
+              "x": 11.8,
+              "y": 9.5
+            },
+            {
+              "x": 11.8,
+              "y": 7.5
+            },
+            {
+              "x": 15.2,
+              "y": 7.5
+            }
+          ],
+          "arrival": {
+            "x": 15.199999999999967,
+            "y": 7.500000000000007
+          },
+          "seconds": 2.8
+        },
+        "B>A": {
+          "start": {
+            "x": 15.2,
+            "y": 7.5
+          },
+          "end": {
+            "x": 6,
+            "y": 9.5
+          },
+          "ticks": 168,
+          "commands": [
+            {
+              "x": -1,
+              "y": 0,
+              "ticks": 51
+            },
+            {
+              "x": 0,
+              "y": 1,
+              "ticks": 30
+            },
+            {
+              "x": -1,
+              "y": 0,
+              "ticks": 87
+            }
+          ],
+          "ok": true,
+          "waypoints": [
+            {
+              "x": 15.2,
+              "y": 7.5
+            },
+            {
+              "x": 11.8,
+              "y": 7.5
+            },
+            {
+              "x": 11.8,
+              "y": 9.5
+            },
+            {
+              "x": 6,
+              "y": 9.5
+            }
+          ],
+          "arrival": {
+            "x": 6.000000000000032,
+            "y": 9.499999999999993
+          },
+          "seconds": 2.8
+        },
+        "A>C": {
+          "start": {
+            "x": 6,
+            "y": 9.5
+          },
+          "end": {
+            "x": 20.8,
+            "y": 5
+          },
+          "ticks": 290,
+          "commands": [
+            {
+              "x": 1,
+              "y": 0,
+              "ticks": 87
+            },
+            {
+              "x": 0,
+              "y": -1,
+              "ticks": 68
+            },
+            {
+              "x": 1,
+              "y": 0,
+              "ticks": 67
+            },
+            {
+              "x": 1,
+              "y": 1,
+              "ticks": 1
+            },
+            {
+              "x": 1,
+              "y": 0,
+              "ticks": 67
+            }
+          ],
+          "ok": true,
+          "waypoints": [
+            {
+              "x": 6,
+              "y": 9.5
+            },
+            {
+              "x": 11.8,
+              "y": 9.5
+            },
+            {
+              "x": 11.8,
+              "y": 5
+            },
+            {
+              "x": 20.8,
+              "y": 5
+            }
+          ],
+          "arrival": {
+            "x": 20.780473785412383,
+            "y": 5.0138071187457856
+          },
+          "seconds": 4.833333333333333
+        }
+      },
+      "waves": [
+        {
+          "wave": 1,
+          "arrows": [],
+          "initialS": {
+            "A": 0
+          },
+          "corrections": [],
+          "groups": [
+            {
+              "lane": "A",
+              "types": [
+                "light",
+                "medium",
+                "light",
+                "light"
+              ],
+              "N": 4,
+              "J": 6,
+              "K": 540,
+              "T": 87,
+              "S": 0,
+              "F": 87,
+              "FMinusStartPlusSolo": 0,
+              "solo": {
+                "shot": {
+                  "tick": 87,
+                  "enemyId": "e1",
+                  "type": "light",
+                  "position": {
+                    "x": 5.8750144233803026,
+                    "y": 4.374570183266992
+                  },
+                  "aim": {
+                    "x": 5.000000000000001,
+                    "y": 10.3
+                  },
+                  "distanceToBase": 5.989688535654599,
+                  "range": 6,
+                  "bulletId": "b2"
+                },
+                "hit": {
+                  "tick": 122,
+                  "bulletId": "b2",
+                  "enemyId": "e1",
+                  "position": {
+                    "x": 5,
+                    "y": 10.3
+                  }
+                },
+                "spawnTicks": [
+                  0,
+                  150,
+                  300,
+                  450
+                ]
+              },
+              "combined": {
+                "shot": {
+                  "tick": 87,
+                  "enemyId": "e1",
+                  "type": "light",
+                  "position": {
+                    "x": 5.8750144233803026,
+                    "y": 4.374570183266992
+                  },
+                  "aim": {
+                    "x": 5.000000000000001,
+                    "y": 10.3
+                  },
+                  "distanceToBase": 5.989688535654599,
+                  "range": 6,
+                  "bulletId": "b2"
+                },
+                "hit": {
+                  "tick": 122,
+                  "bulletId": "b2",
+                  "enemyId": "e1",
+                  "position": {
+                    "x": 5,
+                    "y": 10.3
+                  }
+                },
+                "spawnTicks": [
+                  0,
+                  150,
+                  300,
+                  450
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "wave": 2,
+          "arrows": [],
+          "initialS": {
+            "A": 0
+          },
+          "corrections": [],
+          "groups": [
+            {
+              "lane": "A",
+              "types": [
+                "medium",
+                "light",
+                "medium",
+                "light",
+                "light"
+              ],
+              "N": 5,
+              "J": 9,
+              "K": 744,
+              "T": 168,
+              "S": 0,
+              "F": 168,
+              "FMinusStartPlusSolo": 0,
+              "solo": {
+                "shot": {
+                  "tick": 168,
+                  "enemyId": "e1",
+                  "type": "medium",
+                  "position": {
+                    "x": 5.881151411318764,
+                    "y": 5.380173829513334
+                  },
+                  "aim": {
+                    "x": 5.000000000000001,
+                    "y": 10.3
+                  },
+                  "distanceToBase": 4.998111379058549,
+                  "range": 5,
+                  "bulletId": "b3"
+                },
+                "hit": {
+                  "tick": 197,
+                  "bulletId": "b3",
+                  "enemyId": "e1",
+                  "position": {
+                    "x": 4.999999999999999,
+                    "y": 10.3
+                  }
+                },
+                "spawnTicks": [
+                  0,
+                  150,
+                  300,
+                  450,
+                  600
+                ]
+              },
+              "combined": {
+                "shot": {
+                  "tick": 168,
+                  "enemyId": "e1",
+                  "type": "medium",
+                  "position": {
+                    "x": 5.881151411318764,
+                    "y": 5.380173829513334
+                  },
+                  "aim": {
+                    "x": 5.000000000000001,
+                    "y": 10.3
+                  },
+                  "distanceToBase": 4.998111379058549,
+                  "range": 5,
+                  "bulletId": "b3"
+                },
+                "hit": {
+                  "tick": 197,
+                  "bulletId": "b3",
+                  "enemyId": "e1",
+                  "position": {
+                    "x": 4.999999999999999,
+                    "y": 10.3
+                  }
+                },
+                "spawnTicks": [
+                  0,
+                  150,
+                  300,
+                  450,
+                  600
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "wave": 3,
+          "arrows": [],
+          "initialS": {
+            "C": 0
+          },
+          "corrections": [],
+          "groups": [
+            {
+              "lane": "C",
+              "types": [
+                "light",
+                "medium",
+                "light",
+                "medium",
+                "light",
+                "light"
+              ],
+              "N": 6,
+              "J": 10,
+              "K": 912,
+              "T": 388,
+              "S": 0,
+              "F": 388,
+              "FMinusStartPlusSolo": 0,
+              "solo": {
+                "shot": {
+                  "tick": 388,
+                  "enemyId": "e1",
+                  "type": "light",
+                  "position": {
+                    "x": 10.639291748699575,
+                    "y": 8.36630814861528
+                  },
+                  "aim": {
+                    "x": 5.000000000000001,
+                    "y": 10.3
+                  },
+                  "distanceToBase": 5.961608474485957,
+                  "range": 6,
+                  "bulletId": "b4"
+                },
+                "hit": {
+                  "tick": 423,
+                  "bulletId": "b4",
+                  "enemyId": "e1",
+                  "position": {
+                    "x": 5.000000000000001,
+                    "y": 10.300000000000033
+                  }
+                },
+                "spawnTicks": [
+                  0,
+                  150,
+                  300,
+                  450,
+                  600,
+                  750
+                ]
+              },
+              "combined": {
+                "shot": {
+                  "tick": 388,
+                  "enemyId": "e1",
+                  "type": "light",
+                  "position": {
+                    "x": 10.639291748699575,
+                    "y": 8.36630814861528
+                  },
+                  "aim": {
+                    "x": 5.000000000000001,
+                    "y": 10.3
+                  },
+                  "distanceToBase": 5.961608474485957,
+                  "range": 6,
+                  "bulletId": "b4"
+                },
+                "hit": {
+                  "tick": 423,
+                  "bulletId": "b4",
+                  "enemyId": "e1",
+                  "position": {
+                    "x": 5.000000000000001,
+                    "y": 10.300000000000033
+                  }
+                },
+                "spawnTicks": [
+                  0,
+                  150,
+                  300,
+                  450,
+                  600,
+                  750
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "wave": 4,
+          "arrows": [
+            {
+              "from": "C",
+              "to": "B",
+              "mode": "U",
+              "Qticks": 122,
+              "G": 842,
+              "L": 842,
+              "U": 902,
+              "actual": 886,
+              "offsetFromG": 44,
+              "inWindow": true
+            }
+          ],
+          "initialS": {
+            "C": 0,
+            "B": 1092
+          },
+          "corrections": [
+            {
+              "pass": 1,
+              "from": "C",
+              "to": "B",
+              "actual": 841,
+              "midpoint": 872,
+              "delta": 45,
+              "before": {
+                "C": 0,
+                "B": 1092
+              },
+              "after": {
+                "C": 0,
+                "B": 1137
+              }
+            }
+          ],
+          "groups": [
+            {
+              "lane": "C",
+              "types": [
+                "medium",
+                "heavy",
+                "light",
+                "light"
+              ],
+              "N": 4,
+              "J": 11,
+              "K": 630,
+              "T": 626,
+              "S": 0,
+              "F": 626,
+              "FMinusStartPlusSolo": 0,
+              "solo": {
+                "shot": {
+                  "tick": 626,
+                  "enemyId": "e1",
+                  "type": "medium",
+                  "position": {
+                    "x": 9.683690706639867,
+                    "y": 8.592709888520073
+                  },
+                  "aim": {
+                    "x": 5.000000000000001,
+                    "y": 10.3
+                  },
+                  "distanceToBase": 4.985157786893189,
+                  "range": 5,
+                  "bulletId": "b5"
+                },
+                "hit": {
+                  "tick": 655,
+                  "bulletId": "b5",
+                  "enemyId": "e1",
+                  "position": {
+                    "x": 5.000000000000001,
+                    "y": 10.300000000000022
+                  }
+                },
+                "spawnTicks": [
+                  0,
+                  150,
+                  300,
+                  450
+                ]
+              },
+              "combined": {
+                "shot": {
+                  "tick": 626,
+                  "enemyId": "e1",
+                  "type": "medium",
+                  "position": {
+                    "x": 9.683690706639867,
+                    "y": 8.592709888520073
+                  },
+                  "aim": {
+                    "x": 5.000000000000001,
+                    "y": 10.3
+                  },
+                  "distanceToBase": 4.985157786893189,
+                  "range": 5,
+                  "bulletId": "b5"
+                },
+                "hit": {
+                  "tick": 655,
+                  "bulletId": "b5",
+                  "enemyId": "e1",
+                  "position": {
+                    "x": 5.000000000000001,
+                    "y": 10.300000000000022
+                  }
+                },
+                "spawnTicks": [
+                  0,
+                  150,
+                  300,
+                  450
+                ]
+              }
+            },
+            {
+              "lane": "B",
+              "types": [
+                "light",
+                "medium",
+                "light",
+                "medium"
+              ],
+              "N": 4,
+              "J": 8,
+              "K": 576,
+              "T": 376,
+              "S": 1137,
+              "F": 1512,
+              "FMinusStartPlusSolo": -1,
+              "solo": {
+                "shot": {
+                  "tick": 376,
+                  "enemyId": "e1",
+                  "type": "light",
+                  "position": {
+                    "x": 10.997797003214071,
+                    "y": 11.376828410080645
+                  },
+                  "aim": {
+                    "x": 5.000000000000001,
+                    "y": 11.376828410080645
+                  },
+                  "distanceToBase": 5.99779700321407,
+                  "range": 6,
+                  "bulletId": "b4"
+                },
+                "hit": {
+                  "tick": 411,
+                  "bulletId": "b4",
+                  "enemyId": "e1",
+                  "position": {
+                    "x": 5.000000000000001,
+                    "y": 11.376828410080645
+                  }
+                },
+                "spawnTicks": [
+                  0,
+                  150,
+                  300,
+                  450
+                ]
+              },
+              "combined": {
+                "shot": {
+                  "tick": 1512,
+                  "enemyId": "e13",
+                  "type": "light",
+                  "position": {
+                    "x": 10.997797003214071,
+                    "y": 11.376828410080645
+                  },
+                  "aim": {
+                    "x": 5.000000000000001,
+                    "y": 11.376828410080645
+                  },
+                  "distanceToBase": 5.99779700321407,
+                  "range": 6,
+                  "bulletId": "b27"
+                },
+                "hit": {
+                  "tick": 1547,
+                  "bulletId": "b27",
+                  "enemyId": "e13",
+                  "position": {
+                    "x": 5.000000000000001,
+                    "y": 11.376828410080645
+                  }
+                },
+                "spawnTicks": [
+                  1137,
+                  1287,
+                  1437,
+                  1587
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "wave": 5,
+          "arrows": [
+            {
+              "from": "C",
+              "to": "B",
+              "mode": "D",
+              "Qticks": 122,
+              "G": 212,
+              "L": 212,
+              "U": 272,
+              "actual": 213,
+              "offsetFromG": 1,
+              "inWindow": true
+            }
+          ],
+          "initialS": {
+            "B": 0,
+            "C": 10
+          },
+          "corrections": [],
+          "groups": [
+            {
+              "lane": "B",
+              "types": [
+                "medium",
+                "heavy",
+                "light",
+                "light"
+              ],
+              "N": 4,
+              "J": 11,
+              "K": 630,
+              "T": 610,
+              "S": 0,
+              "F": 610,
+              "FMinusStartPlusSolo": 0,
+              "solo": {
+                "shot": {
+                  "tick": 610,
+                  "enemyId": "e1",
+                  "type": "medium",
+                  "position": {
+                    "x": 9.988452478014324,
+                    "y": 11.376322874808201
+                  },
+                  "aim": {
+                    "x": 5.000000000000001,
+                    "y": 11.376322874808201
+                  },
+                  "distanceToBase": 4.988452478014323,
+                  "range": 5,
+                  "bulletId": "b5"
+                },
+                "hit": {
+                  "tick": 639,
+                  "bulletId": "b5",
+                  "enemyId": "e1",
+                  "position": {
+                    "x": 5.000000000000001,
+                    "y": 11.376322874808201
+                  }
+                },
+                "spawnTicks": [
+                  0,
+                  150,
+                  300,
+                  450
+                ]
+              },
+              "combined": {
+                "shot": {
+                  "tick": 610,
+                  "enemyId": "e1",
+                  "type": "medium",
+                  "position": {
+                    "x": 9.988452478014324,
+                    "y": 11.376322874808201
+                  },
+                  "aim": {
+                    "x": 5.000000000000001,
+                    "y": 11.376322874808201
+                  },
+                  "distanceToBase": 4.988452478014323,
+                  "range": 5,
+                  "bulletId": "b12"
+                },
+                "hit": {
+                  "tick": 639,
+                  "bulletId": "b12",
+                  "enemyId": "e1",
+                  "position": {
+                    "x": 5.000000000000001,
+                    "y": 11.376322874808201
+                  }
+                },
+                "spawnTicks": [
+                  0,
+                  150,
+                  300,
+                  450
+                ]
+              }
+            },
+            {
+              "lane": "C",
+              "types": [
+                "light",
+                "medium",
+                "light",
+                "light"
+              ],
+              "N": 4,
+              "J": 6,
+              "K": 540,
+              "T": 388,
+              "S": 10,
+              "F": 397,
+              "FMinusStartPlusSolo": -1,
+              "solo": {
+                "shot": {
+                  "tick": 388,
+                  "enemyId": "e1",
+                  "type": "light",
+                  "position": {
+                    "x": 10.639291748699575,
+                    "y": 8.36630814861528
+                  },
+                  "aim": {
+                    "x": 5.000000000000001,
+                    "y": 10.3
+                  },
+                  "distanceToBase": 5.961608474485957,
+                  "range": 6,
+                  "bulletId": "b4"
+                },
+                "hit": {
+                  "tick": 423,
+                  "bulletId": "b4",
+                  "enemyId": "e1",
+                  "position": {
+                    "x": 5.000000000000001,
+                    "y": 10.300000000000033
+                  }
+                },
+                "spawnTicks": [
+                  0,
+                  150,
+                  300,
+                  450
+                ]
+              },
+              "combined": {
+                "shot": {
+                  "tick": 397,
+                  "enemyId": "e2",
+                  "type": "light",
+                  "position": {
+                    "x": 10.639291748699575,
+                    "y": 8.36630814861528
+                  },
+                  "aim": {
+                    "x": 5.000000000000001,
+                    "y": 10.3
+                  },
+                  "distanceToBase": 5.961608474485957,
+                  "range": 6,
+                  "bulletId": "b7"
+                },
+                "hit": {
+                  "tick": 432,
+                  "bulletId": "b7",
+                  "enemyId": "e2",
+                  "position": {
+                    "x": 5.000000000000001,
+                    "y": 10.300000000000033
+                  }
+                },
+                "spawnTicks": [
+                  10,
+                  160,
+                  310,
+                  460
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "wave": 6,
+          "arrows": [
+            {
+              "from": "C",
+              "to": "A",
+              "mode": "D",
+              "Qticks": 290,
+              "G": 380,
+              "L": 380,
+              "U": 440,
+              "actual": 424,
+              "offsetFromG": 44,
+              "inWindow": true
+            },
+            {
+              "from": "A",
+              "to": "B",
+              "mode": "U",
+              "Qticks": 168,
+              "G": 630,
+              "L": 630,
+              "U": 690,
+              "actual": 661,
+              "offsetFromG": 31,
+              "inWindow": true
+            }
+          ],
+          "initialS": {
+            "A": 919,
+            "C": 0,
+            "B": 1026
+          },
+          "corrections": [
+            {
+              "pass": 1,
+              "from": "C",
+              "to": "A",
+              "actual": 379,
+              "midpoint": 410,
+              "delta": 45,
+              "before": {
+                "A": 919,
+                "C": 0,
+                "B": 1026
+              },
+              "after": {
+                "A": 964,
+                "C": 0,
+                "B": 1026
+              }
+            }
+          ],
+          "groups": [
+            {
+              "lane": "A",
+              "types": [
+                "light",
+                "medium",
+                "light"
+              ],
+              "N": 3,
+              "J": 5,
+              "K": 372,
+              "T": 87,
+              "S": 964,
+              "F": 1050,
+              "FMinusStartPlusSolo": -1,
+              "solo": {
+                "shot": {
+                  "tick": 87,
+                  "enemyId": "e1",
+                  "type": "light",
+                  "position": {
+                    "x": 5.8750144233803026,
+                    "y": 4.374570183266992
+                  },
+                  "aim": {
+                    "x": 5.000000000000001,
+                    "y": 10.3
+                  },
+                  "distanceToBase": 5.989688535654599,
+                  "range": 6,
+                  "bulletId": "b2"
+                },
+                "hit": {
+                  "tick": 122,
+                  "bulletId": "b2",
+                  "enemyId": "e1",
+                  "position": {
+                    "x": 5,
+                    "y": 10.3
+                  }
+                },
+                "spawnTicks": [
+                  0,
+                  150,
+                  300
+                ]
+              },
+              "combined": {
+                "shot": {
+                  "tick": 1050,
+                  "enemyId": "e13",
+                  "type": "light",
+                  "position": {
+                    "x": 5.8750144233803026,
+                    "y": 4.374570183266992
+                  },
+                  "aim": {
+                    "x": 5.000000000000001,
+                    "y": 10.3
+                  },
+                  "distanceToBase": 5.989688535654599,
+                  "range": 6,
+                  "bulletId": "b17"
+                },
+                "hit": {
+                  "tick": 1085,
+                  "bulletId": "b17",
+                  "enemyId": "e13",
+                  "position": {
+                    "x": 5,
+                    "y": 10.3
+                  }
+                },
+                "spawnTicks": [
+                  964,
+                  1114,
+                  1264
+                ]
+              }
+            },
+            {
+              "lane": "C",
+              "types": [
+                "medium",
+                "light",
+                "light",
+                "light"
+              ],
+              "N": 4,
+              "J": 6,
+              "K": 540,
+              "T": 626,
+              "S": 0,
+              "F": 626,
+              "FMinusStartPlusSolo": 0,
+              "solo": {
+                "shot": {
+                  "tick": 626,
+                  "enemyId": "e1",
+                  "type": "medium",
+                  "position": {
+                    "x": 9.683690706639867,
+                    "y": 8.592709888520073
+                  },
+                  "aim": {
+                    "x": 5.000000000000001,
+                    "y": 10.3
+                  },
+                  "distanceToBase": 4.985157786893189,
+                  "range": 5,
+                  "bulletId": "b5"
+                },
+                "hit": {
+                  "tick": 655,
+                  "bulletId": "b5",
+                  "enemyId": "e1",
+                  "position": {
+                    "x": 5.000000000000001,
+                    "y": 10.300000000000022
+                  }
+                },
+                "spawnTicks": [
+                  0,
+                  150,
+                  300,
+                  450
+                ]
+              },
+              "combined": {
+                "shot": {
+                  "tick": 626,
+                  "enemyId": "e1",
+                  "type": "medium",
+                  "position": {
+                    "x": 9.683690706639867,
+                    "y": 8.592709888520073
+                  },
+                  "aim": {
+                    "x": 5.000000000000001,
+                    "y": 10.3
+                  },
+                  "distanceToBase": 4.985157786893189,
+                  "range": 5,
+                  "bulletId": "b5"
+                },
+                "hit": {
+                  "tick": 655,
+                  "bulletId": "b5",
+                  "enemyId": "e1",
+                  "position": {
+                    "x": 5.000000000000001,
+                    "y": 10.300000000000022
+                  }
+                },
+                "spawnTicks": [
+                  0,
+                  150,
+                  300,
+                  450
+                ]
+              }
+            },
+            {
+              "lane": "B",
+              "types": [
+                "medium",
+                "light",
+                "light"
+              ],
+              "N": 3,
+              "J": 5,
+              "K": 372,
+              "T": 610,
+              "S": 1026,
+              "F": 1711,
+              "FMinusStartPlusSolo": 75,
+              "solo": {
+                "shot": {
+                  "tick": 610,
+                  "enemyId": "e1",
+                  "type": "medium",
+                  "position": {
+                    "x": 9.988452478014324,
+                    "y": 11.376322874808201
+                  },
+                  "aim": {
+                    "x": 5.000000000000001,
+                    "y": 11.376322874808201
+                  },
+                  "distanceToBase": 4.988452478014323,
+                  "range": 5,
+                  "bulletId": "b4"
+                },
+                "hit": {
+                  "tick": 639,
+                  "bulletId": "b4",
+                  "enemyId": "e1",
+                  "position": {
+                    "x": 5.000000000000001,
+                    "y": 11.376322874808201
+                  }
+                },
+                "spawnTicks": [
+                  0,
+                  150,
+                  300
+                ]
+              },
+              "combined": {
+                "shot": {
+                  "tick": 1711,
+                  "enemyId": "e16",
+                  "type": "medium",
+                  "position": {
+                    "x": 9.99497291816126,
+                    "y": 12.096950254851501
+                  },
+                  "aim": {
+                    "x": 5.000000000000001,
+                    "y": 12.096950254851501
+                  },
+                  "distanceToBase": 4.994972918161259,
+                  "range": 5,
+                  "bulletId": "b58"
+                },
+                "hit": {
+                  "tick": 1740,
+                  "bulletId": "b58",
+                  "enemyId": "e16",
+                  "position": {
+                    "x": 5.000000000000001,
+                    "y": 12.096950254851501
+                  }
+                },
+                "spawnTicks": [
+                  1026,
+                  1176,
+                  1326
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "wave": 7,
+          "arrows": [
+            {
+              "from": "B",
+              "to": "A",
+              "mode": "D",
+              "Qticks": 168,
+              "G": 258,
+              "L": 258,
+              "U": 318,
+              "actual": 302,
+              "offsetFromG": 44,
+              "inWindow": true
+            },
+            {
+              "from": "A",
+              "to": "C",
+              "mode": "D",
+              "Qticks": 290,
+              "G": 380,
+              "L": 380,
+              "U": 440,
+              "actual": 410,
+              "offsetFromG": 30,
+              "inWindow": true
+            }
+          ],
+          "initialS": {
+            "B": 0,
+            "C": 388,
+            "A": 466
+          },
+          "corrections": [
+            {
+              "pass": 1,
+              "from": "B",
+              "to": "A",
+              "actual": 257,
+              "midpoint": 288,
+              "delta": 45,
+              "before": {
+                "B": 0,
+                "C": 388,
+                "A": 466
+              },
+              "after": {
+                "B": 0,
+                "C": 388,
+                "A": 511
+              }
+            },
+            {
+              "pass": 1,
+              "from": "A",
+              "to": "C",
+              "actual": 335,
+              "midpoint": 410,
+              "delta": 75,
+              "before": {
+                "B": 0,
+                "C": 388,
+                "A": 511
+              },
+              "after": {
+                "B": 0,
+                "C": 463,
+                "A": 511
+              }
+            }
+          ],
+          "groups": [
+            {
+              "lane": "B",
+              "types": [
+                "light",
+                "heavy",
+                "medium",
+                "light"
+              ],
+              "N": 4,
+              "J": 11,
+              "K": 630,
+              "T": 376,
+              "S": 0,
+              "F": 376,
+              "FMinusStartPlusSolo": 0,
+              "solo": {
+                "shot": {
+                  "tick": 376,
+                  "enemyId": "e1",
+                  "type": "light",
+                  "position": {
+                    "x": 10.997797003214071,
+                    "y": 11.376828410080645
+                  },
+                  "aim": {
+                    "x": 5.000000000000001,
+                    "y": 11.376828410080645
+                  },
+                  "distanceToBase": 5.99779700321407,
+                  "range": 6,
+                  "bulletId": "b4"
+                },
+                "hit": {
+                  "tick": 411,
+                  "bulletId": "b4",
+                  "enemyId": "e1",
+                  "position": {
+                    "x": 5.000000000000001,
+                    "y": 11.376828410080645
+                  }
+                },
+                "spawnTicks": [
+                  0,
+                  150,
+                  300,
+                  450
+                ]
+              },
+              "combined": {
+                "shot": {
+                  "tick": 376,
+                  "enemyId": "e1",
+                  "type": "light",
+                  "position": {
+                    "x": 10.997797003214071,
+                    "y": 11.376828410080645
+                  },
+                  "aim": {
+                    "x": 5.000000000000001,
+                    "y": 11.376828410080645
+                  },
+                  "distanceToBase": 5.99779700321407,
+                  "range": 6,
+                  "bulletId": "b4"
+                },
+                "hit": {
+                  "tick": 411,
+                  "bulletId": "b4",
+                  "enemyId": "e1",
+                  "position": {
+                    "x": 5.000000000000001,
+                    "y": 11.376828410080645
+                  }
+                },
+                "spawnTicks": [
+                  0,
+                  150,
+                  300,
+                  450
+                ]
+              }
+            },
+            {
+              "lane": "C",
+              "types": [
+                "medium",
+                "light",
+                "light"
+              ],
+              "N": 3,
+              "J": 5,
+              "K": 372,
+              "T": 626,
+              "S": 463,
+              "F": 1088,
+              "FMinusStartPlusSolo": -1,
+              "solo": {
+                "shot": {
+                  "tick": 626,
+                  "enemyId": "e1",
+                  "type": "medium",
+                  "position": {
+                    "x": 9.683690706639867,
+                    "y": 8.592709888520073
+                  },
+                  "aim": {
+                    "x": 5.000000000000001,
+                    "y": 10.3
+                  },
+                  "distanceToBase": 4.985157786893189,
+                  "range": 5,
+                  "bulletId": "b4"
+                },
+                "hit": {
+                  "tick": 655,
+                  "bulletId": "b4",
+                  "enemyId": "e1",
+                  "position": {
+                    "x": 5.000000000000001,
+                    "y": 10.300000000000022
+                  }
+                },
+                "spawnTicks": [
+                  0,
+                  150,
+                  300
+                ]
+              },
+              "combined": {
+                "shot": {
+                  "tick": 1088,
+                  "enemyId": "e7",
+                  "type": "medium",
+                  "position": {
+                    "x": 9.683690706639867,
+                    "y": 8.592709888520073
+                  },
+                  "aim": {
+                    "x": 5.000000000000001,
+                    "y": 10.3
+                  },
+                  "distanceToBase": 4.985157786893189,
+                  "range": 5,
+                  "bulletId": "b27"
+                },
+                "hit": {
+                  "tick": 1117,
+                  "bulletId": "b27",
+                  "enemyId": "e7",
+                  "position": {
+                    "x": 5.000000000000001,
+                    "y": 10.300000000000022
+                  }
+                },
+                "spawnTicks": [
+                  463,
+                  613,
+                  763
+                ]
+              }
+            },
+            {
+              "lane": "A",
+              "types": [
+                "medium",
+                "heavy",
+                "light",
+                "light"
+              ],
+              "N": 4,
+              "J": 11,
+              "K": 630,
+              "T": 168,
+              "S": 511,
+              "F": 678,
+              "FMinusStartPlusSolo": -1,
+              "solo": {
+                "shot": {
+                  "tick": 168,
+                  "enemyId": "e1",
+                  "type": "medium",
+                  "position": {
+                    "x": 5.881151411318764,
+                    "y": 5.380173829513334
+                  },
+                  "aim": {
+                    "x": 5.000000000000001,
+                    "y": 10.3
+                  },
+                  "distanceToBase": 4.998111379058549,
+                  "range": 5,
+                  "bulletId": "b3"
+                },
+                "hit": {
+                  "tick": 197,
+                  "bulletId": "b3",
+                  "enemyId": "e1",
+                  "position": {
+                    "x": 4.999999999999999,
+                    "y": 10.3
+                  }
+                },
+                "spawnTicks": [
+                  0,
+                  150,
+                  300,
+                  450
+                ]
+              },
+              "combined": {
+                "shot": {
+                  "tick": 678,
+                  "enemyId": "e8",
+                  "type": "medium",
+                  "position": {
+                    "x": 5.881151411318764,
+                    "y": 5.380173829513334
+                  },
+                  "aim": {
+                    "x": 5.000000000000001,
+                    "y": 10.3
+                  },
+                  "distanceToBase": 4.998111379058549,
+                  "range": 5,
+                  "bulletId": "b13"
+                },
+                "hit": {
+                  "tick": 707,
+                  "bulletId": "b13",
+                  "enemyId": "e8",
+                  "position": {
+                    "x": 4.999999999999999,
+                    "y": 10.3
+                  }
+                },
+                "spawnTicks": [
+                  511,
+                  661,
+                  811,
+                  961
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "wave": 8,
+          "arrows": [
+            {
+              "from": "C",
+              "to": "A",
+              "mode": "F",
+              "Qticks": 290,
+              "G": 145,
+              "L": 145,
+              "U": 205,
+              "actual": 189,
+              "offsetFromG": 44,
+              "inWindow": true
+            },
+            {
+              "from": "A",
+              "to": "B",
+              "mode": "F",
+              "Qticks": 168,
+              "G": 90,
+              "L": 90,
+              "U": 150,
+              "actual": 120,
+              "offsetFromG": 30,
+              "inWindow": true
+            }
+          ],
+          "initialS": {
+            "A": 744,
+            "B": 428,
+            "C": 0
+          },
+          "corrections": [
+            {
+              "pass": 1,
+              "from": "C",
+              "to": "A",
+              "actual": 144,
+              "midpoint": 175,
+              "delta": 45,
+              "before": {
+                "A": 744,
+                "B": 428,
+                "C": 0
+              },
+              "after": {
+                "A": 789,
+                "B": 428,
+                "C": 0
+              }
+            },
+            {
+              "pass": 1,
+              "from": "A",
+              "to": "B",
+              "actual": 45,
+              "midpoint": 120,
+              "delta": 75,
+              "before": {
+                "A": 789,
+                "B": 428,
+                "C": 0
+              },
+              "after": {
+                "A": 789,
+                "B": 503,
+                "C": 0
+              }
+            }
+          ],
+          "groups": [
+            {
+              "lane": "A",
+              "types": [
+                "heavy",
+                "light",
+                "medium",
+                "light",
+                "light"
+              ],
+              "N": 5,
+              "J": 12,
+              "K": 798,
+              "T": 204,
+              "S": 789,
+              "F": 992,
+              "FMinusStartPlusSolo": -1,
+              "solo": {
+                "shot": {
+                  "tick": 204,
+                  "enemyId": "e1",
+                  "type": "heavy",
+                  "position": {
+                    "x": 5.875182114225499,
+                    "y": 4.369572996080132
+                  },
+                  "aim": {
+                    "x": 5.000000000000001,
+                    "y": 10.3
+                  },
+                  "distanceToBase": 5.9946566358618245,
+                  "range": 6,
+                  "bulletId": "b3"
+                },
+                "hit": {
+                  "tick": 239,
+                  "bulletId": "b3",
+                  "enemyId": "e1",
+                  "position": {
+                    "x": 4.999999999999993,
+                    "y": 10.3
+                  }
+                },
+                "spawnTicks": [
+                  0,
+                  150,
+                  300,
+                  450,
+                  600
+                ]
+              },
+              "combined": {
+                "shot": {
+                  "tick": 992,
+                  "enemyId": "e8",
+                  "type": "heavy",
+                  "position": {
+                    "x": 5.875182114225499,
+                    "y": 4.369572996080132
+                  },
+                  "aim": {
+                    "x": 5.000000000000001,
+                    "y": 10.3
+                  },
+                  "distanceToBase": 5.9946566358618245,
+                  "range": 6,
+                  "bulletId": "b15"
+                },
+                "hit": {
+                  "tick": 1027,
+                  "bulletId": "b15",
+                  "enemyId": "e8",
+                  "position": {
+                    "x": 4.999999999999993,
+                    "y": 10.3
+                  }
+                },
+                "spawnTicks": [
+                  789,
+                  939,
+                  1089,
+                  1239,
+                  1389
+                ]
+              }
+            },
+            {
+              "lane": "B",
+              "types": [
+                "medium",
+                "light",
+                "light",
+                "light"
+              ],
+              "N": 4,
+              "J": 6,
+              "K": 540,
+              "T": 610,
+              "S": 503,
+              "F": 1112,
+              "FMinusStartPlusSolo": -1,
+              "solo": {
+                "shot": {
+                  "tick": 610,
+                  "enemyId": "e1",
+                  "type": "medium",
+                  "position": {
+                    "x": 9.988452478014324,
+                    "y": 11.376322874808201
+                  },
+                  "aim": {
+                    "x": 5.000000000000001,
+                    "y": 11.376322874808201
+                  },
+                  "distanceToBase": 4.988452478014323,
+                  "range": 5,
+                  "bulletId": "b5"
+                },
+                "hit": {
+                  "tick": 639,
+                  "bulletId": "b5",
+                  "enemyId": "e1",
+                  "position": {
+                    "x": 5.000000000000001,
+                    "y": 11.376322874808201
+                  }
+                },
+                "spawnTicks": [
+                  0,
+                  150,
+                  300,
+                  450
+                ]
+              },
+              "combined": {
+                "shot": {
+                  "tick": 1112,
+                  "enemyId": "e5",
+                  "type": "medium",
+                  "position": {
+                    "x": 9.988452478014324,
+                    "y": 11.376322874808201
+                  },
+                  "aim": {
+                    "x": 5.000000000000001,
+                    "y": 11.376322874808201
+                  },
+                  "distanceToBase": 4.988452478014323,
+                  "range": 5,
+                  "bulletId": "b18"
+                },
+                "hit": {
+                  "tick": 1141,
+                  "bulletId": "b18",
+                  "enemyId": "e5",
+                  "position": {
+                    "x": 5.000000000000001,
+                    "y": 11.376322874808201
+                  }
+                },
+                "spawnTicks": [
+                  503,
+                  653,
+                  803,
+                  953
+                ]
+              }
+            },
+            {
+              "lane": "C",
+              "types": [
+                "heavy",
+                "light",
+                "medium",
+                "light",
+                "light"
+              ],
+              "N": 5,
+              "J": 12,
+              "K": 798,
+              "T": 803,
+              "S": 0,
+              "F": 803,
+              "FMinusStartPlusSolo": 0,
+              "solo": {
+                "shot": {
+                  "tick": 803,
+                  "enemyId": "e2",
+                  "type": "light",
+                  "position": {
+                    "x": 10.654806574915995,
+                    "y": 8.34667087200803
+                  },
+                  "aim": {
+                    "x": 5.000000000000001,
+                    "y": 10.3
+                  },
+                  "distanceToBase": 5.9826693107654725,
+                  "range": 6,
+                  "bulletId": "b6"
+                },
+                "hit": {
+                  "tick": 838,
+                  "bulletId": "b6",
+                  "enemyId": "e2",
+                  "position": {
+                    "x": 5.000000000000001,
+                    "y": 10.30000000000002
+                  }
+                },
+                "spawnTicks": [
+                  0,
+                  150,
+                  300,
+                  450,
+                  600
+                ]
+              },
+              "combined": {
+                "shot": {
+                  "tick": 803,
+                  "enemyId": "e2",
+                  "type": "light",
+                  "position": {
+                    "x": 10.654806574915995,
+                    "y": 8.34667087200803
+                  },
+                  "aim": {
+                    "x": 5.000000000000001,
+                    "y": 10.3
+                  },
+                  "distanceToBase": 5.9826693107654725,
+                  "range": 6,
+                  "bulletId": "b10"
+                },
+                "hit": {
+                  "tick": 838,
+                  "bulletId": "b10",
+                  "enemyId": "e2",
+                  "position": {
+                    "x": 5.000000000000001,
+                    "y": 10.30000000000002
+                  }
+                },
+                "spawnTicks": [
+                  0,
+                  150,
+                  300,
+                  450,
+                  600
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "resources": {
+    "totalEnemies": {
+      "light": 41,
+      "medium": 19,
+      "heavy": 6
+    },
+    "beforeWaves": [
+      {
+        "wave": 1,
+        "medium": 0,
+        "heavy": 0,
+        "available": []
+      },
+      {
+        "wave": 2,
+        "medium": 1,
+        "heavy": 0,
+        "available": [
+          {
+            "type": "medium",
+            "lane": "A",
+            "sourceWave": 1,
+            "throughWave": 2
+          }
+        ]
+      },
+      {
+        "wave": 3,
+        "medium": 2,
+        "heavy": 0,
+        "available": [
+          {
+            "type": "medium",
+            "lane": "A",
+            "sourceWave": 2,
+            "throughWave": 3
+          },
+          {
+            "type": "medium",
+            "lane": "A",
+            "sourceWave": 2,
+            "throughWave": 3
+          }
+        ]
+      },
+      {
+        "wave": 4,
+        "medium": 2,
+        "heavy": 0,
+        "available": [
+          {
+            "type": "medium",
+            "lane": "C",
+            "sourceWave": 3,
+            "throughWave": 4
+          },
+          {
+            "type": "medium",
+            "lane": "C",
+            "sourceWave": 3,
+            "throughWave": 4
+          }
+        ]
+      },
+      {
+        "wave": 5,
+        "medium": 3,
+        "heavy": 1,
+        "available": [
+          {
+            "type": "medium",
+            "lane": "C",
+            "sourceWave": 4,
+            "throughWave": 5
+          },
+          {
+            "type": "heavy",
+            "lane": "C",
+            "sourceWave": 4,
+            "throughWave": 6
+          },
+          {
+            "type": "medium",
+            "lane": "B",
+            "sourceWave": 4,
+            "throughWave": 5
+          },
+          {
+            "type": "medium",
+            "lane": "B",
+            "sourceWave": 4,
+            "throughWave": 5
+          }
+        ]
+      },
+      {
+        "wave": 6,
+        "medium": 2,
+        "heavy": 2,
+        "available": [
+          {
+            "type": "heavy",
+            "lane": "C",
+            "sourceWave": 4,
+            "throughWave": 6
+          },
+          {
+            "type": "medium",
+            "lane": "B",
+            "sourceWave": 5,
+            "throughWave": 6
+          },
+          {
+            "type": "heavy",
+            "lane": "B",
+            "sourceWave": 5,
+            "throughWave": 7
+          },
+          {
+            "type": "medium",
+            "lane": "C",
+            "sourceWave": 5,
+            "throughWave": 6
+          }
+        ]
+      },
+      {
+        "wave": 7,
+        "medium": 3,
+        "heavy": 1,
+        "available": [
+          {
+            "type": "heavy",
+            "lane": "B",
+            "sourceWave": 5,
+            "throughWave": 7
+          },
+          {
+            "type": "medium",
+            "lane": "A",
+            "sourceWave": 6,
+            "throughWave": 7
+          },
+          {
+            "type": "medium",
+            "lane": "C",
+            "sourceWave": 6,
+            "throughWave": 7
+          },
+          {
+            "type": "medium",
+            "lane": "B",
+            "sourceWave": 6,
+            "throughWave": 7
+          }
+        ]
+      },
+      {
+        "wave": 8,
+        "medium": 3,
+        "heavy": 2,
+        "available": [
+          {
+            "type": "heavy",
+            "lane": "B",
+            "sourceWave": 7,
+            "throughWave": 9
+          },
+          {
+            "type": "medium",
+            "lane": "B",
+            "sourceWave": 7,
+            "throughWave": 8
+          },
+          {
+            "type": "medium",
+            "lane": "C",
+            "sourceWave": 7,
+            "throughWave": 8
+          },
+          {
+            "type": "medium",
+            "lane": "A",
+            "sourceWave": 7,
+            "throughWave": 8
+          },
+          {
+            "type": "heavy",
+            "lane": "A",
+            "sourceWave": 7,
+            "throughWave": 9
+          }
+        ]
+      }
+    ],
+    "potentialBeforeFinal": {
+      "medium": 16,
+      "heavy": 4
+    }
+  }
+}

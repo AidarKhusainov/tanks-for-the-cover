@@ -220,6 +220,33 @@ test('city return and its fallback positions are shielded from the west street',
   assert(Math.hypot(returned.x - preferred.x, returned.y - preferred.y) >= 2 * TANK_RADIUS);
 });
 
+test('magnetic fallback returns are shielded and wait if no center fits', () => {
+  const config = MAP_CONFIGS.magnetic;
+  const game = new Game(config);
+  game.wrecks = placeHulls([config.PLAYER_START]);
+  game.player.alive = false;
+  game.player.respawn = 0;
+  game._updateRespawn(0);
+  assert.equal(game.player.alive, true);
+  const first = { x:game.player.x, y:game.player.y };
+  assert.notDeepEqual(first, config.PLAYER_START);
+
+  const shooter = { id:'west-light', x:10.5, y:16.6, type:'light', r:TANK_RADIUS, hp:20 };
+  assert(game._positionFree(shooter.x, shooter.y, shooter, false));
+  game.enemies.push(shooter);
+  assert(game._shoot(shooter, game.player, 'enemy', 10, 8, 6));
+  game._updateBullets(.6);
+  assert.equal(game.player.hp, 60, 'a light outside the bunker cannot hit the fallback return');
+
+  game.wrecks = placeHulls([config.PLAYER_START, first]);
+  game.player.alive = false;
+  const second = game._respawnPosition();
+  assert(second, 'another fallback fits if both preferred and first are occupied');
+  game.wrecks = placeHulls([config.PLAYER_START, first, second]);
+  game._updateRespawn(0);
+  assert.equal(game.player.alive, false);
+});
+
 function clearSegment(game, a, b) {
   return game._navigationSegmentFree(a.x, a.y, b.x, b.y, false);
 }
@@ -249,7 +276,8 @@ test('A and C choke points close across their useful areas while their bypasses 
       const across = axis === 'x' ? 'y' : 'x';
       const width = across === 'x' ? area.w : area.h;
       assert(crossesGate(game, axis, center, area), `${id}/${lane} should be open without a hull`);
-      for (const fraction of [0, .5, 1]) {
+      for (let step = 0; step <= 20; step++) {
+        const fraction = step / 20;
         const hull = { ...center, [across]: area[across] + fraction * width };
         assert(game._positionFree(hull.x, hull.y, game.player, true));
         game.wrecks = placeHulls([hull]);
@@ -276,7 +304,7 @@ test('magnetic B lets either single hull be passed locally and closes with both'
 test('either city B blocker closes the short route at a different street', () => {
   const game = new Game(MAP_CONFIGS.city);
   const { blockers, usefulAreas, bypass } = game.config.TACTICS.B;
-  for (const [index, axis] of ['x', 'y'].entries()) {
+  for (const [index, axis] of ['x', 'x'].entries()) {
     const hull = blockers[index], area = usefulAreas[index];
     game.wrecks = [];
     assert(crossesGate(game, axis, hull, area));
