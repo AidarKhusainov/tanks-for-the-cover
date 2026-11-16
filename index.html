@@ -85,9 +85,10 @@
           <div class="route-options">
             <label class="route-toggle"><input id="routes" type="checkbox" aria-describedby="route-note" checked> Маршрут при текущих препятствиях</label>
             <label>Вход <select id="route-lane"><option value="">Все</option></select></label>
-            <label>Тип противника <select id="route-type"></select></label>
+            <label>Тип противника <select id="route-type"><option value="">Первый в группе</option></select></label>
           </div>
-          <p class="fineprint" id="route-note">Путь к базе или до первого корпуса для пролома (круг). У всех типов общая геометрия пути. Погоня, остановки для огня и заторы меняют движение, а появление и исчезновение корпусов меняют маршрут.</p>
+          <p class="fineprint" id="route-note">Текущая оценка до выстрела по базе для выбранного танка. Круг отмечает первый корпус для пролома. В бою оценка меняется с появлением танков, погоней и изменением преград.</p>
+          <p class="fineprint" id="route-estimate" hidden></p>
         </div>
       </section>
       <aside class="sidebar" aria-label="Управление волной и корпусами">
@@ -100,7 +101,9 @@
         <section class="salvage-card" id="salvage-card"><div class="section-label"><span>КОРПУСА НА ПОЛЕ</span><span id="wreck-count">0</span></div><p id="wreck-prep-lesson" class="wreck-lesson" role="status" hidden>Нажми на корпус: его можно оставить, разобрать на ремонт базы или взять модуль. Метка «до N» показывает последнюю волну службы.</p><div id="salvage-content"></div><div id="salvage-actions" hidden>
           <button id="repair" class="secondary" aria-describedby="repair-reason"></button><p id="repair-reason" class="fineprint action-detail" hidden></p>
           <button id="install-module" class="secondary" aria-describedby="module-effect module-reason"></button>
-          <p id="module-effect" class="fineprint action-detail"></p><p id="module-reason" class="fineprint action-detail" hidden></p>
+          <p id="module-effect" class="fineprint action-detail" hidden></p><p id="module-reason" class="fineprint action-detail" hidden></p>
+          <button id="install-barrel" class="secondary" aria-describedby="barrel-effect barrel-reason" hidden></button>
+          <p id="barrel-effect" class="fineprint action-detail" hidden></p><p id="barrel-reason" class="fineprint action-detail" hidden></p>
           <button id="choose-reinforcement" class="secondary" aria-describedby="choose-reinforcement-reason">Укрепить другой корпус</button>
           <p id="choose-reinforcement-reason" class="fineprint action-detail" hidden></p>
           <button id="leave" class="text-button">Оставить на месте</button>
@@ -131,7 +134,7 @@
     { x:14.5, y:16.4, w:.4, h:1.6, kind:'bunker' }
   ];
   const CLASSIC = {
-    mapId:'classic', AI_MODE:'classic', SPAWN_INTERVAL:2.5,
+    mapId:'classic', mapVersion:1, AI_MODE:'classic', SPAWN_INTERVAL:2.5,
     WALLS:[
       {x:0,y:7.5,w:8.1,h:1.5}, {x:9.9,y:7.5,w:8.2,h:1.5}, {x:19.9,y:7.5,w:8.1,h:1.5},
       {x:11.8,y:10.6,w:4.4,h:1.6}, ...niche
@@ -145,7 +148,7 @@
     ], ROADS:[], AREAS:[]
   };
   const BATTLEFIELD = {
-    mapId:'battlefield', AI_MODE:'roles', SPAWN_INTERVAL:2.5,
+    mapId:'battlefield', mapVersion:1, AI_MODE:'roles', SPAWN_INTERVAL:2.5,
     WALLS:[
       {x:5.2,y:3.0,w:3.8,h:2.8,kind:'ruin'},
       {x:12.2,y:3.0,w:3.6,h:2.3,kind:'ruin'},
@@ -207,13 +210,25 @@
   const TANK_RADIUS = 0.5;
   const STEP = 1 / 60;
   const PLAYER_WEAPON = Object.freeze({ speed: 40, damage: 20, range: 6, cooldown: 0.30 });
-  const PLAYER_BASE_STATS = Object.freeze({ speed: 4, maxHp: 60 });
+  const PLAYER_BASE_STATS = Object.freeze({ speed: 4, maxHp: 60, range: PLAYER_WEAPON.range });
   const PLAYER_MODULES = Object.freeze({
     engine: Object.freeze({ ...PLAYER_BASE_STATS, speed: 5 }),
-    armor: Object.freeze({ ...PLAYER_BASE_STATS, maxHp: 90 })
+    armor: Object.freeze({ ...PLAYER_BASE_STATS, maxHp: 90 }),
+    barrel: Object.freeze({ ...PLAYER_BASE_STATS, range: 6.75 })
   });
   const playerStatsFor = module => PLAYER_MODULES[module] ?? PLAYER_BASE_STATS;
   const ENEMY_PROJECTILE_SPEED = 10;
+  const FIRING_POSITION_RADII = [0.75, 1.25, 1.75, 2.25];
+  const FIRING_RETRY_SECONDS = 0.25;
+  const HEAVY_BASE_DUEL_RADIUS = 7;
+  const HEAVY_FINISH_HORIZON = 2.75;
+  const HEAVY_AIM_MEMORY = 0.2;
+  const HEAVY_FINISH_MARGIN = 0.08;
+  const ROUTE_RECHECK = 0.6;
+  const ROUTE_SWITCH_MARGIN = 0.55;
+  const ROUTE_TURN_SECONDS = 0.13;
+  const ROUTE_OCCUPIED_DELAY = 0.65;
+  const BREACH_GROUP_RADIUS = 6;
   const LIGHT_DODGE_SPEED = 3;
   const DRIVE_ACCELERATION = 180;
   const TURN_ACCELERATION = 64800 * Math.PI / 180;
@@ -223,17 +238,17 @@
   const approach = (from, to, limit) => from + clamp(to - from, -limit, limit);
   const DODGE_TURN_RATE = 1080 * Math.PI / 180;
   const ATTEMPT_LOG_VERSION = 1;
-  const BUILD_ID = 'prototype-06-smooth-dodge-1';
+  const BUILD_ID = 'prototype-06-shared-combat-1';
   const scenarios = typeof module !== 'undefined' && module.exports ? require('./scenarios.js') : root.TankScenarios;
   const ENEMY_TYPES = Object.freeze({
     light: Object.freeze({ hp: 20, speed: 2.6, damage: 8, range: 6, cooldown: 1.4 }),
     medium: Object.freeze({
       hp: 60, speed: 1.7, damage: 12, range: 5, cooldown: 1.2,
-      wreck: Object.freeze({ hp: 60, waves: 1, repairHp: 30, module: 'engine' })
+      wreck: Object.freeze({ hp: 60, waves: 1, repairHp: 25, modules: Object.freeze(['engine', 'barrel']) })
     }),
     heavy: Object.freeze({
       hp: 120, speed: 1.1, damage: 20, range: 6, cooldown: 2,
-      wreck: Object.freeze({ hp: 120, waves: 2, repairHp: 50, module: 'armor' })
+      wreck: Object.freeze({ hp: 120, waves: 2, repairHp: 45, modules: Object.freeze(['armor']) })
     })
   });
   const CLASSIC_ENEMY_TYPES = Object.freeze({
@@ -468,6 +483,7 @@
       this._wreckSignature = '';
       this._openField = null;
       this._breachSearch = null;
+      this._shotFields = new Map();
       this._traffic = null;
       this.lastMessage = 'Подготовка к первой волне';
       this._attemptNumber = (this._attemptNumber ?? 0) + 1;
@@ -490,6 +506,7 @@
     get remaining() { return this.enemies.filter(enemy => !enemy.dead && enemy.hp > 0).length + this._spawnQueue.length; }
     get canUndo() { return this._undoReason() === null; }
 
+    get playerWeaponRange() { return this._playerStats.range; }
     get _playerStats() { return playerStatsFor(this.player.module); }
 
     _restorePlayerHp() {
@@ -506,7 +523,7 @@
 
     _attemptState() {
       const { x, y, hp, maxHp, alive, module } = this.player;
-      return { baseHp: this.base.hp, player: { x, y, hp, maxHp, alive, module } };
+      return { baseHp: this.base.hp, player: { x, y, hp, maxHp, alive, module, weaponRange: this.playerWeaponRange } };
     }
 
     _attemptWrecks() {
@@ -569,15 +586,18 @@
       return { wreck, spec, reason };
     }
 
-    getWreckActions(id) {
+    getWreckActions(id, requestedModule) {
       const { spec, reason } = this._getPreparationWreck(id);
-      const module = spec?.module ?? null;
-      const repairHp = reason ? null : Math.min(spec.repairHp, this.base.maxHp - this.base.hp);
-      const moduleReason = reason ?? (!module ? 'no-module' : module === this.player.module ? 'same-module' : null);
+      const modules = spec?.modules ?? [];
+      const module = requestedModule === undefined ? modules[0] ?? null : requestedModule;
+      const repairHp = reason ? null : clamp(this.base.maxHp - this.base.hp, 0, spec.repairHp);
+      const moduleReason = reason ?? (!modules.includes(module) ? 'no-module' :
+        module === this.player.module ? 'same-module' : null);
       return {
         repairHp,
         repairBaseHp: reason ? null : this.base.hp + repairHp,
         repairReason: reason,
+        modules,
         module,
         moduleReason,
         replacedModule: moduleReason ? null : this.player.module,
@@ -620,8 +640,8 @@
       return { ok: true, hp };
     }
 
-    installModuleFromWreck(id) {
-      const { module, moduleReason } = this.getWreckActions(id);
+    installModuleFromWreck(id, requestedModule) {
+      const { module, moduleReason } = this.getWreckActions(id, requestedModule);
       if (moduleReason) return { ok: false, reason: moduleReason };
       const index = this.wrecks.findIndex(wreck => wreck.id === id);
       const wreck = this.wrecks[index];
@@ -678,12 +698,12 @@
       if (reason) return { reason };
       const state = this._undo.at(-1);
       const { x, y, r, module } = state.player;
-      const { maxHp } = playerStatsFor(module);
+      const { maxHp, range } = playerStatsFor(module);
       return {
         reason: null,
         wrecks: state.wrecks.map(({ wreck }) => ({ ...wreck })),
         baseHp: state.baseHp,
-        player: { x, y, r, module, hp: maxHp, maxHp }
+        player: { x, y, r, module, hp: maxHp, maxHp, weaponRange: range }
       };
     }
 
@@ -783,7 +803,7 @@
       if (this.phase === 'battle' && input.fire && canAim && player.cooldown <= EPS) {
         this._shoot(player, {
           x: player.x + Math.cos(player.angle), y: player.y + Math.sin(player.angle)
-        }, 'player', PLAYER_WEAPON.speed, PLAYER_WEAPON.damage, PLAYER_WEAPON.range);
+        }, 'player', PLAYER_WEAPON.speed, PLAYER_WEAPON.damage, this.playerWeaponRange);
         player.cooldown = PLAYER_WEAPON.cooldown;
         this.stats.shots++;
       }
@@ -863,12 +883,23 @@
         enemy.smoothDrive = RETURN_STEERING_MIN_TIME;
       }
       enemy.dodge = dodge;
+      if (dodge) {
+        enemy.firingPosition = null;
+        enemy.positionedPlayer = false;
+      }
       enemy.cooldown = Math.max(0, enemy.cooldown - dt);
       if (this.config.AI_MODE === 'roles' && enemy.type === 'light') this._updatePressure(enemy, dt);
-      if (!enemy.pressure && enemy.routeVersion !== this._navVersion) this._assignRoute(enemy);
+      const routeMayChange = (this.wrecks.length && enemy.stationaryTarget !== 'base') ||
+        enemy.routeDecision?.decision === 'unreachable' ||
+        (enemy.routeIndex >= enemy.route.length && !enemy.stationaryTarget);
+      const recheck = this.config.AI_MODE === 'roles' && routeMayChange && !dodge &&
+        !this._forecasting && this._waveTime >= (enemy.routeRecheckAt ?? Infinity);
+      if (!enemy.pressure && (enemy.routeVersion !== this._navVersion || recheck)) this._assignRoute(enemy);
       let stationary = false;
       let stationaryTarget = null;
       let facingPoint = null;
+      let firingManeuver = null;
+      enemy.activeFiringTarget = null;
       if (enemy.windup > 0) {
         stationary = enemy.aimKind !== 'player';
         if (stationary) stationaryTarget = enemy.aimKind;
@@ -881,10 +912,15 @@
         }
       } else if (this.phase === 'battle') {
         const target = this._chooseTarget(enemy, spec.range);
-        stationary = target && target.kind !== 'player';
-        if (stationary) stationaryTarget = target.kind;
         if (target) {
+          enemy.positionedPlayer = !dodge && target.kind === 'player' &&
+            (enemy.positionedPlayer || enemy.firingPosition?.kind === 'player');
+          stationary = target.kind !== 'player' || target.hold || (enemy.positionedPlayer && !enemy.pressure);
+          if (stationary) stationaryTarget = target.kind;
+          enemy.firingPosition = null;
+          enemy.firingRetryAt = 0;
           const point = target.point || target.object;
+          if (!dodge) enemy.activeFiringTarget = { kind: target.kind, object: target.object, point };
           if (!(this.config.ENEMY_WINDUP > EPS)) facingPoint = point;
           if (enemy.cooldown <= EPS && (!stationary || !dodge)) {
             enemy.cooldown = spec.cooldown;
@@ -896,6 +932,9 @@
               enemy.angle = Math.atan2(point.y - enemy.y, point.x - enemy.x);
             } else this._shoot(enemy, point, 'enemy', ENEMY_PROJECTILE_SPEED, spec.damage, spec.range);
           }
+        } else if (!dodge && this.config.AI_MODE === 'roles') {
+          enemy.positionedPlayer = false;
+          firingManeuver = this._firingManeuver(enemy, spec.range);
         }
       }
       enemy.stationaryTarget = stationaryTarget;
@@ -906,7 +945,9 @@
         blocked = !this._driveArc(enemy, dodge.heading, dodge.gear * dodge.speed * dt, dt);
       } else {
         if (!stationary) {
-          if (enemy.pressure) this._followPressure(enemy, spec.speed, dt);
+          if (firingManeuver) {
+            if (firingManeuver.position) this._moveToFiringPosition(enemy, firingManeuver.position, spec.speed, dt);
+          } else if (enemy.pressure) this._followPressure(enemy, spec.speed, dt);
           else this._followRoute(enemy, spec.speed, dt);
         }
         if (enemy.smoothDrive && !enemy.arcStep) {
@@ -1019,7 +1060,7 @@
         if (bullet.team !== 'player') continue;
         // A light tank can start a forward arc on the launch tick. A gear
         // change and medium dodges still wait for the first flight segment.
-        const justFired = bullet.remaining >= PLAYER_WEAPON.range - EPS;
+        const justFired = bullet.remaining >= bullet.range - EPS;
         if (justFired && enemy.type !== 'light') continue;
         if (enemy.dodge?.bulletId === bullet.id) return enemy.dodge;
         const timeLeft = bullet.remaining / bullet.speed;
@@ -1093,6 +1134,9 @@
       world.enemies = [...copies.values()];
       world.bullets = [];
       world._events = [];
+      world._attemptEvents = [];
+      world._forecasting = true;
+      world._shotFields = new Map(this._shotFields);
       world._traffic = this._traffic && {
         ...this._traffic, members: new Map(this._traffic.members), released: new Set(this._traffic.released)
       };
@@ -1205,6 +1249,9 @@
     }
 
     _chooseTarget(enemy, range) {
+      if (this.config.AI_MODE === 'roles' && enemy.type === 'heavy') {
+        return this._chooseHeavyTarget(enemy, this.config.ENEMY_TYPES.heavy);
+      }
       if (this.config.AI_MODE === 'roles' && enemy.type === 'light') {
         if (this._canSeePlayer(enemy) && distance(enemy, this.player) <= range + this.player.r + EPS) {
           return { kind: 'player', object: this.player };
@@ -1224,19 +1271,143 @@
       return null;
     }
 
-    _clearShot(shooter, target, kind, point = target) {
-      const collision = this._firstCollision(shooter.x, shooter.y, point.x, point.y, shooter.id);
+    _heavyProjectileHits(owner, target, kind) {
+      const hits = [];
+      for (const bullet of this.bullets) {
+        if (bullet.ownerId !== owner.id) continue;
+        const end = projectileStep(bullet, bullet.remaining / bullet.speed);
+        const hit = this._firstCollision(bullet.x, bullet.y, end.x, end.y, bullet.ownerId);
+        if (hit?.kind === kind && hit.object === target) {
+          hits.push({ seconds: bullet.remaining * hit.t / bullet.speed, damage: bullet.damage });
+        }
+      }
+      return hits;
+    }
+
+    _heavyPlayerThreat(enemy, playerTarget) {
+      const base = centerRect(this.base);
+      const player = this.player;
+      const radiusSq = square(HEAVY_BASE_DUEL_RADIUS);
+      if (!playerTarget || pointRectDistanceSq(enemy.x, enemy.y, base) > radiusSq ||
+          pointRectDistanceSq(player.x, player.y, base) > radiusSq) {
+        enemy.lastAimedAt = undefined;
+        return null;
+      }
+
+      const range = this.playerWeaponRange;
+      const aim = this._firstCollision(player.x, player.y, player.x + range * Math.cos(player.angle),
+        player.y + range * Math.sin(player.angle), player.id);
+      const aimed = aim?.kind === 'enemy' && aim.object === enemy;
+      const incoming = this._heavyProjectileHits(player, enemy, 'enemy');
+      const recentAim = !aimed && this._waveTime - (enemy.lastAimedAt ?? -Infinity) <= HEAVY_AIM_MEMORY + EPS &&
+        distance(enemy, player) <= range + enemy.r + EPS && this._clearShot(player, enemy, 'enemy');
+      if (!aimed && !incoming.length && !recentAim) return null;
+      if (aimed) {
+        const flight = range * aim.t / PLAYER_WEAPON.speed;
+        const count = Math.ceil(enemy.hp / PLAYER_WEAPON.damage);
+        for (let i = 0; i < count; i++) {
+          incoming.push({
+            seconds: player.cooldown + flight + i * PLAYER_WEAPON.cooldown,
+            damage: PLAYER_WEAPON.damage
+          });
+        }
+      }
+      incoming.sort((a, b) => a.seconds - b.seconds);
+      let remaining = enemy.hp;
+      let deathSeconds = Infinity;
+      for (const hit of incoming) {
+        remaining -= hit.damage;
+        if (remaining <= 0) {
+          deathSeconds = hit.seconds;
+          break;
+        }
+      }
+      if (aimed) {
+        enemy.lastAimedAt = this._waveTime;
+        enemy.lastAimedDeathAt = this._waveTime + deathSeconds;
+      } else if (recentAim) {
+        // Brief aiming jitter must not erase the time pressure behind the
+        // current decision. Keep it only while the player's gun can reach.
+        deathSeconds = Math.min(deathSeconds, Math.max(0, enemy.lastAimedDeathAt - this._waveTime));
+      }
+      return { deathSeconds };
+    }
+
+    _heavyBaseFinish(enemy, spec, basePoint) {
+      if (!basePoint) return null;
+      let remaining = this.base.hp;
+      const incoming = this._heavyProjectileHits(enemy, this.base, 'base').sort((a, b) => a.seconds - b.seconds);
+      for (const hit of incoming) {
+        remaining -= hit.damage;
+        if (remaining <= 0) return { hits: 0, seconds: hit.seconds };
+      }
+      const hits = Math.ceil(remaining / spec.damage);
+      const entry = segmentRect(enemy.x, enemy.y, basePoint.x, basePoint.y, centerRect(this.base));
+      const flight = distance(enemy, basePoint) * entry / ENEMY_PROJECTILE_SPEED;
+      return { hits, seconds: enemy.cooldown + this.config.ENEMY_WINDUP + (hits - 1) * spec.cooldown + flight };
+    }
+
+    _chooseHeavyTarget(enemy, spec) {
+      const playerTarget = this.player.alive && distance(enemy, this.player) <= spec.range + this.player.r + EPS &&
+        this._clearShot(enemy, this.player, 'player') ? { kind: 'player', object: this.player } : null;
+      const basePoint = this._visibleBasePoint(enemy, spec.range);
+      const baseTarget = basePoint ? { kind: 'base', object: this.base, point: basePoint } : null;
+      const wreck = this.wrecks.find(item => item.id === enemy.targetWreckId);
+      const wreckTarget = wreck && distance(enemy, wreck) <= spec.range + wreck.r + EPS &&
+        this._clearShot(enemy, wreck, 'wreck') ? { kind: 'wreck', object: wreck } : null;
+      const threat = this._heavyPlayerThreat(enemy, playerTarget);
+      const finish = this._heavyBaseFinish(enemy, spec, basePoint);
+      const deathSeconds = threat?.deathSeconds ?? Infinity;
+      const margin = enemy.heavyTarget === 'player' ? HEAVY_FINISH_MARGIN : 0;
+      const canFinish = finish && finish.seconds <= HEAVY_FINISH_HORIZON + EPS &&
+        finish.seconds + margin < deathSeconds - EPS;
+
+      let target = null;
+      let reason = 'advance';
+      if (canFinish) {
+        target = baseTarget;
+        reason = 'base_finish';
+      } else if (wreckTarget) {
+        target = wreckTarget;
+        reason = 'assigned_breach';
+      } else if (threat) {
+        target = { ...playerTarget, hold: true };
+        reason = 'player_threat';
+      } else if (baseTarget) {
+        target = baseTarget;
+        reason = 'base_pressure';
+      } else if (playerTarget) {
+        target = playerTarget;
+        reason = 'passing_shot';
+      }
+      const kind = target?.kind ?? null;
+      if (enemy.heavyTarget !== kind || enemy.heavyTargetReason !== reason) {
+        enemy.heavyTarget = kind;
+        enemy.heavyTargetReason = reason;
+        if (!this._forecasting) this._recordAttempt('heavy_target', {
+          enemyId: enemy.id, lane: enemy.lane ?? null, x: enemy.x, y: enemy.y,
+          target: kind, targetWreckId: kind === 'wreck' ? target.object.id : null, reason,
+          hp: enemy.hp, baseHp: this.base.hp, cooldown: enemy.cooldown,
+          baseHits: finish?.hits ?? null, baseHitSeconds: finish?.seconds ?? null,
+          threat: Boolean(threat), threatDeathSeconds: Number.isFinite(deathSeconds) ? deathSeconds : null
+        });
+      }
+      return target;
+    }
+
+    _clearShot(shooter, target, kind, point = target, includeEnemies = true) {
+      const collision = this._firstCollision(shooter.x, shooter.y, point.x, point.y, shooter.id, includeEnemies);
       return collision && collision.kind === kind && collision.object === target;
     }
 
-    _visibleBasePoint(enemy, range) {
+    _visibleBasePoint(enemy, range, includeEnemies = true) {
       const rect = centerRect(this.base);
       const closest = {
         x: clamp(enemy.x, rect.x, rect.x + rect.w),
         y: clamp(enemy.y, rect.y, rect.y + rect.h)
       };
       if (distance(enemy, closest) > range + EPS) return null;
-      if (this._clearShot(enemy, this.base, 'base', closest)) return closest;
+      if (this._clearShot(enemy, this.base, 'base', closest, includeEnemies)) return closest;
       const candidates = [];
       const add = (x, y) => {
         if (x < rect.x - EPS || y < rect.y - EPS || x > rect.x + rect.w + EPS || y > rect.y + rect.h + EPS) return;
@@ -1274,7 +1445,10 @@
           for (const y of [wall.y, wall.y + wall.h]) silhouette(Math.atan2(y - enemy.y, x - enemy.x));
         }
       }
-      const circles = this.wrecks.concat(this.enemies.filter(actor => actor !== enemy && !actor.dead && actor.hp > 0));
+      const circles = this.wrecks.slice();
+      if (includeEnemies) {
+        circles.push(...this.enemies.filter(actor => actor.id !== enemy.id && !actor.dead && actor.hp > 0));
+      }
       if (this.player.alive) circles.push(this.player);
       for (const circle of circles) {
         const d = distance(enemy, circle);
@@ -1286,18 +1460,145 @@
       }
       candidates.sort((a, b) => a.distance - b.distance || a.x - b.x || a.y - b.y);
       for (const point of candidates) {
-        if (this._clearShot(enemy, this.base, 'base', point)) return { x: point.x, y: point.y };
+        if (this._clearShot(enemy, this.base, 'base', point, includeEnemies)) return { x: point.x, y: point.y };
       }
       return null;
     }
 
+    _firingPoint(enemy, range, kind, target, includeEnemies = true) {
+      if (kind === 'base') return this._visibleBasePoint(enemy, range, includeEnemies);
+      if (distance(enemy, target) > range + target.r + EPS) return null;
+      return this._clearShot(enemy, target, kind, target, includeEnemies) ? target : null;
+    }
+
+    _blockedFiringTarget(enemy, range) {
+      const player = { kind: 'player', object: this.player };
+      const wreck = this.wrecks.find(item => item.id === enemy.targetWreckId);
+      const targets = [{ kind: 'base', object: this.base }];
+      if (wreck) targets.unshift({ kind: 'wreck', object: wreck });
+      if (this.player.alive && enemy.type !== 'heavy') {
+        if (enemy.type === 'light') targets.unshift(player);
+        else targets.push(player);
+      }
+      const considered = enemy.pressure ? [player] : targets;
+      return considered.find(({kind, object}) => this._firingPoint(enemy, range, kind, object, false) &&
+        !this._firingPoint(enemy, range, kind, object));
+    }
+
+    _firingManeuver(enemy, range) {
+      const allies = this.enemies.filter(actor => actor !== enemy && !actor.dead && actor.hp > 0);
+      const target = allies.length ? this._blockedFiringTarget(enemy, range) : null;
+      if (!target) {
+        enemy.firingPosition = null;
+        enemy.firingRetryAt = 0;
+        return null;
+      }
+      const { kind, object } = target;
+      const bodies = this.player.alive ? [...allies, this.player] : allies;
+      const firingLanes = allies.flatMap(actor => {
+        if (actor.dodge) return [];
+        const active = actor.activeFiringTarget;
+        if (active && this._clearShot(actor, active.object, active.kind, active.point)) {
+          return [{ from: actor, to: active.point, kind: active.kind, id: active.object.id }];
+        }
+        const planned = actor.firingPosition;
+        return planned ? [{ from: planned, to: planned.point, kind: planned.kind, id: planned.targetId }] : [];
+      });
+      const checkPosition = position => {
+        if (enemy.pressure && distance(enemy.pressure.origin, position) > 4 + EPS) return null;
+        if (!this._navigationSegmentFree(enemy.x, enemy.y, position.x, position.y, false)) return null;
+        if (bodies.some(body => pointSegmentDistanceSq(body.x, body.y, enemy.x, enemy.y, position.x, position.y) <
+          square(body.r + enemy.r) - EPS)) return null;
+        if (firingLanes.some(({from, to}) =>
+          distance(position, from) < 2 * enemy.r - EPS ||
+          pointSegmentDistanceSq(position.x, position.y, from.x, from.y, to.x, to.y) < square(enemy.r))) return null;
+        const point = this._firingPoint({ ...position, id: enemy.id }, range, kind, object);
+        if (!point || firingLanes.some(({from}) =>
+          pointSegmentDistanceSq(from.x, from.y, position.x, position.y, point.x, point.y) < square(enemy.r))) return null;
+        return { x: position.x, y: position.y, kind, targetId: object.id, point: { x: point.x, y: point.y } };
+      };
+      const previous = enemy.firingPosition;
+      if (previous?.kind === kind && previous.targetId === object.id) {
+        const position = checkPosition(previous);
+        enemy.firingPosition = position;
+        if (position) return { position };
+      }
+      enemy.firingPosition = null;
+      if ((enemy.firingRetryAt ?? 0) <= this._waveTime + EPS) {
+        const angle = Math.atan2(object.y - enemy.y, object.x - enemy.x);
+        const side = String(enemy.id).charCodeAt(String(enemy.id).length - 1) % 2 ? 1 : -1;
+        // Try sidesteps first, then diagonals and retreat. A direct local
+        // connector is enough here; the normal route solver owns longer moves.
+        for (const radius of FIRING_POSITION_RADII) {
+          for (const turn of [2, -2, 1, -1, 3, -3, 4, 0]) {
+            const heading = angle + turn * side * Math.PI / 4;
+            const position = checkPosition({
+              x: enemy.x + Math.cos(heading) * radius, y: enemy.y + Math.sin(heading) * radius
+            });
+            if (!position) continue;
+            enemy.firingPosition = position;
+            if (!this._forecasting) this._recordAttempt('enemy_firing_position', {
+              enemyId: enemy.id, enemyType: enemy.type, lane: enemy.lane ?? null,
+              target: kind, targetId: object.id ?? kind,
+              position: { x: position.x, y: position.y }
+            });
+            return { position };
+          }
+        }
+        enemy.firingRetryAt = this._waveTime + FIRING_RETRY_SECONDS;
+      }
+      // Yield only to a real or reserved lane for the same target. Otherwise
+      // resume navigation so two tanks blocked on unrelated targets can move.
+      return firingLanes.some(lane => lane.kind === kind && lane.id === object.id) ? { position: null } : null;
+    }
+
+    _moveToFiringPosition(enemy, position, speed, dt) {
+      const length = distance(enemy, position);
+      if (length <= EPS) return;
+      const travel = Math.min(speed * dt, length);
+      const angle = Math.atan2(position.y - enemy.y, position.x - enemy.x);
+      if (enemy.smoothDrive) {
+        const { x, y } = enemy;
+        this._moveCircle(enemy, Math.cos(angle) * travel, Math.sin(angle) * travel, false);
+        this._followSteeredMotion(enemy, x, y, dt, length, travel);
+      } else {
+        // The whole connector was checked against the current obstacles.
+        enemy.x += Math.cos(angle) * travel;
+        enemy.y += Math.sin(angle) * travel;
+        enemy.bodyAngle = angle;
+      }
+    }
+
     _assignRoute(enemy) {
-      const result = this.debugRoute(enemy.x, enemy.y);
-      enemy.route = this._routeUntilBreach(result);
-      enemy.routeIndex = 0;
+      const previous = enemy.routeDecision;
+      const geometryChanged = enemy.routeVersion !== this._navVersion;
+      const result = this.debugRoute(enemy.x, enemy.y, enemy);
+      const key = result.breachIds?.join('|') ?? '';
+      const changed = !previous || previous.key !== key || previous.decision !== result.decision;
+      const sameRoute = !changed && !geometryChanged && enemy.routeIndex < enemy.route.length && enemy.stuck < 0.4;
+      if (!sameRoute) {
+        // During disengagement a light may still fire on the move. Keep a
+        // baseward waypoint even if its current position is already in range.
+        const returning = enemy.reacquireDelay > EPS && !result.points.length;
+        const fallback = result.decision === 'unreachable' || returning ? this._findOpenPath(enemy.x, enemy.y) : null;
+        enemy.route = fallback ? this._smoothRoute(fallback) : this._routeUntilBreach(result);
+        enemy.routeIndex = 0;
+        enemy.stuck = 0;
+      }
       enemy.targetWreckId = result.blockedWreckId || null;
       enemy.routeVersion = this._navVersion;
-      enemy.stuck = 0;
+      // Detach periodic estimates for a full column from the same frame.
+      const lastIdCharacter = String(enemy.id).slice(-1);
+      enemy.routeRecheckAt = this._waveTime + ROUTE_RECHECK + (lastIdCharacter.charCodeAt(0) % 8) * STEP;
+      if (this.config.AI_MODE !== 'roles') return;
+      enemy.routeDecision = { key, decision: result.decision };
+      if ((changed || geometryChanged) && this.wrecks.length && this.phase === 'battle' && !this._forecasting) {
+        const { decision, estimatedSeconds, detourSeconds, breachSeconds, breachIds, shooters, group } = result;
+        this._recordAttempt('ai_route', {
+          enemyId: enemy.id, lane: enemy.lane ?? null, enemyType: enemy.type,
+          decision, estimatedSeconds, detourSeconds, breachSeconds, breachIds, shooters, group
+        });
+      }
     }
 
     _followRoute(enemy, speed, dt) {
@@ -1305,9 +1606,11 @@
         this._followRetreat(enemy, speed, dt);
         return;
       }
-      const waypointTolerance = enemy.targetWreckId ? EPS : 0.12;
+      // An intermediate corner can be rounded. The last point is selected
+      // for its actual firing ray, which can start exactly at maximum range.
+      const waypointTolerance = index => enemy.targetWreckId || index === enemy.route.length - 1 ? EPS : 0.12;
       while (enemy.routeIndex < enemy.route.length &&
-        distance(enemy, enemy.route[enemy.routeIndex]) < waypointTolerance) enemy.routeIndex++;
+        distance(enemy, enemy.route[enemy.routeIndex]) < waypointTolerance(enemy.routeIndex)) enemy.routeIndex++;
       const waypoint = enemy.route[enemy.routeIndex];
       if (!waypoint) return;
       const dx = waypoint.x - enemy.x;
@@ -1351,7 +1654,7 @@
       if (enemy.smoothDrive) {
         const nextWaypoint = enemy.route[enemy.routeIndex + 1];
         const upcomingTurn = Boolean(nextWaypoint &&
-          length <= waypointTolerance + speed * RETURN_STEERING_MIN_TIME);
+          length <= waypointTolerance(enemy.routeIndex) + speed * RETURN_STEERING_MIN_TIME);
         this._followSteeredMotion(enemy, beforeX, beforeY, dt, length, travel, upcomingTurn);
         moved = Math.hypot(enemy.x - beforeX, enemy.y - beforeY);
       } else if (moved > EPS) {
@@ -1605,13 +1908,13 @@
       this.bullets.push({
         id: `b${++this._serial}`, x: shooter.x, y: shooter.y,
         dx: dx / length, dy: dy / length, speed, damage,
-        remaining: range, team, ownerId: shooter.id
+        range, remaining: range, team, ownerId: shooter.id
       });
       this._emit('shot', { x: shooter.x, y: shooter.y, side: team });
       return true;
     }
 
-    _firstCollision(ax, ay, bx, by, ownerId) {
+    _firstCollision(ax, ay, bx, by, ownerId, includeEnemies = true) {
       let best = null;
       const consider = (t, kind, object) => {
         if (t !== null && (!best || t < best.t - EPS)) best = { t, kind, object };
@@ -1623,9 +1926,11 @@
       if (this.player.alive && this.player.id !== ownerId) {
         consider(segmentCircle(ax, ay, bx, by, this.player.x, this.player.y, this.player.r), 'player', this.player);
       }
-      for (const enemy of this.enemies) {
-        if (enemy.dead || enemy.hp <= 0 || enemy.id === ownerId) continue;
-        consider(segmentCircle(ax, ay, bx, by, enemy.x, enemy.y, enemy.r), 'enemy', enemy);
+      if (includeEnemies) {
+        for (const enemy of this.enemies) {
+          if (enemy.dead || enemy.hp <= 0 || enemy.id === ownerId) continue;
+          consider(segmentCircle(ax, ay, bx, by, enemy.x, enemy.y, enemy.r), 'enemy', enemy);
+        }
       }
       return best;
     }
@@ -1769,6 +2074,7 @@
       this._navVersion++;
       this._openField = null;
       this._breachSearch = null;
+      this._shotFields = new Map();
       this._traffic = null;
       this._wreckSignature = this.wrecks.map(wreck => `${wreck.id}:${wreck.x}:${wreck.y}:${wreck.r}`).join('|');
     }
@@ -1817,12 +2123,12 @@
       return this._openField;
     }
 
-    *_nearbyNodes(x, y) {
+    *_nearbyNodes(x, y, cells = 4) {
       const { nodes, columns, rows } = this._grid;
       const column = Math.floor(x / CELL);
       const row = Math.floor(y / CELL);
-      for (let cy = Math.max(0, row - 4); cy <= Math.min(rows - 1, row + 4); cy++) {
-        for (let cx = Math.max(0, column - 4); cx <= Math.min(columns - 1, column + 4); cx++) {
+      for (let cy = Math.max(0, row - cells); cy <= Math.min(rows - 1, row + cells); cy++) {
+        for (let cx = Math.max(0, column - cells); cx <= Math.min(columns - 1, column + cells); cx++) {
           const id = cy * columns + cx;
           if (nodes[id].free) yield id;
         }
@@ -2014,7 +2320,7 @@
       return [...points.slice(0, index), { x, y }];
     }
 
-    debugRoute(x, y) {
+    _legacyRoute(x, y) {
       this._syncNavigation();
       const open = this._findOpenPath(x, y);
       if (open) return { points: this._smoothRoute(open), blockedWreckId: null };
@@ -2024,13 +2330,500 @@
       return { points, ...this._firstBreach({ x, y }, points) };
     }
 
+    _staticBaseRays(from, range) {
+      const rect = centerRect(this.base);
+      const xs = [clamp(from.x, rect.x, rect.x + rect.w), rect.x, rect.x + rect.w];
+      const ys = [clamp(from.y, rect.y, rect.y + rect.h), rect.y, rect.y + rect.h];
+      const result = [];
+      for (const x of new Set(xs)) for (const y of new Set(ys)) {
+        const t = segmentRect(from.x, from.y, x, y, rect);
+        if (t === null || this.config.WALLS.some(wall => {
+          const contact = segmentRect(from.x, from.y, x, y, wall);
+          return contact !== null && contact <= t + EPS;
+        })) continue;
+        const point = { x: from.x + (x - from.x) * t, y: from.y + (y - from.y) * t };
+        if (distance(from, point) <= range + EPS) result.push(point);
+      }
+      return result;
+    }
+
+    _obstacleOnRay(from, to, objects) {
+      let first = null;
+      let earliest = Infinity;
+      for (const object of objects) {
+        const time = segmentCircle(from.x, from.y, to.x, to.y, object.x, object.y, object.r);
+        if (time !== null && time < earliest - EPS) {
+          earliest = time;
+          first = object;
+        }
+      }
+      return first;
+    }
+
+    _shotField(spec, mode) {
+      // Open, shortest and HP-weighted routes are a small local set of candidates.
+      // Geometry is shared, while each route's combat time is assessed forward.
+      const staticField = mode === 'direct' || !this.wrecks.length;
+      const fields = staticField ? (this._grid.staticShotFields ??= new Map()) : this._shotFields;
+      const key = staticField ? spec.range :
+        `${spec.range}:${mode}:${mode === 'weighted' ? this.wrecks.map(w => Math.ceil(w.hp / 20)).join(',') : ''}`;
+      if (fields.has(key)) return fields.get(key);
+      const { nodes, size } = this._grid;
+      const allRays = this._grid.baseRays ??= new Map();
+      if (!allRays.has(spec.range)) {
+        allRays.set(spec.range, nodes.map(node => node.free &&
+          pointRectDistanceSq(node.x, node.y, centerRect(this.base)) <= square(spec.range) + EPS ?
+          this._staticBaseRays(node, spec.range) : []));
+      }
+      const rays = allRays.get(spec.range);
+      const costs = new Float64Array(size).fill(Infinity);
+      const next = new Int32Array(size).fill(-1);
+      const goals = new Map();
+      const heap = new MinHeap();
+      const covered = mode === 'weighted' ? nodes.map(node => this.wrecks.filter(wreck =>
+        distance(node, wreck) < TANK_RADIUS + wreck.r - EPS)) : null;
+      const cutCost = wreck => 0.75 + Math.ceil(wreck.hp / 20) * 0.7;
+      for (let id = 0; id < size; id++) {
+        if (!rays[id].length) continue;
+        const node = nodes[id];
+        if (!staticField && mode === 'open' && !this._navigationSegmentFree(node.x, node.y, node.x, node.y, false)) continue;
+        for (const point of rays[id]) {
+          const blockers = staticField ? [] : this.wrecks.filter(wreck =>
+            segmentCircle(node.x, node.y, point.x, point.y, wreck.x, wreck.y, wreck.r) !== null);
+          if (mode === 'open' && blockers.length) continue;
+          const cost = mode === 'weighted' ?
+            [...new Set([...blockers, ...covered[id]])].reduce((sum, wreck) => sum + cutCost(wreck), 0) : 0;
+          if (cost >= costs[id]) continue;
+          costs[id] = cost;
+          goals.set(id, point);
+        }
+        if (goals.has(id)) heap.push({ id, cost: costs[id] });
+      }
+      while (heap.items.length) {
+        const current = heap.pop();
+        if (current.cost > costs[current.id] + EPS) continue;
+        const node = nodes[current.id];
+        for (const edge of node.edges) {
+          const neighbor = nodes[edge.id];
+          if (!staticField && mode === 'open' && this.wrecks.some(wreck =>
+            pointSegmentDistanceSq(wreck.x, wreck.y, node.x, node.y, neighbor.x, neighbor.y) <
+              square(TANK_RADIUS + wreck.r) - EPS)) continue;
+          let candidate = current.cost + edge.length;
+          if (covered) for (const wreck of covered[current.id]) {
+            if (!covered[edge.id].includes(wreck)) candidate += cutCost(wreck);
+          }
+          if (candidate >= costs[edge.id] - EPS) continue;
+          costs[edge.id] = candidate;
+          next[edge.id] = current.id;
+          heap.push({ id: edge.id, cost: candidate });
+        }
+      }
+      const field = { costs, next, goals };
+      // HP changes rank the weighted candidates without duplicating old fields.
+      if (mode === 'weighted') for (const entry of this._shotFields.keys()) {
+        if (entry.startsWith(`${spec.range}:weighted:`)) this._shotFields.delete(entry);
+      }
+      fields.set(key, field);
+      return field;
+    }
+
+    _shotPath(start, spec, mode) {
+      const directBaseRays = this._staticBaseRays(start, spec.range);
+      for (const ray of directBaseRays) {
+        if (!this._obstacleOnRay(start, ray, this.wrecks)) return { points: [], basePoint: ray };
+      }
+      if (mode === 'direct' && directBaseRays.length) return { points: [], basePoint: directBaseRays[0] };
+      const { nodes } = this._grid;
+      const { costs, next, goals } = this._shotField(spec, mode);
+      let first = -1;
+      let best = Infinity;
+      for (const id of this._nearbyNodes(start.x, start.y)) {
+        const node = nodes[id];
+        const candidate = costs[id] + distance(start, node);
+        if (candidate >= best - EPS ||
+            !this._navigationSegmentFree(start.x, start.y, node.x, node.y, mode !== 'open')) continue;
+        first = id;
+        best = candidate;
+      }
+      if (first < 0) return null;
+      const raw = [start];
+      let current = first;
+      while (next[current] >= 0) {
+        raw.push(nodes[current]);
+        current = next[current];
+      }
+      raw.push(nodes[current]);
+      return {
+        points: this._smoothRoute(raw, mode === 'open' ? null : this.wrecks),
+        basePoint: goals.get(current)
+      };
+    }
+
+    _routeCohort(enemy) {
+      return this.enemies.filter(actor => actor.id !== enemy.id && actor.hp > 0 && !actor.dead &&
+        !actor.dodge && !actor.pressure && enemy.lane != null && actor.lane === enemy.lane &&
+        distance(enemy, actor) <= BREACH_GROUP_RADIUS &&
+        staticSegmentFree(this.config, enemy.x, enemy.y, actor.x, actor.y));
+    }
+
+    _travelSeconds(points, speed, heading) {
+      let seconds = 0;
+      for (let i = 1; i < points.length; i++) {
+        const from = points[i - 1];
+        const to = points[i];
+        const length = distance(from, to);
+        if (length < EPS) continue;
+        const angle = Math.atan2(to.y - from.y, to.x - from.x);
+        seconds += length / speed;
+        if (Number.isFinite(heading)) seconds += ROUTE_TURN_SECONDS * Math.abs(angleDelta(angle, heading)) / (Math.PI / 2);
+        heading = angle;
+      }
+      return seconds;
+    }
+
+    _breachRay(point, wreck, spec, blockers) {
+      const length = distance(point, wreck);
+      const flightDistance = length - wreck.r;
+      if (flightDistance < EPS || flightDistance > spec.range + EPS) return null;
+      const contact = flightDistance / length;
+      const end = { x: point.x + (wreck.x - point.x) * contact, y: point.y + (wreck.y - point.y) * contact };
+      if (this.config.WALLS.some(wall => segmentRect(point.x, point.y, end.x, end.y, wall) !== null) ||
+          segmentRect(point.x, point.y, end.x, end.y, centerRect(this.base)) !== null ||
+          this._obstacleOnRay(point, end, blockers)) return null;
+      return { end, flight: flightDistance / ENEMY_PROJECTILE_SPEED };
+    }
+
+    _breachApproach(prefix, wreck, blockers, spec, heading, occupied) {
+      let best = null;
+      // Sample from the current position up to physical contact. Shooting can
+      // start as soon as the route exposes the hull, including before a turn.
+      for (let index = 0; index < prefix.length; index++) {
+        const left = prefix[Math.max(index - 1, 0)];
+        const right = prefix[index];
+        const steps = Math.max(1, Math.ceil(distance(left, right) / (CELL * 2)));
+        for (let step = index ? 1 : 0; step <= (index ? steps : 0); step++) {
+          const fraction = step / steps;
+          const point = { x: left.x + (right.x - left.x) * fraction, y: left.y + (right.y - left.y) * fraction };
+          if (occupied.some(actor => distance(actor, point) < actor.r + TANK_RADIUS - EPS)) continue;
+          const ray = this._breachRay(point, wreck, spec, blockers);
+          if (!ray) continue;
+          const path = index ? [...prefix.slice(0, index), point] : [point];
+          const travel = this._travelSeconds(path, spec.speed, heading);
+          if (!best || travel + ray.flight < best.travel + best.flight - EPS) {
+            best = { ...ray, point, path, travel, index };
+          }
+        }
+        if (best && index > best.index + 1) break;
+      }
+      return best;
+    }
+
+    _supportShot(actor, from, occupied, wreck, hulls, startTime, readyAt, movingBlockers, anchor) {
+      const spec = this.config.ENEMY_TYPES[actor.type] ?? this.config.ENEMY_TYPES.light;
+      const points = [from];
+      if (actor.firingPosition?.targetId === wreck.id) points.push(actor.firingPosition);
+      const lead = occupied[0]?.point ?? anchor;
+      for (const radius of [1.05, 1.6]) for (let eighth = 0; eighth < 8; eighth++) {
+        const angle = eighth * Math.PI / 4;
+        points.push({ x: lead.x + Math.cos(angle) * radius, y: lead.y + Math.sin(angle) * radius });
+      }
+      let best = null;
+      for (const point of points) {
+        if (!staticSegmentFree(this.config, from.x, from.y, point.x, point.y, actor.r) ||
+            hulls.some(hull => pointSegmentDistanceSq(hull.x, hull.y, from.x, from.y, point.x, point.y) <
+              square(hull.r + actor.r) - EPS) || movingBlockers.some(blocker =>
+              blocker.actor !== actor && pointSegmentDistanceSq(blocker.x, blocker.y, from.x, from.y, point.x, point.y) <
+                square(blocker.r + actor.r) - EPS)) continue;
+        if (occupied.some(shot =>
+            pointSegmentDistanceSq(shot.point.x, shot.point.y, from.x, from.y, point.x, point.y) <
+              square(shot.r + actor.r) - EPS ||
+            pointSegmentDistanceSq(point.x, point.y, shot.point.x, shot.point.y, shot.end.x, shot.end.y) <
+              square(actor.r) - EPS)) continue;
+        const obstacles = [...hulls.filter(hull => hull !== wreck), ...occupied.map(shot => ({ ...shot.point, r: shot.r }))];
+        obstacles.push(...movingBlockers.filter(blocker => blocker.actor !== actor));
+        const ray = this._breachRay(point, wreck, spec, obstacles);
+        if (!ray) continue;
+        const arrival = startTime + this._travelSeconds([from, point], spec.speed, actor.bodyAngle);
+        const fireAt = Math.max(readyAt, arrival);
+        const hitAt = fireAt + ray.flight;
+        if (best && best.hitAt <= hitAt + EPS) continue;
+        best = { ...ray, actor, point, r: actor.r, fireAt, hitAt, spec };
+      }
+      return best;
+    }
+
+    _pendingWreckHits(wreck) {
+      const impacts = [];
+      for (const shell of this.bullets) {
+        if (shell.team !== 'enemy' || shell.speed <= 0 || shell.remaining <= EPS) continue;
+        // Resolve the projectile's actual remaining ray, including intervening
+        // allies and terrain. A shell aimed at a hull can hit something else.
+        const end = projectileStep(shell, shell.remaining / shell.speed);
+        const collision = this._firstCollision(shell.x, shell.y, end.x, end.y, shell.ownerId);
+        if (collision?.kind === 'wreck' && collision.object === wreck) {
+          impacts.push({ time: collision.t * shell.remaining / shell.speed, damage: shell.damage, ownerId: shell.ownerId });
+        }
+      }
+      return impacts.sort((a, b) => a.time - b.time);
+    }
+
+    _clearanceTime(wreck, shooters) {
+      // Resolve individual impacts in order, then carry actual reload times
+      // forward to the next hull. Damage beyond the final hit cannot help it.
+      let remaining = wreck.hp;
+      let clearedAt = 0;
+      let nextImpact = 0;
+      const impacts = this._pendingWreckHits(wreck);
+      const nextHits = shooters.map(shot => shot.hitAt);
+      const used = new Map();
+      const firingIds = new Set();
+      while (remaining > 0) {
+        let first = -1;
+        for (let i = 0; i < nextHits.length; i++) {
+          if (first < 0 || nextHits[i] < nextHits[first] - EPS) first = i;
+        }
+        const committed = impacts[nextImpact];
+        if (committed && (first < 0 || committed.time <= nextHits[first] + EPS)) {
+          clearedAt = committed.time;
+          remaining -= committed.damage;
+          firingIds.add(committed.ownerId);
+          nextImpact++;
+          continue;
+        }
+        if (first < 0) return null;
+        const shot = shooters[first];
+        clearedAt = nextHits[first];
+        remaining -= shot.spec.damage;
+        nextHits[first] += shot.spec.cooldown;
+        used.set(shot.actor, { point: shot.point, readyAt: nextHits[first] - shot.flight });
+        firingIds.add(shot.actor.id);
+      }
+      return { clearedAt, used, firingIds: [...firingIds].filter(Boolean) };
+    }
+
+    _routeTrafficDelay(enemy, points) {
+      const contacts = new Set();
+      let from = enemy;
+      for (const to of points) {
+        for (const actor of this.enemies) {
+          if (actor.id === enemy.id || actor.hp <= 0 || actor.dead || distance(actor, enemy) > BREACH_GROUP_RADIUS) continue;
+          if (pointSegmentDistanceSq(actor.x, actor.y, from.x, from.y, to.x, to.y) < square(TANK_RADIUS + actor.r) - EPS) {
+            contacts.add(actor);
+          }
+        }
+        from = to;
+      }
+      return [...contacts].reduce((time, actor) => {
+        const speed = this.config.ENEMY_TYPES[actor.type]?.speed ?? 1.7;
+        return time + (actor.stationaryTarget ? ROUTE_OCCUPIED_DELAY : TANK_RADIUS * 2 / speed);
+      }, 0);
+    }
+
+    _baseShotApproach(enemy, spec, start, points, remaining, blockers) {
+      const end = points.at(-1) ?? start;
+      const base = centerRect(this.base);
+      // Nine grid columns or rows around the endpoint are searched below.
+      const reach = spec.range + 4.5 * CELL * Math.SQRT2;
+      if (pointRectDistanceSq(end.x, end.y, base) > square(reach) + EPS) return null;
+      if (enemy.id && distance(enemy, end) < EPS && this._visibleBasePoint(enemy, spec.range)) return points;
+      const canShoot = (point, rays = this._staticBaseRays(point, spec.range)) => rays.some(ray =>
+        !this._obstacleOnRay(point, ray, remaining) && !this._obstacleOnRay(point, ray, blockers));
+      const bodies = [...remaining, ...blockers];
+      const occupied = bodies.some(body => distance(body, end) < enemy.r + body.r - EPS);
+      if (!occupied && canShoot(end)) return points;
+
+      // The cached route is static. Probe around its last point when a live
+      // tank occupies the lane, using the same contours for travel and fire.
+      const prefix = occupied ? points.slice(0, -1) : points;
+      const from = prefix.at(-1) ?? start;
+      const staticRays = this._grid.baseRays?.get(spec.range);
+      let best = null;
+      let length = Infinity;
+      for (const id of this._nearbyNodes(end.x, end.y, occupied ? 6 : 4)) {
+        const point = this._grid.nodes[id];
+        const travel = distance(from, point);
+        if (travel >= length - EPS || (staticRays && !staticRays[id].length) ||
+            pointRectDistanceSq(point.x, point.y, base) > square(spec.range) + EPS ||
+            !staticSegmentFree(this.config, from.x, from.y, point.x, point.y, enemy.r) ||
+            bodies.some(blocker =>
+              pointSegmentDistanceSq(blocker.x, blocker.y, from.x, from.y, point.x, point.y) <
+                square(enemy.r + blocker.r) - EPS) ||
+            !canShoot(point, staticRays?.[id])) continue;
+        best = { x: point.x, y: point.y };
+        length = travel;
+      }
+      return best ? [...prefix, best] : null;
+    }
+
+    _estimateShotPath(enemy, spec, route, cohort) {
+      const remaining = this.wrecks.slice();
+      let elapsed = 0;
+      let start = { x: enemy.x, y: enemy.y };
+      let points = route.points;
+      const breachIds = [];
+      let firstStop = null;
+      const group = new Map(cohort.map(actor => [actor, { point: actor, readyAt: actor.cooldown ?? 0 }]));
+      let readyAt = enemy.cooldown ?? 0;
+      let heading = enemy.bodyAngle;
+      const currentBlockers = this.enemies.filter(actor => actor.id !== enemy.id && !actor.dead && actor.hp > 0 &&
+        !group.has(actor));
+      if (this.player.alive) currentBlockers.push(this.player);
+      for (;;) {
+        const projectedGroup = [...group.entries()].map(([actor, state]) => ({ ...state.point, r: actor.r, actor }));
+        const movingBlockers = [...currentBlockers, ...projectedGroup];
+        let from = start;
+        let index = 0;
+        let contact = null;
+        let wreck = null;
+        for (; index < points.length; index++) {
+          const to = points[index];
+          let first = Infinity;
+          for (const hull of remaining) {
+            const radius = TANK_RADIUS + hull.r;
+            if (pointSegmentDistanceSq(hull.x, hull.y, from.x, from.y, to.x, to.y) >= square(radius) - EPS) continue;
+            const fraction = segmentCircle(from.x, from.y, to.x, to.y, hull.x, hull.y, radius);
+            if (fraction === null || fraction >= first - EPS) continue;
+            first = fraction;
+            wreck = hull;
+          }
+          if (wreck) {
+            contact = { x: from.x + (to.x - from.x) * first, y: from.y + (to.y - from.y) * first };
+            break;
+          }
+          from = to;
+        }
+        if (!wreck) wreck = this._obstacleOnRay(from, route.basePoint, remaining);
+        if (!wreck) {
+          const ownPath = this._baseShotApproach(enemy, spec, start, points, remaining, movingBlockers);
+          let time = Infinity;
+          if (ownPath) {
+            const arrival = elapsed + this._travelSeconds([start, ...ownPath], spec.speed, heading);
+            time = Math.max(arrival, readyAt) + this._routeTrafficDelay(enemy, firstStop?.points ?? ownPath);
+          }
+          // A group member already at an opening may deliver the first shot.
+          // Its position and reload are those projected after each cleared hull.
+          for (const [actor, state] of group) {
+            if (Math.max(elapsed, state.readyAt) >= time - EPS) continue;
+            const allySpec = this.config.ENEMY_TYPES[actor.type] ?? this.config.ENEMY_TYPES.light;
+            const occupied = [{ ...start, r: enemy.r }, ...movingBlockers.filter(item => item.actor !== actor)];
+            const allyPath = this._baseShotApproach(actor, allySpec, state.point, [], remaining, occupied);
+            if (!allyPath) continue;
+            const arrival = elapsed + this._travelSeconds([state.point, ...allyPath], allySpec.speed, actor.bodyAngle);
+            time = Math.min(time, Math.max(arrival, state.readyAt));
+          }
+          if (!Number.isFinite(time)) return null;
+          return {
+            points: firstStop?.points ?? ownPath ?? [],
+            blockedWreckId: breachIds[0] ?? null,
+            breachIds, time, shooters: firstStop?.shooters ?? [],
+            supportPositions: firstStop?.supportPositions
+          };
+        }
+
+        const prefix = [start, ...points.slice(0, index), ...(contact ? [contact] : [])];
+        const blockers = [...remaining.filter(hull => hull !== wreck), ...movingBlockers];
+        // Nearby teammates can use separate rays, reserved below.
+        const approach = this._breachApproach(prefix, wreck, blockers, spec, heading, movingBlockers);
+        const shooters = [];
+        if (approach) {
+          const fireAt = Math.max(readyAt, elapsed + approach.travel);
+          shooters.push({ ...approach, actor: enemy, r: enemy.r, fireAt, hitAt: fireAt + approach.flight, spec });
+        }
+        const available = [...group.entries()].sort(([a], [b]) => distance(a, wreck) - distance(b, wreck) ||
+          String(a.id).localeCompare(String(b.id)));
+        for (const [actor, state] of available) {
+          const shot = this._supportShot(actor, state.point, shooters, wreck, remaining, elapsed, state.readyAt,
+            movingBlockers, prefix.at(-1));
+          if (shot) shooters.push(shot);
+        }
+        const clearance = this._clearanceTime(wreck, shooters);
+        if (!clearance) return null;
+        const { clearedAt, used, firingIds } = clearance;
+        firstStop ??= {
+          points: approach?.path.slice(1) ?? [],
+          shooters: firingIds,
+          supportPositions: new Map([...used].filter(([actor]) => actor !== enemy)
+            .map(([actor, position]) => [actor, position.point]))
+        };
+        for (const [actor, state] of used) if (actor !== enemy) group.set(actor, state);
+        breachIds.push(wreck.id);
+        remaining.splice(remaining.indexOf(wreck), 1);
+        elapsed = Math.max(clearedAt, elapsed + (approach?.travel ?? 0));
+        readyAt = used.get(enemy)?.readyAt ?? readyAt;
+        if (!approach) continue;
+        if (approach.path.length > 1) {
+          const previous = approach.path.at(-2);
+          heading = Math.atan2(approach.point.y - previous.y, approach.point.x - previous.x);
+        }
+        start = approach.point;
+        points = points.slice(Math.max(0, approach.index - 1));
+        if (points.length && distance(start, points[0]) < EPS) points = points.slice(1);
+      }
+    }
+
+    _routeEstimates(enemy, cohort) {
+      const spec = this.config.ENEMY_TYPES[enemy.type] ?? this.config.ENEMY_TYPES.light;
+      const liveRay = enemy.id && this._visibleBasePoint(enemy, spec.range);
+      if (liveRay) {
+        const readyPosition = this._estimateShotPath(enemy, spec, { points: [], basePoint: liveRay }, cohort);
+        if (readyPosition) return [readyPosition];
+      }
+      const candidates = [];
+      const paths = [];
+      for (const mode of this.wrecks.length ? ['open', 'direct', 'weighted'] : ['open']) {
+        const path = this._shotPath(enemy, spec, mode);
+        if (!path || paths.some(other => distance(path.basePoint, other.basePoint) < EPS &&
+            path.points.length === other.points.length &&
+            path.points.every((point, index) => distance(point, other.points[index]) < EPS))) continue;
+        paths.push(path);
+        const estimate = this._estimateShotPath(enemy, spec, path, cohort);
+        if (estimate) candidates.push(estimate);
+      }
+      candidates.sort((a, b) => a.time - b.time || a.breachIds.length - b.breachIds.length);
+      return candidates;
+    }
+
+    debugRoute(x, y, actor = null) {
+      this._syncNavigation();
+      const enemy = actor ?? { x, y, type: 'light', r: TANK_RADIUS };
+      const spec = this.config.ENEMY_TYPES[enemy.type] ?? this.config.ENEMY_TYPES.light;
+      if (this.config.AI_MODE !== 'roles' || spec.range <= EPS) return this._legacyRoute(x, y);
+      const cohort = this.wrecks.length ? this._routeCohort(enemy) : [];
+      const group = [enemy, ...cohort].sort((a, b) =>
+        Number(b.stationaryTarget === 'wreck') - Number(a.stationaryTarget === 'wreck') ||
+        distance(a, this.base) - distance(b, this.base) || String(a.id).localeCompare(String(b.id)));
+      const lead = group[0];
+      const candidates = this._routeEstimates(lead, group.slice(1));
+      const open = candidates.find(candidate => !candidate.breachIds.length);
+      const breach = candidates.find(candidate => candidate.breachIds.length);
+      const winner = candidates[0];
+      const current = candidates.find(candidate => lead.routeDecision?.key === candidate.breachIds.join('|'));
+      const chosen = current && current.time <= winner.time + ROUTE_SWITCH_MARGIN + EPS ? current : winner;
+      const supportPosition = chosen?.supportPositions?.get(enemy);
+      const localCandidates = supportPosition ?
+        [{ ...chosen, points: [{ x: supportPosition.x, y: supportPosition.y }] }] :
+        lead === enemy ? candidates : this._routeEstimates(enemy, cohort);
+      const local = chosen && localCandidates.find(candidate => candidate.breachIds.join('|') === chosen.breachIds.join('|'));
+      const route = local ?? localCandidates[0];
+      return {
+        points: route?.points ?? [], blockedWreckId: route?.blockedWreckId ?? null,
+        decision: route ? route.blockedWreckId ? 'breach' : 'detour' : 'unreachable',
+        estimatedSeconds: local && chosen ? chosen.time : route?.time ?? null,
+        detourSeconds: open?.time ?? null, breachSeconds: breach?.time ?? null,
+        breachIds: route?.breachIds ?? [], shooters: (local && chosen ? chosen : route)?.shooters ?? [],
+        group: group.map(member => member.id).filter(Boolean)
+      };
+    }
+
     getPreviewPaths({ lane = null, type = null } = {}) {
-      // All enemy types use the same navigation geometry. Type-specific combat behavior is outside this forecast.
       if (type !== null && !Object.hasOwn(this.config.ENEMY_TYPES, type)) return [];
       return Object.entries(this.config.SPAWNS).filter(([entry]) => lane === null || lane === entry).map(([lane, spawn]) => {
-        const route = this.debugRoute(spawn.x, spawn.y);
-        return { lane, points: [{ x: spawn.x, y: spawn.y }, ...this._routeUntilBreach(route)],
-          blockedWreckId: route.blockedWreckId };
+        const nextGroup = this.config.WAVES[this.waveIndex]?.find(group => group.lane === lane);
+        const route = this.debugRoute(spawn.x, spawn.y, {
+          x: spawn.x, y: spawn.y, type: type ?? nextGroup?.types[0] ?? 'light', r: TANK_RADIUS
+        });
+        const { points, blockedAt, ...estimate } = route;
+        return { lane, points: [{ x: spawn.x, y: spawn.y }, ...this._routeUntilBreach(route)], ...estimate };
       });
     }
 
@@ -2045,7 +2838,7 @@
   <script>
 (() => {
   'use strict';
-  const { Game, CONFIG, PLAYER_WEAPON, TANK_RADIUS, isInSpawnZone } = globalThis.TankCore;
+  const { Game, CONFIG, PLAYER_WEAPON, PLAYER_MODULES, TANK_RADIUS, isInSpawnZone } = globalThis.TankCore;
   const game = new Game();
   const el = (id) => document.getElementById(id);
   const canvas = el('board'), ctx = canvas.getContext('2d');
@@ -2075,7 +2868,8 @@
   for(const lane of Object.keys(CONFIG.SPAWNS))el('route-lane').add(new Option(lane,lane));
   for(const type of Object.keys(CONFIG.ENEMY_TYPES))el('route-type').add(new Option(enemyLooks[type].name,type));
   const hitsToKill = hp => Math.ceil(hp / PLAYER_WEAPON.damage);
-  const moduleNames = { engine: 'Двигатель', armor: 'Броня' };
+  const moduleNames = { engine: 'Двигатель', armor: 'Броня', barrel: 'Удлинённый ствол' };
+  const rangeLabel = range => range.toLocaleString('ru');
   const preparationReasons = {
     'not-prep': 'Доступно только в подготовке.',
     paused: 'Сначала сними игру с паузы.',
@@ -2160,7 +2954,7 @@
   function help(){
     if(modalKind==='help'){closeHelp();return;}
     pauseBeforeHelp=game.paused;game.paused=true;
-    openModal('help','ТРИ НАПРАВЛЕНИЯ · ОДНА БАЗА','Как играть',`<ol class="modal-list"><li><b>Защищай базу.</b> WASD — движение, мышь — прицел, удержание ЛКМ — огонь. До старта проверь входы и время атаки в плане волны. Кнопка «Кампания» показывает расписание всех волн (${waveCount}).</li><li><b>Лёгкий (Л) охотится за тобой.</b> Знак «!» означает преследование. Уходи за укрытие и меняй позицию.</li><li><b>Средний (С) и тяжёлый (Т) атакуют базу.</b> Рядом с танком указаны HP и число попаданий до уничтожения (×). Оставленные корпуса меняют маршрут и задерживают снаряды обеих сторон. Перечёркнутый корпус рядом с танком означает, что в зоне появления он не оставит баррикаду.</li><li><b>Враг стреляет без предупреждения.</b> При открытой цели и готовом орудии он сразу выпускает снаряд. Меняй позицию и используй твёрдые укрытия. Воронки и следы на земле проходимы.</li><li><b>Между волнами</b> нажми на корпус: оставь его баррикадой или разбери на ремонт базы до +${CONFIG.ENEMY_TYPES.medium.wreck.repairHp} HP за средний или +${CONFIG.ENEMY_TYPES.heavy.wreck.repairHp} HP за тяжёлый. Средний корпус также даёт двигатель, тяжёлый — броню. В слоте помещается один модуль. Последнее действие можно отменить через Ctrl+Z. Подпись «до N» показывает последнюю волну службы.</li><li>Твой танк восстанавливается между волнами и возвращается через 4 секунды после гибели. Пока ты возвращаешься, бой продолжается.</li></ol>`,[['Понятно',closeHelp,true]]);
+    openModal('help','ТРИ НАПРАВЛЕНИЯ · ОДНА БАЗА','Как играть',`<ol class="modal-list"><li><b>Защищай базу.</b> WASD — движение, мышь — прицел, удержание ЛКМ — огонь. До старта проверь входы и время атаки в плане волны. Кнопка «Кампания» показывает расписание всех волн (${waveCount}).</li><li><b>Лёгкий (Л) охотится за тобой.</b> Знак «!» означает преследование. Уходи за укрытие и меняй позицию.</li><li><b>Средний (С) и тяжёлый (Т) атакуют базу.</b> Рядом с танком указаны HP и число попаданий до уничтожения (×). Оставленные корпуса меняют маршрут и задерживают снаряды обеих сторон. Перечёркнутый корпус рядом с танком означает, что в зоне появления он не оставит баррикаду.</li><li><b>Враг стреляет без предупреждения.</b> При открытой цели и готовом орудии он сразу выпускает снаряд. Меняй позицию и используй твёрдые укрытия. Воронки и следы на земле проходимы.</li><li><b>Между волнами</b> нажми на корпус: оставь его баррикадой или разбери на ремонт базы до +${CONFIG.ENEMY_TYPES.medium.wreck.repairHp} HP за средний или +${CONFIG.ENEMY_TYPES.heavy.wreck.repairHp} HP за тяжёлый. Средний корпус даёт на выбор двигатель или удлинённый ствол. Ствол увеличивает дальность до ${rangeLabel(PLAYER_MODULES.barrel.range)} ед. Тяжёлый корпус даёт броню. В слоте помещается один модуль. Последнее действие можно отменить через Ctrl+Z. Подпись «до N» показывает последнюю волну службы.</li><li>Твой танк восстанавливается между волнами и возвращается через 4 секунды после гибели. Пока ты возвращаешься, бой продолжается.</li></ol>`,[['Понятно',closeHelp,true]]);
   }
   function closeHelp(){game.paused=pauseBeforeHelp;closeModal();if(game.paused){game.paused=false;pause();}else lastFrame=performance.now();}
   function reset(){
@@ -2174,8 +2968,8 @@
     const result=game.repairFromWreck(selected);
     if(result.ok){leaveWreck();routeKey=null;toast(result.hp>0?`Корпус разобран. База +${result.hp} HP.`:'Корпус разобран. Проход освобождён.');}
   }
-  function installModule(){
-    const result=game.installModuleFromWreck(selected);
+  function installModule(module){
+    const result=game.installModuleFromWreck(selected,module);
     if(result.ok){leaveWreck();routeKey=null;toast(`Модуль установлен: ${moduleNames[result.module]}.`);}
   }
   function chooseReinforcement(){
@@ -2207,7 +3001,9 @@
     toast('Действие отменено. Позиция танка восстановлена.');
   }
   el('start').onclick=start;el('pause').onclick=pause;el('help').onclick=help;el('campaign').onclick=showCampaign;el('repair').onclick=repair;
-  el('install-module').onclick=installModule;el('leave').onclick=leaveWreck;el('undo').onclick=undo;
+  el('install-module').onclick=()=>installModule();
+  el('install-barrel').onclick=()=>installModule('barrel');
+  el('leave').onclick=leaveWreck;el('undo').onclick=undo;
   el('choose-reinforcement').onclick=chooseReinforcement;
   el('confirm-reinforcement').onclick=confirmReinforcement;
   el('export-attempt').onclick=exportAttempt;
@@ -2315,7 +3111,7 @@
 
   function moduleEffect({ module, replacedModule, moduleStats }){
     const replacement=replacedModule?` взамен «${moduleNames[replacedModule]}»`:'';
-    return `«${moduleNames[module]}»${replacement}. Танк получит ${moduleStats.speed} ед/с и ${moduleStats.maxHp} HP.`;
+    return `«${moduleNames[module]}»${replacement}. Скорость ${moduleStats.speed} ед/с, прочность ${moduleStats.maxHp} HP, дальность ${rangeLabel(moduleStats.range)} ед.`;
   }
   function reinforcementEffect(target, { hp, expiresAfterWave }){
     return `Прочность цели ${target.hp} → ${hp} / ${target.maxHp} HP. Последняя волна службы ${expiresAfterWave}.`;
@@ -2340,15 +3136,16 @@
           preparationPreview={undo};
           const base=undo.baseHp!==game.base.hp?` База вернётся к ${undo.baseHp} HP.`:'';
           const module=undo.player.module!==game.player.module?` Модуль после отмены — ${moduleNames[undo.player.module]??'пустой слот'}.`:'';
-          message=`Полевые метки показывают корпуса и позицию танка после отмены.${base}${module}`;
+          const range=undo.player.weaponRange!==game.playerWeaponRange? ` Дальность после отмены — ${rangeLabel(undo.player.weaponRange)} ед.`:'';
+          message=`Полевые метки показывают корпуса и позицию танка после отмены.${base}${module}${range}`;
         }
       }else if(wreck){
-        const actions=game.getWreckActions(wreck.id);
+        const actions=game.getWreckActions(wreck.id,previewAction==='install-barrel'?'barrel':undefined);
         if(previewAction==='repair'&&!actions.repairReason){
           preparationPreview={spent:wreck,target:{...game.base,r:Math.hypot(game.base.w,game.base.h)/2}};
           message=`Корпус исчезнет. База получит +${actions.repairHp} HP и будет иметь ${actions.repairBaseHp} / ${game.base.maxHp} HP.`;
-        }else if(previewAction==='install-module'&&!actions.moduleReason){
-          preparationPreview={spent:wreck,target:game.player};
+        }else if((previewAction==='install-module'||previewAction==='install-barrel')&&!actions.moduleReason){
+          preparationPreview={spent:wreck,target:game.player,weaponRange:actions.moduleStats.range};
           message=`Корпус исчезнет. ${moduleEffect(actions)}`;
         }else if(previewAction==='choose-reinforcement'&&!reinforcementChoiceReason(wreck.id,actions.repairReason)){
           preparationPreview={spent:wreck};
@@ -2365,7 +3162,7 @@
     }
     if(el('action-preview').textContent!==message)el('action-preview').textContent=message;
   }
-  for(const id of ['repair','install-module','choose-reinforcement','confirm-reinforcement','undo']){
+  for(const id of ['repair','install-module','install-barrel','choose-reinforcement','confirm-reinforcement','undo']){
     const button=el(id);
     button.addEventListener('pointerenter',()=>{
       if(!button.disabled)setActionPreview(hoveredAction=id);
@@ -2381,6 +3178,13 @@
       if(focusedAction===id)focusedAction=null;
       if(previewAction===id)setActionPreview(hoveredAction);
     });
+  }
+  function updateModuleButton(buttonId, effectId, reasonId, action){
+    const button=el(buttonId);
+    button.disabled=!!action.moduleReason;
+    button.textContent=action.module?`Взять модуль · ${moduleNames[action.module]}`:'Взять модуль';
+    showActionReason(effectId,action.moduleReason?null:`Корпус исчезнет. ${moduleEffect(action)}`);
+    showActionReason(reasonId,preparationReasons[action.moduleReason]);
   }
   function updateUi(){
     const prep=game.phase==='prep',fighting=['battle','settling'].includes(game.phase),finished=['won','lost'].includes(game.phase);
@@ -2401,7 +3205,7 @@
     const stateKey=[game.phase,game.waveIndex,selected,wreck?.hp,wreck?.expiresAfterWave,wreck?.reinforced,!!reinforcement,reinforcement?.targetId,target?.hp,target?.expiresAfterWave,target?.reinforced,game.paused,game.navigationVersion,game.base.hp,game.player.alive,game.player.module,game.canUndo].join('|');
     if(stateKey!==lastUiKey){
       lastUiKey=stateKey;const badge=el('phase-badge');badge.className='phase-badge'+(fighting?' battle':finished?' end':'');badge.textContent=prep?'ПОДГОТОВКА':fighting?'БОЙ':game.phase==='won'?'ПОБЕДА':'ПОРАЖЕНИЕ';
-      el('player-module').textContent=`Модуль: ${moduleNames[game.player.module]??'нет'}`;
+      el('player-module').textContent=`Модуль: ${moduleNames[game.player.module]??'нет'} · дальность ${rangeLabel(game.playerWeaponRange)} ед.`;
       showActionReason('undo-reason',game.canUndo?null:preparationReasons[game.getUndoPreview().reason]);
       el('phase-number').textContent=`${waveLabel(game.waveNumber)} / ${waveLabel(waveCount)}`;
       el('phase-title').textContent=prep?(game.waveIndex===0?'Выбери позицию':'Используй корпуса'):finished?(game.phase==='won'?'База уцелела':'Попробуй ещё'):'Держи оборону';
@@ -2426,15 +3230,19 @@
         el('confirm-reinforcement').disabled=!!reason;
       }else if(prep&&wreck){
         const actions=game.getWreckActions(wreck.id),look=enemyLooks[wreck.type];
-        const { repairHp, repairReason, module, moduleReason }=actions;
+        const { repairHp, repairReason, modules }=actions;
         el('salvage-content').innerHTML=`<div class="selected-wreck"><span class="wreck-symbol" aria-hidden="true">${look.mark}</span><div class="wreck-info"><strong>${look.name} корпус</strong><p>${Math.ceil(wreck.hp)} / ${wreck.maxHp} HP${wreck.reinforced?' · Укреплён':''}</p></div></div><p class="wreck-life">${wreck.expiresAfterWave===game.waveNumber?'Последняя волна службы. ':''}Исчезнет после волны ${wreck.expiresAfterWave}.</p>`;
         el('repair').disabled=!!repairReason;
         el('repair').textContent=repairReason?'Разобрать на ремонт':repairHp>0?`Разобрать · +${repairHp} HP базе`:'Разобрать · +0 HP, убрать корпус';
         showActionReason('repair-reason',preparationReasons[repairReason]);
-        el('install-module').disabled=!!moduleReason;
-        el('install-module').textContent=module?`Взять модуль · ${moduleNames[module]}`:'Взять модуль';
-        showActionReason('module-effect',moduleReason?null:`Корпус исчезнет. ${moduleEffect(actions)}`);
-        showActionReason('module-reason',preparationReasons[moduleReason]);
+        updateModuleButton('install-module','module-effect','module-reason',actions);
+        const offersBarrel=modules.includes('barrel');
+        el('install-barrel').hidden=!offersBarrel;
+        if(offersBarrel)updateModuleButton('install-barrel','barrel-effect','barrel-reason',game.getWreckActions(wreck.id,'barrel'));
+        else{
+          showActionReason('barrel-effect',null);
+          showActionReason('barrel-reason',null);
+        }
         const choiceReason=reinforcementChoiceReason(wreck.id,repairReason);
         el('choose-reinforcement').disabled=!!choiceReason;
         showActionReason('choose-reinforcement-reason',preparationReasons[choiceReason]);
@@ -2513,9 +3321,21 @@
     drawGround();
     for(const [lane,spawn] of Object.entries(CONFIG.SPAWNS))drawEntrance(lane,spawn);
     if(game.phase==='prep'&&el('routes').checked){
-      const lane=el('route-lane').value||null,type=el('route-type').value;
+      const lane=el('route-lane').value||null,type=el('route-type').value||null;
       const key=`${game.navigationVersion}|${lane??''}|${type}`;
-      if(key!==routeKey){routeKey=key;routePreview=game.getPreviewPaths({lane,type});}
+      if(key!==routeKey){
+        routeKey=key;
+        routePreview=game.getPreviewPaths({lane,type});
+        const seconds=new Intl.NumberFormat('ru',{maximumFractionDigits:1});
+        el('route-estimate').textContent=routePreview.map(path=>{
+          if(path.estimatedSeconds===null)return `${path.lane} · огневой позиции пока нет`;
+          const hull=game.wrecks.find(item=>item.id===path.blockedWreckId);
+          const type=hull&&enemyLooks[hull.type]?.name.toLowerCase();
+          const action=hull?`пролом · ${type??'корпус'}, ${hull.hp} HP`:path.breachSeconds!==null?'обход':'проезд';
+          return `${path.lane} · ${action} · ${seconds.format(path.estimatedSeconds)} с`;
+        }).join(' | ');
+      }
+      el('route-estimate').hidden=false;
       for(const path of routePreview){
         if(path.points.length<2)continue;
         ctx.strokeStyle=laneColor(path.lane)+'a0';
@@ -2528,7 +3348,7 @@
       }
       ctx.setLineDash([]);
       ctx.lineDashOffset=0;
-    }
+    }else el('route-estimate').hidden=true;
     for(const w of CONFIG.WALLS)drawCover(w);
     text('ЗАЩИЩЁННАЯ НИША',16.4,15.72,.20,'#536c58');
     ctx.strokeStyle='#8aa18480';ctx.lineWidth=.035;ctx.beginPath();ctx.arc(16.4,17.2,.7,0,Math.PI*2);ctx.stroke();text('R',16.4,17.2,.31,'#708668');
@@ -2650,7 +3470,13 @@
 
   function drawPreparationPreview(){
     if(!preparationPreview)return;
-    const { spent, target, undo }=preparationPreview;
+    const { spent, target, undo, weaponRange }=preparationPreview;
+    const range=undo?.player.weaponRange??weaponRange;
+    if(range!==undefined&&range!==game.playerWeaponRange){
+      const origin=undo?.player??game.player;
+      ctx.save();ctx.setLineDash([.18,.13]);ctx.strokeStyle='#31596799';ctx.lineWidth=.05;
+      ctx.beginPath();ctx.arc(origin.x,origin.y,range,0,Math.PI*2);ctx.stroke();ctx.restore();
+    }
     function mark(actor, label, color){
       ctx.save();
       ctx.setLineDash([.16,.10]);
@@ -2745,7 +3571,7 @@
     drawUnitLabels(actors,game.phase==='prep'&&el('routes').checked?routePreview:[]);
     for(const b of game.bullets){const own=b.team==='player';ctx.beginPath();ctx.moveTo(b.x-(b.dx||0)*.22,b.y-(b.dy||0)*.22);ctx.lineTo(b.x,b.y);ctx.strokeStyle=own?'#345868':'#843828';ctx.lineWidth=own?.14:.17;ctx.stroke();ctx.strokeStyle=own?'#f7ffd9':'#ffd49a';ctx.lineWidth=own?.07:.09;ctx.stroke();ctx.fillStyle=own?'#ffffe4':'#a24630';ctx.beginPath();ctx.arc(b.x,b.y,own?.06:.10,0,Math.PI*2);ctx.fill();}
     if(pointer.inside&&!game.paused&&game.player.alive&&game.phase==='battle'){
-      const p=game.player,dist=Math.hypot(pointer.x-p.x,pointer.y-p.y),angle=Math.atan2(pointer.y-p.y,pointer.x-p.x);ctx.strokeStyle='#31596755';ctx.lineWidth=.025;ctx.setLineDash([.07,.14]);ctx.beginPath();ctx.moveTo(p.x+Math.cos(angle)*.8,p.y+Math.sin(angle)*.8);ctx.lineTo(p.x+Math.cos(angle)*Math.min(PLAYER_WEAPON.range,dist),p.y+Math.sin(angle)*Math.min(PLAYER_WEAPON.range,dist));ctx.stroke();ctx.setLineDash([]);ctx.strokeStyle=dist>PLAYER_WEAPON.range+TANK_RADIUS?'#a4775e':'#285c70';ctx.lineWidth=.04;ctx.beginPath();ctx.arc(pointer.x,pointer.y,.19,0,Math.PI*2);ctx.moveTo(pointer.x-.30,pointer.y);ctx.lineTo(pointer.x-.13,pointer.y);ctx.moveTo(pointer.x+.13,pointer.y);ctx.lineTo(pointer.x+.30,pointer.y);ctx.moveTo(pointer.x,pointer.y-.30);ctx.lineTo(pointer.x,pointer.y-.13);ctx.moveTo(pointer.x,pointer.y+.13);ctx.lineTo(pointer.x,pointer.y+.30);ctx.stroke();
+      const p=game.player,range=game.playerWeaponRange,dist=Math.hypot(pointer.x-p.x,pointer.y-p.y),angle=Math.atan2(pointer.y-p.y,pointer.x-p.x);ctx.strokeStyle='#31596755';ctx.lineWidth=.025;ctx.setLineDash([.07,.14]);ctx.beginPath();ctx.moveTo(p.x+Math.cos(angle)*.8,p.y+Math.sin(angle)*.8);ctx.lineTo(p.x+Math.cos(angle)*Math.min(range,dist),p.y+Math.sin(angle)*Math.min(range,dist));ctx.stroke();ctx.setLineDash([]);ctx.strokeStyle=dist>range+TANK_RADIUS?'#a4775e':'#285c70';ctx.lineWidth=.04;ctx.beginPath();ctx.arc(pointer.x,pointer.y,.19,0,Math.PI*2);ctx.moveTo(pointer.x-.30,pointer.y);ctx.lineTo(pointer.x-.13,pointer.y);ctx.moveTo(pointer.x+.13,pointer.y);ctx.lineTo(pointer.x+.30,pointer.y);ctx.moveTo(pointer.x,pointer.y-.30);ctx.lineTo(pointer.x,pointer.y-.13);ctx.moveTo(pointer.x,pointer.y+.13);ctx.lineTo(pointer.x,pointer.y+.30);ctx.stroke();
     }
     ctx.restore();
   }

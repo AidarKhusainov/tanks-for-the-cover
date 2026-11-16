@@ -209,24 +209,37 @@ test('light pursues the last visible point for up to 0.8 s after the player hide
 });
 
 test('light ends pursuit after 3 s, routes from its current position and waits 2 s to reacquire', () => {
-  const { game, enemy } = setUpPursuit(9, 13.5, 9, 9.5);
-  const originalRoute = game.debugRoute(enemy.x, enemy.y).points;
+  const { game, enemy } = setUpPursuit(6.9, 13.5, 6.9, 9.5);
+  const originalRoute = game.debugRoute(enemy.x, enemy.y, enemy).points;
   game.update(179 * FRAME);
   assert.ok(enemy.pressure);
   assert.ok(Math.abs(enemy.y - 11.5) < 1e-6, 'the enemy stopped two units from the player');
-  const returnRoute = game.debugRoute(enemy.x, enemy.y).points;
+  const returnRoute = game.debugRoute(enemy.x, enemy.y, enemy).points;
   assert.ok(returnRoute.length);
   assert.notDeepEqual(returnRoute, originalRoute, 'the pursuit changed the available route');
 
   game.update(FRAME);
   assert.equal(enemy.pressure, null);
   assert.deepEqual(enemy.route, returnRoute);
-  assert.ok(enemy.x > 9, 'the enemy resumes movement toward the base');
+  assert.ok(enemy.x > 6.9, 'the enemy resumes movement toward the base');
   game.update(119 * FRAME);
   assert.equal(enemy.pressure, null);
   assert.ok(game._canSeePlayer(enemy), 'the player is still in sight just before reacquisition');
   game.update(FRAME);
   assert.ok(enemy.pressure);
+});
+
+test('light moves back toward the base even while taking a passing shot at the player', () => {
+  const { game, enemy } = setUpPursuit(9, 13.5, 9, 9.5);
+  game.update(179 * FRAME);
+  assert.ok(enemy.pressure);
+  assert.ok(game._visibleBasePoint(enemy, 6));
+  assert.equal(game._chooseTarget(enemy, 6)?.kind, 'player');
+  const before = enemy.x;
+  game.update(12 * FRAME);
+  assert.equal(enemy.pressure, null);
+  assert.ok(enemy.reacquireDelay > 1.5);
+  assert.ok(enemy.x > before + 0.2);
 });
 
 test('light ends pursuit after travelling four units from its origin', () => {
@@ -271,6 +284,7 @@ test('heavy spawns with a diameter of 1 and immediately fires 20 HP shots at 10 
     WAVES: [[{ start: 0, lane: 'A', types: ['heavy'] }]]
   });
   setPlayer(game, 7.1, 16);
+  game.player.angle = 0;
   assert.equal(game.startWave(), true);
   const [enemy] = game.enemies;
   assert.equal(enemy.hp, 120);
@@ -284,7 +298,7 @@ test('heavy spawns with a diameter of 1 and immediately fires 20 HP shots at 10 
   assert.ok(Math.abs(shot.remaining + shot.speed * FRAME - 6) < 1e-7);
   assert.equal(enemy.windup, 0);
   assert.equal(enemy.cooldown, 2);
-  assert.equal(enemy.stationaryTarget, 'base', 'the base contour at exactly 6 beats a closer player');
+  assert.equal(enemy.stationaryTarget, 'base', 'the base contour at exactly 6 remains in range with a non-threatening player nearby');
   game.update(2 - FRAME);
   assert.equal(game.base.hp, 220);
   assert.equal(game.player.hp, 60);

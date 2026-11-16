@@ -161,10 +161,15 @@ test('medium can still leave a wreck across the chosen line with a centered firs
 
 test('medium predicts when a moving tank will leave the line before the shot reaches it', () => {
   const fixture = scene('medium', { player: [4, 12.15], tank: [9.4, 12.5],
-    blockers: [{kind: 'enemy', x: 6.2, y: 12.6475}] });
+    blockers: [{kind: 'enemy', x: 6.2, y: 12.61}] });
+  const blocker = fixture.game.enemies[1];
+  Object.assign(blocker, {
+    route: [{ x: 6.2, y: 13.5 }], routeIndex: 0, routeVersion: fixture.game.navigationVersion
+  });
   const shot = fire(fixture, 20, 12.15, 1.7);
   assert.ok(shot.trace.length > 0);
   assert.equal(fixture.enemy.hp, 60);
+  assert.equal(blocker.hp, 60);
 });
 
 test('a target can dodge even when a tank farther down the line takes the shot', () => {
@@ -261,4 +266,23 @@ test('a light smoothly returns to pursuit around an obstacle', () => {
     assert.equal(enemy.intent, 'press');
     assert.equal(enemy.hp, 20);
   }
+});
+
+test('a medium can dodge in the extra range of the barrel after the first flight segment', () => {
+  const { game, enemy } = scene('medium', { player: [3, 6.8], tank: [9.8, 6.8] });
+  game.phase = 'prep';
+  game._killEnemy({ id: 'donor', type: 'medium', x: 24, y: 13 });
+  assert.equal(game.installModuleFromWreck(game.wrecks[0].id, 'barrel').module, 'barrel');
+  game.phase = 'battle';
+  Object.assign(enemy, { route: [], routeIndex: 0, routeVersion: game.navigationVersion });
+
+  const [aimX, aimY] = grazingAim({ game, enemy }, 0.39);
+  game.update(STEP, { fire: true, aimX, aimY });
+  assert.equal(enemy.dodge, null, 'medium waits during the launch tick');
+  const shot = game.bullets.find(bullet => bullet.team === 'player');
+  assert.ok(shot.remaining > 6, 'the longer projectile still has over 6 units of range');
+  game.update(STEP);
+  assert.equal(enemy.dodge?.bulletId, shot.id, 'the next tick is already part of flight');
+  game.update(0.2);
+  assert.equal(enemy.hp, 60, 'the dodge cleared the real projectile');
 });

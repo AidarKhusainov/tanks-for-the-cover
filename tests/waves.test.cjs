@@ -171,7 +171,7 @@ test('heavy wreck survives the creation wave and two following waves without HP 
   assert.equal(game.wrecks.length, 0);
 });
 
-for (const [type, capacity] of [['medium', 30], ['heavy', 50]]) {
+for (const [type, capacity] of [['medium', 25], ['heavy', 45]]) {
   test(`${type}: repair preview and action agree at low, nearly full and full base; undo restores the hull`, () => {
     const game = new Game();
     game._killEnemy({ ...mediumAt({ x: 5.13, y: 6.5 }), type });
@@ -412,7 +412,7 @@ test('module preview reports both replacements and the resulting tank stats with
     const preview = game.getWreckActions(wreck.id);
     assert.equal(preview.replacedModule, replacedModule);
     assert.equal(preview.module, module);
-    assert.deepEqual({ ...preview.moduleStats }, { speed, maxHp });
+    assert.deepEqual({ ...preview.moduleStats }, { speed, maxHp, range: 6 });
     assert.equal(JSON.stringify(game), before);
     assert.equal(game.installModuleFromWreck(wreck.id).ok, true);
     assertLoadout(game, module, preview.moduleStats.maxHp, preview.moduleStats.speed);
@@ -514,7 +514,7 @@ test('mixed preparation undo restores hull order, repair counters, modules and e
     position: position(game.player)
   });
   const beforeRepair = snapshot();
-  assert.deepEqual({ ...game.repairFromWreck(repair.id) }, { ok: true, hp: 30 });
+  assert.deepEqual({ ...game.repairFromWreck(repair.id) }, { ok: true, hp: 25 });
   game.update(0.65, { x: 1 });
   assert.ok(game.player.x > repair.x + 1, 'tank moved fully past the hull');
   const beforeEngine = snapshot();
@@ -538,15 +538,16 @@ test('mixed preparation undo restores hull order, repair counters, modules and e
   assert.equal(game.undo(), false);
 });
 
-for (const [module, hull, maxHp, speed] of [
-  ['armor', 'heavy', 90, 4],
-  ['engine', 'medium', 60, 5]
+for (const [module, hull, maxHp, speed, range] of [
+  ['armor', 'heavy', 90, 4, 6],
+  ['engine', 'medium', 60, 5, 6],
+  ['barrel', 'medium', 60, 4, 6.75]
 ]) {
   test(`${module} stays equipped through timed respawn, early wave end, preparation and the next battle`, () => {
     const config = { ...CONFIG, WAVES: [[{ start: 12, lane: 'A', types: ['light'] }], [], [], []] };
     const game = new Game(config);
     const wreck = createWreck(game, hull, 24, 13);
-    assert.equal(game.installModuleFromWreck(wreck.id).ok, true);
+    assert.equal(game.installModuleFromWreck(wreck.id, module).ok, true);
     game.player.hp = 29;
     assert.equal(game.startWave(), true);
     assert.equal(game.player.hp, maxHp);
@@ -576,6 +577,7 @@ for (const [module, hull, maxHp, speed] of [
     game.update(0.4, { y: -1 });
     assert.ok(game.player.y < 16);
     assertLoadout(game, module, maxHp, speed);
+    assert.equal(game.playerWeaponRange, range);
 
     killPlayer();
     game._spawnQueue.length = 0; // No further enemies; the wave ends before the second timer.
@@ -592,6 +594,7 @@ for (const [module, hull, maxHp, speed] of [
     assert.equal(game.phase, 'prep');
     assert.equal(game.player.hp, maxHp);
     assert.equal(game.player.module, module);
+    assert.equal(game.playerWeaponRange, range);
   });
 }
 
@@ -688,7 +691,7 @@ test('reinforced hulls remain ordinary resources and one undo restores both hull
   step(() => game.repairFromWreck(repair.id), { x: 1 }, 0.65);
   step(() => game.installModuleFromWreck(engine.id), { y: 1 }, 0.2);
   step(() => game.reinforceWreck(donor.id, target.id), { x: -1 }, 0.2);
-  assert.equal(game.getWreckActions(target.id).repairHp, 50);
+  assert.equal(game.getWreckActions(target.id).repairHp, 45);
   assert.equal(game.getWreckActions(target.id).module, 'armor');
   step(() => game.installModuleFromWreck(target.id), { y: 1 }, 0.2);
   assert.equal(game.player.hp, 90);
@@ -700,7 +703,7 @@ test('reinforced hulls remain ordinary resources and one undo restores both hull
   }
   assert.equal(game.undo(), false);
   assert.equal(game.reinforceWreck(donor.id, target.id).ok, true);
-  assert.deepEqual({ ...game.repairFromWreck(target.id) }, { ok: true, hp: 50 });
+  assert.deepEqual({ ...game.repairFromWreck(target.id) }, { ok: true, hp: 45 });
 });
 
 test('undo preview reads the next snapshot, including the previous tank position and both kinds of hull changes', () => {
@@ -818,9 +821,9 @@ test('the approved campaign advances through eight waves, settles and resets', (
   };
 
   Object.assign(game.player, { x: 3, y: 6.5 });
-  game.base.hp = 210;
+  game.base.hp = 215;
   game._killEnemy(mediumAt({ x: 5, y: 6.5 }));
-  assert.equal(game.repairFromWreck(game.wrecks[0].id).ok, true);
+  assert.deepEqual({ ...game.repairFromWreck(game.wrecks[0].id) }, { ok: true, hp: 25 });
   const armor = createWreck(game, 'heavy', 7, 6.5);
   assert.equal(game.installModuleFromWreck(armor.id).ok, true);
   assert.equal(game.player.module, 'armor');
@@ -936,4 +939,72 @@ test('base defeat retains the first lethal enemy impact through settling and eve
   const nextLog = JSON.parse(game.exportAttemptLog());
   assert.equal(nextLog.attemptNumber, log.attemptNumber + 1);
   assert.deepEqual(nextLog.events.map(event => event.type), ['attempt_start']);
+});
+
+test('a medium hull offers a barrel or engine and swaps the sole slot with undo', () => {
+  const game = new Game(EMPTY_WAVES);
+  const engine = createWreck(game, 'medium', 22, 13);
+  const barrel = createWreck(game, 'medium', 24, 13);
+  const armor = createWreck(game, 'heavy', 26, 13);
+  assert.equal(game.installModuleFromWreck(engine.id, 'engine').ok, true);
+
+  const before = game.exportAttemptLog();
+  assert.equal(game.getWreckActions(barrel.id, 'engine').moduleReason, 'same-module');
+  const preview = game.getWreckActions(barrel.id, 'barrel');
+  assert.deepEqual(Array.from(preview.modules), ['engine', 'barrel']);
+  assert.equal(preview.moduleReason, null);
+  assert.equal(preview.replacedModule, 'engine');
+  assert.deepEqual({ ...preview.moduleStats }, { speed: 4, maxHp: 60, range: 6.75 });
+  assert.equal(game.installModuleFromWreck(armor.id, 'barrel').reason, 'no-module');
+  assert.equal(game.exportAttemptLog(), before, 'preview and invalid installation leave no changes');
+
+  assert.equal(game.installModuleFromWreck(barrel.id, 'barrel').module, 'barrel');
+  assert.equal(game.wrecks.some(wreck => wreck.id === barrel.id), false);
+  assertLoadout(game, 'barrel', 60, 4);
+  assert.equal(game.playerWeaponRange, 6.75);
+  assert.equal(game.getUndoPreview().player.weaponRange, 6);
+  assert.equal(game.installModuleFromWreck(armor.id, 'armor').module, 'armor');
+  assert.equal(game.playerWeaponRange, 6);
+  assert.equal(game.undo(), true);
+  assert.equal(game.player.module, 'barrel');
+  assert.equal(game.playerWeaponRange, 6.75);
+  assert.equal(game.undo(), true);
+  assert.equal(game.player.module, 'engine');
+  assert.equal(game.playerWeaponRange, 6);
+  assert.ok(game.wrecks.some(wreck => wreck.id === barrel.id));
+  assert.equal(game.installModuleFromWreck(barrel.id, 'barrel').module, 'barrel');
+
+  const log = JSON.parse(game.exportAttemptLog());
+  assert.equal(log.configuration.game.mapId, 'battlefield');
+  assert.equal(log.configuration.game.mapVersion, 1);
+  assert.equal(log.current.player.weaponRange, 6.75);
+  const action = log.events.filter(event => event.type === 'module_change').at(-1);
+  assert.equal(action.previousModule, 'engine');
+  assert.equal(action.player.module, 'barrel');
+  assert.equal(action.player.weaponRange, 6.75);
+  game.reset();
+  assert.equal(game.player.module, null);
+  assert.equal(game.playerWeaponRange, 6);
+});
+
+test('barrel extends actual projectile contact distance by exactly 0.75 units', () => {
+  for (const [module, centerDistance, expectedHp] of [
+    [null, 6.5, 40], [null, 6.51, 60], ['barrel', 7.25, 40], ['barrel', 7.26, 60]
+  ]) {
+    const game = new Game(EMPTY_WAVES);
+    if (module) {
+      const donor = createWreck(game, 'medium', 24, 13);
+      assert.equal(game.installModuleFromWreck(donor.id, module).module, module);
+    }
+    Object.assign(game.player, { x: 3, y: 6.5 });
+    const wreck = createWreck(game, 'medium', 3 + centerDistance, 6.5);
+    assert.equal(game.startWave(), true);
+    game.update(FRAME, { fire: true, aimX: wreck.x, aimY: wreck.y });
+    const [shot] = game.bullets;
+    assert.equal(shot.damage, PLAYER_WEAPON.damage);
+    assert.equal(shot.speed, PLAYER_WEAPON.speed);
+    assert.equal(game.player.cooldown, PLAYER_WEAPON.cooldown);
+    game.update(0.2);
+    assert.equal(wreck.hp, expectedHp, `${module}: center distance ${centerDistance}`);
+  }
 });

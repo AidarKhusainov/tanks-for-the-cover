@@ -158,8 +158,8 @@ test('enemies from A, B and C can traverse the current map to the base', () => {
   }
 });
 
-test('a new wreck triggers a free detour even at low HP, and removal reopens the shortcut', () => {
-  const game = new Game(twoOpenings);
+test('classic routing detours around a low-HP wreck and reuses the shortcut after removal', () => {
+  const game = new Game({ ...twoOpenings, AI_MODE: 'classic' });
   game.phase = 'battle';
   const enemy = { ...medium('scout', 4, 8.5), cooldown: 0 };
   game.enemies.push(enemy);
