@@ -68,8 +68,8 @@ test('dismantling a wreck repairs the base and supports undo', () => {
   const wreckId = game.wrecks[0].id;
   const result = game.repairFromWreck(wreckId);
   assert.equal(result.ok, true);
-  assert.equal(result.hp, 30);
-  assert.equal(game.base.hp, 227);
+  assert.equal(result.hp, 25);
+  assert.equal(game.base.hp, 222);
   assert.equal(game.wrecks.length, 0);
   assert.equal(game.undo(), true);
   assert.equal(game.base.hp, 197);
@@ -95,7 +95,7 @@ test('route preview includes all three entrance lanes', () => {
   assert.ok(routes.every(route => route.points.length >= 2));
 });
 
-test('selecting an entrance and enemy type uses the shared route without changing combat assignments', () => {
+test('preview uses each selected type’s estimated time without changing combat assignments', () => {
   const game = controlScene();
   const { x, y } = CONFIG.SPAWNS.A;
   const enemy = { id: 'test', x, y, r: 0.5, type: 'medium', hp: 60 };
@@ -108,12 +108,13 @@ test('selecting an entrance and enemy type uses the shared route without changin
       const paths = game.getPreviewPaths({ lane, type });
       assert.equal(paths.length, 1);
       assert.equal(paths[0].lane, lane);
-      assert.deepEqual(paths[0], game.getPreviewPaths().find(path => path.lane === lane));
+      assert.ok(paths[0].estimatedSeconds > 0);
     }
   }
-  const [blocked] = game.getPreviewPaths({ lane: 'A', type: 'heavy' });
-  assert.equal(blocked.blockedWreckId, 'left');
-  assert.deepEqual(blocked.points.at(-1), enemy.route.at(-1));
+  const [light] = game.getPreviewPaths({ lane: 'A', type: 'light' });
+  const [medium] = game.getPreviewPaths({ lane: 'A', type: 'medium' });
+  assert.ok(light.estimatedSeconds < medium.estimatedSeconds);
+  assert.deepEqual(medium.points.at(-1), enemy.route.at(-1));
   assert.equal(game.getPreviewPaths({ lane: 'D', type: 'heavy' }).length, 0);
   assert.equal(game.getPreviewPaths({ lane: 'A', type: 'unknown' }).length, 0);
   assert.equal(JSON.stringify(game.enemies), before);
@@ -175,8 +176,8 @@ function pathLength(points) {
     length + Math.hypot(point.x - points[i].x, point.y - points[i].y), 0);
 }
 
-test('blocked navigation finds only left in the control scene and preserves that hull after smoothing', () => {
-  const game = controlScene();
+test('classic blocked navigation finds only left in the control scene and preserves that hull after smoothing', () => {
+  const game = controlScene({ ...CONFIG, AI_MODE: 'classic' });
   const start = CONFIG.SPAWNS.A;
   const route = game.debugRoute(start.x, start.y);
   assert.equal(route.blockedWreckId, 'left');
@@ -190,8 +191,8 @@ test('blocked navigation finds only left in the control scene and preserves that
   assert.equal(game.debugRoute(start.x, start.y).blockedWreckId, null);
 });
 
-test('breach minimizes distinct hulls before grid length, even with repeated contact on the shortest route', () => {
-  const game = controlScene();
+test('classic breach minimizes distinct hulls before grid length, even with repeated contact on the shortest route', () => {
+  const game = controlScene({ ...CONFIG, AI_MODE: 'classic' });
   const { x, y } = CONFIG.SPAWNS.B;
   const raw = game._findBreachPath?.(x, y) ?? [];
   const contacts = hullContacts(game, { x, y }, raw.slice(1));
@@ -203,8 +204,8 @@ test('breach minimizes distinct hulls before grid length, even with repeated con
   assert.equal(game.debugRoute(x, y).blockedWreckId, 'right');
 });
 
-test('a free detour beats a shorter breach through a nearly destroyed hull', () => {
-  const game = controlScene();
+test('classic free detour beats a shorter breach through a nearly destroyed hull', () => {
+  const game = controlScene({ ...CONFIG, AI_MODE: 'classic' });
   const { x, y } = CONFIG.SPAWNS.A;
   game.wrecks = game.wrecks.filter(hull => hull.id !== 'right');
   game.wrecks[0].hp = 1;
@@ -214,8 +215,8 @@ test('a free detour beats a shorter breach through a nearly destroyed hull', () 
   assert.deepEqual(hullContacts(game, { x, y }, route.points), []);
 });
 
-test('equal-length breaches are stable across hull order, HP and live tanks', () => {
-  const config = { ...CONFIG, WALLS: [
+test('classic equal-length breaches are stable across hull order, HP and live tanks', () => {
+  const config = { ...CONFIG, AI_MODE: 'classic', WALLS: [
     { x: 11.8, y: 10.6, w: 4.4, h: 1.6 },
     { x: 0, y: 14.6, w: 28, h: 0.4 }
   ] };
@@ -240,8 +241,8 @@ test('equal-length breaches are stable across hull order, HP and live tanks', ()
   assert.deepEqual(rearranged.debugRoute(x, y), route);
 });
 
-test('blocked preview ends at the same first contact used by the enemy and updates from its current position', () => {
-  const game = controlScene();
+test('classic blocked preview ends at the same first contact used by the enemy and updates from its current position', () => {
+  const game = controlScene({ ...CONFIG, AI_MODE: 'classic' });
   const { x, y } = CONFIG.SPAWNS.A;
   const enemy = { id: 'test', x, y, r: 0.5, type: 'medium', hp: 60 };
   game.enemies.push(enemy);
@@ -273,8 +274,8 @@ test('blocked preview ends at the same first contact used by the enemy and updat
   assert.deepEqual(reopened.points.at(-1), enemy.route.at(-1));
 });
 
-test('reinforcement frees the donor passage and undo restores its collisions and route', () => {
-  const game = controlScene();
+test('classic reinforcement preview frees the donor passage and undo restores its collisions and route', () => {
+  const game = controlScene({ ...CONFIG, AI_MODE: 'classic' });
   for (const wreck of game.wrecks) wreck.type = 'medium';
   const [donor, target] = game.wrecks;
   const probe = { r: 0.5 };

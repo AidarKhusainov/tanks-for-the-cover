@@ -32,7 +32,7 @@ test('attempt log preserves actual wave, wreck and player transitions across pau
   hit(game, 'wreck', playerDestroyed, 'player');
   hit(game, 'wreck', enemyDestroyed, 'enemy');
 
-  game.enemies.push({ type: 'light', hp: 20, x: 11, y: 5, cooldown: 99 });
+  game.enemies.push({ id: 'scout', type: 'light', hp: 20, x: 11, y: 5, cooldown: 99 });
   hit(game, 'player', game.player, 'enemy');
   game.paused = true;
   game.update(10);
@@ -58,7 +58,7 @@ test('attempt log preserves actual wave, wreck and player transitions across pau
   assert.deepEqual(log.configuration.playerWeapon, { ...PLAYER_WEAPON });
   assert.deepEqual(log.events.map(event => event.type), [
     'attempt_start', 'wave_start', 'wreck_created', 'wreck_created', 'wreck_created',
-    'wreck_removed', 'wreck_removed', 'player_death', 'player_return', 'player_death',
+    'wreck_removed', 'wreck_removed', 'player_death', 'ai_route', 'player_return', 'player_death',
     'wave_end', 'player_return', 'wave_start', 'wreck_removed', 'wave_end', 'attempt_end'
   ]);
   for (const [index, event] of log.events.entries()) {
@@ -69,6 +69,10 @@ test('attempt log preserves actual wave, wreck and player transitions across pau
     }
   }
   const events = type => log.events.filter(event => event.type === type);
+  const [route] = events('ai_route');
+  assert.equal(route.enemyId, 'scout');
+  assert.equal(route.decision, 'detour');
+  assert.ok(Number.isFinite(route.estimatedSeconds));
   const [created] = events('wreck_created');
   assert.equal(created.wave, 1);
   assert.deepEqual(created.wreck, JSON.parse(JSON.stringify(expired)));
