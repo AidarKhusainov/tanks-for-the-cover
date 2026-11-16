@@ -33,13 +33,13 @@
 
 **Interfaces:** Existing `Game.update(dt,input)`, `_chooseTarget`, `_chooseHeavyTarget`, `_estimateShotPath`, `debugRoute`, `_firingManeuver`, `_followRoute`. Keep public exports compatible. Add private helpers only for reusable own-position planning or shared self-defense state; no test-only runtime switches.
 
-- [ ] Add the magnetic A reconstruction: base and wreck geometry from submitted log, heavy `(7.375,11.375)`, lights `(7.375,9.9)`/`(7.375,8.9)`; assert their own routing makes progress and multiple reachable shooters fire within a bounded observation window. Include a clear-space variant and genuine one-tank corridor handover. Store only minimal nonpersonal fixture fields in tests.
-- [ ] Add self-defense tests for medium/heavy, near/far base, incoming projectile and recent hit, occluded/out-of-range player, attack cessation, no pursuit, cooldown preservation and heavy finish-vs-death. Replace only test expectations explicitly superseded by the approved rule.
-- [ ] Add breach-estimate regression with one member counterfiring; actual feasible shooting participants and observed clearance must agree. Test target flips without stale indefinitely reserved positions.
-- [ ] Run new regression tests against baseline and save meaningful failures before production edits. Save test-only patch and logs under the plan workspace for reproducibility.
-- [ ] Correct own-path selection independently of group's first-shot estimate; cooperate to open feasible exits, preserve hard queue when space is insufficient. Implement shared observed-attack memory/target response and exclude distracted shooters from group clearing estimates. Keep bounded per-frame work and avoid repeated full-world path searches.
-- [ ] Run focused tests then `npm test`; document exact output, source hash and any unresolved failure. Update PDD/check descriptions to match runtime; record any meaningful performance change.
-- [ ] Commit scoped implementation, tests and rules documentation. Report full results and own review in the task report; no push or external mutation by the implementer.
+- [x] Add the magnetic A reconstruction: base and wreck geometry from submitted log, heavy `(7.375,11.375)`, lights `(7.375,9.9)`/`(7.375,8.9)`; assert their own routing makes progress and multiple reachable shooters fire within a bounded observation window. Include a clear-space variant and genuine one-tank corridor handover. Store only minimal nonpersonal fixture fields in tests.
+- [x] Add self-defense tests for medium/heavy, near/far base, incoming projectile and recent hit, occluded/out-of-range player, attack cessation, no pursuit, cooldown preservation and heavy finish-vs-death. Replace only test expectations explicitly superseded by the approved rule.
+- [x] Add breach-estimate regression with one member counterfiring; actual feasible shooting participants and observed clearance must agree. Test target flips without stale indefinitely reserved positions.
+- [x] Run new regression tests against baseline and save meaningful failures before production edits. Save test-only patch and logs under the plan workspace for reproducibility.
+- [x] Correct own-path selection independently of group's first-shot estimate; cooperate to open feasible exits, preserve hard queue when space is insufficient. Implement shared observed-attack memory/target response and exclude distracted shooters from group clearing estimates. Keep bounded per-frame work and avoid repeated full-world path searches.
+- [x] Run focused tests then `npm test`; document exact output, source hash and any unresolved failure. Update PDD/check descriptions to match runtime; record any meaningful performance change.
+- [x] Commit scoped implementation, tests and rules documentation. Report full results and own review in the task report; no push or external mutation by the implementer.
 
 ### Task 2: Validate both campaigns and publish reproducible evidence
 
@@ -47,9 +47,9 @@
 
 **Interfaces:** Consumes the committed Task 1 HTML. `node tools/calibrate-maps.cjs <html> <out.json> [map]`, `node tools/verify-maps-campaign.cjs <html> <map> <engine|barrel> <new-output-dir>`. Existing controls restore explicitly labelled prep snapshots only.
 
-- [ ] Freeze exact HTML SHA-256. Run four full ordinary-input campaigns (both maps × engine/barrel); preserve wins and failures, recorded inputs, late-wave observations and preparation snapshots.
-- [ ] Recompute both maps' timing/calibration including V6–V8: first actual spawn, first base shot/hit, pairwise overlap and required player travel windows. Compare to baseline configuration; report unchanged timing if no correction is needed.
-- [ ] Repeat relevant wreck/calendar controls at late V7/V8 with/without useful wrecks and after spending/expiration; relate resources to actual earlier waves, not artificial abundance. Reuse existing helpers and flag every diagnostic fixture.
-- [ ] Exercise the two regression scenes in browser and both map selectors/offline startup with exact changed HTML. Distinguish controlled AI checks, automated campaigns and actual user pilot.
-- [ ] Write concise technical report with exact commands, hashes, outcomes, timing differences and remaining human acceptance. Update plan ledger and private Baton/#14 pilot record. Do not overwrite historical evidence.
+- [x] Freeze exact HTML SHA-256. Run four full ordinary-input campaigns (both maps × engine/barrel); preserve wins and failures, recorded inputs, late-wave observations and preparation snapshots.
+- [x] Recompute both maps' timing/calibration including V6–V8: first actual spawn, first base shot/hit, pairwise overlap and required player travel windows. Compare to baseline configuration; report unchanged timing if no correction is needed.
+- [x] Repeat relevant wreck/calendar controls at late V7/V8 with/without useful wrecks and after spending/expiration; relate resources to actual earlier waves, not artificial abundance. Reuse existing helpers and flag every diagnostic fixture.
+- [x] Exercise regression scenes and both map selectors in browser; carry forward across the sole later city V6 data change. Offline file startup was attempted but blocked by browser protocol policy, so it is explicitly not claimed. Distinguish controlled AI checks, automated campaigns and actual user pilot.
+- [x] Write concise technical report with exact commands, hashes, outcomes, timing differences and remaining human acceptance. Update plan ledger and private Baton/#14 pilot record. Do not overwrite historical evidence.
 - [ ] Independent review of the exact integrated diff; fix confirmed findings, run affected checks. Publish branch/PR within continuing task authorization, verify exact CI input and results. Merge remains a separate owner decision.

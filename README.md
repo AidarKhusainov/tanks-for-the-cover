@@ -28,6 +28,8 @@ cd tanks-for-the-cover
 
 Плановые старты зависят от карты и известны до начала волны. Во время боя предупреждение отличает отсчёт от ожидания занятого входа. [Схемы, измерения и воспроизведение проверок](docs/two-map-verification.md).
 
+[Проверка текущего ИИ и поздних волн](docs/ai-firing-self-defense-verification.md) описывает исправление огневой очереди, ответный огонь и обновлённые городские тайминги.
+
 ## Историческая 2D-карта «Тёплый обжитой город»
 
 Отдельная автономная сборка с городскими кварталами, базой на площади и восемью волнами с трёх входов. [Играть в браузере](https://htmlpreview.github.io/?https://raw.githubusercontent.com/AidarKhusainov/tanks-for-the-cover/ce8b7a594164a49ee0e82b9c4ab826e24e851b10/experiments/warm-town-2d/tanks-warm-town.html) · [Карта, офлайн-запуск и проверки](experiments/warm-town-2d/README.md).
