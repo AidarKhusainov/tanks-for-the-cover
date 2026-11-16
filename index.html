@@ -1112,6 +1112,8 @@
           firingManeuver = this._firingManeuver(enemy, spec.range);
         }
       }
+      // A deliberate lane yield does not pass through route collision accounting.
+      enemy.firingWait = firingManeuver?.waitingTarget ?? null;
       if (!dodge && stationary && stationaryTarget !== 'player' && this.config.AI_MODE === 'roles') {
         const release = this._releaseFiringExit(enemy, spec.range);
         if (release) {
@@ -1779,7 +1781,8 @@
       }
       // Yield only to a real or reserved lane for the same target. Otherwise
       // resume navigation so two tanks blocked on unrelated targets can move.
-      return firingLanes.some(lane => lane.kind === kind && lane.id === object.id) ? { position: null } : null;
+      return firingLanes.some(lane => lane.kind === kind && lane.id === object.id) ?
+        { position: null, waitingTarget: { kind, targetId: object.id } } : null;
     }
 
     _releaseFiringExit(enemy, range) {
@@ -1799,7 +1802,8 @@
       enemy.exitRetryAt = this._waveTime + ROUTE_RECHECK;
       // A stopped gun only yields when a nearby follower actually cannot move.
       const waiting = allies.some(actor => !actor.stationaryTarget && !actor.dodge &&
-        distance(actor, enemy) < 2.5 && actor.stuck > 0.15);
+        distance(actor, enemy) < 2.5 && (actor.stuck > 0.15 ||
+          (actor.firingWait?.kind === target.kind && actor.firingWait.targetId === target.object.id)));
       if (!waiting) return null;
       const origin = { x: enemy.x, y: enemy.y };
       const queue = [{ point: origin, path: [] }];
