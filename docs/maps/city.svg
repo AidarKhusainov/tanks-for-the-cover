@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 896 684" role="img" aria-labelledby="title description"><title id="title">Город: пути и позиции</title><desc id="description">Координатная схема city версии 1. Сплошные линии — короткие пути, пунктир — обходы, круги — опорные корпуса, P — позиции измерения, R — возвращение. Это схема возможных путей, не обещание маршрута ИИ.</desc><style>text{font-family:DejaVu Sans,sans-serif;fill:#163438} .map-label{font-size:.42px;font-weight:bold;paint-order:stroke;stroke:#fffaf1;stroke-width:.08px;stroke-linejoin:round}</style><rect width="896" height="684" fill="#faf7ed"/>
+<text x="28" y="32" font-size="22" font-weight="bold">Город</text>
+<text x="28" y="55" font-size="13">city · версия 1 · координаты игрового поля</text>
+<g transform="translate(28 75) scale(30)">
+<rect width="28" height="18" fill="#eee5d5" stroke="#73918a" stroke-width=".03"/>
+<path d="M1,0V18" stroke="#adc1b9" stroke-width=".015"/>
+<path d="M2,0V18" stroke="#adc1b9" stroke-width=".015"/>
+<path d="M3,0V18" stroke="#adc1b9" stroke-width=".015"/>
+<path d="M4,0V18" stroke="#adc1b9" stroke-width=".015"/>
+<path d="M5,0V18" stroke="#adc1b9" stroke-width=".015"/>
+<path d="M6,0V18" stroke="#adc1b9" stroke-width=".015"/>
+<path d="M7,0V18" stroke="#adc1b9" stroke-width=".015"/>
+<path d="M8,0V18" stroke="#adc1b9" stroke-width=".015"/>
+<path d="M9,0V18" stroke="#adc1b9" stroke-width=".015"/>
+<path d="M10,0V18" stroke="#adc1b9" stroke-width=".015"/>
+<path d="M11,0V18" stroke="#adc1b9" stroke-width=".015"/>
+<path d="M12,0V18" stroke="#adc1b9" stroke-width=".015"/>
+<path d="M13,0V18" stroke="#adc1b9" stroke-width=".015"/>
+<path d="M14,0V18" stroke="#adc1b9" stroke-width=".015"/>
+<path d="M15,0V18" stroke="#adc1b9" stroke-width=".015"/>
+<path d="M16,0V18" stroke="#adc1b9" stroke-width=".015"/>
+<path d="M17,0V18" stroke="#adc1b9" stroke-width=".015"/>
+<path d="M18,0V18" stroke="#adc1b9" stroke-width=".015"/>
+<path d="M19,0V18" stroke="#adc1b9" stroke-width=".015"/>
+<path d="M20,0V18" stroke="#adc1b9" stroke-width=".015"/>
+<path d="M21,0V18" stroke="#adc1b9" stroke-width=".015"/>
+<path d="M22,0V18" stroke="#adc1b9" stroke-width=".015"/>
+<path d="M23,0V18" stroke="#adc1b9" stroke-width=".015"/>
+<path d="M24,0V18" stroke="#adc1b9" stroke-width=".015"/>
+<path d="M25,0V18" stroke="#adc1b9" stroke-width=".015"/>
+<path d="M26,0V18" stroke="#adc1b9" stroke-width=".015"/>
+<path d="M27,0V18" stroke="#adc1b9" stroke-width=".015"/>
+<path d="M0,1H28" stroke="#adc1b9" stroke-width=".015"/>
+<path d="M0,2H28" stroke="#adc1b9" stroke-width=".015"/>
+<path d="M0,3H28" stroke="#adc1b9" stroke-width=".015"/>
+<path d="M0,4H28" stroke="#adc1b9" stroke-width=".015"/>
+<path d="M0,5H28" stroke="#adc1b9" stroke-width=".015"/>
+<path d="M0,6H28" stroke="#adc1b9" stroke-width=".015"/>
+<path d="M0,7H28" stroke="#adc1b9" stroke-width=".015"/>
+<path d="M0,8H28" stroke="#adc1b9" stroke-width=".015"/>
+<path d="M0,9H28" stroke="#adc1b9" stroke-width=".015"/>
+<path d="M0,10H28" stroke="#adc1b9" stroke-width=".015"/>
+<path d="M0,11H28" stroke="#adc1b9" stroke-width=".015"/>
+<path d="M0,12H28" stroke="#adc1b9" stroke-width=".015"/>
+<path d="M0,13H28" stroke="#adc1b9" stroke-width=".015"/>
+<path d="M0,14H28" stroke="#adc1b9" stroke-width=".015"/>
+<path d="M0,15H28" stroke="#adc1b9" stroke-width=".015"/>
+<path d="M0,16H28" stroke="#adc1b9" stroke-width=".015"/>
+<path d="M0,17H28" stroke="#adc1b9" stroke-width=".015"/>
+<rect x="2" y="3.5" width="3.2" height="4.5" fill="#bc836b" stroke="#45656b" stroke-width=".04"/>
+<rect x="6.8" y="3.5" width="2.8" height="4.5" fill="#bc836b" stroke="#45656b" stroke-width=".04"/>
+<rect x="16" y="0" width="8" height="4.2" fill="#bc836b" stroke="#45656b" stroke-width=".04"/>
+<rect x="16" y="5.8" width="8" height="5.4" fill="#bc836b" stroke="#45656b" stroke-width=".04"/>
+<rect x="18.8" y="11.2" width="5.2" height="2.2" fill="#bc836b" stroke="#45656b" stroke-width=".04"/>
+<rect x="24" y="9.6" width="2.4" height="0.8" fill="#bc836b" stroke="#45656b" stroke-width=".04"/>
+<rect x="12.4" y="8.4" width="2" height="2" fill="#bc836b" stroke="#45656b" stroke-width=".04"/>
+<rect x="12.4" y="12" width="2" height="3" fill="#bc836b" stroke="#45656b" stroke-width=".04"/>
+<rect x="8" y="15" width="16" height="1" fill="#bc836b" stroke="#45656b" stroke-width=".04"/>
+<rect x="3" y="13" width="5" height="0.4" fill="#45656b" stroke="#45656b" stroke-width=".04"/>
+<rect x="7.6" y="13" width="0.4" height="3.2" fill="#45656b" stroke="#45656b" stroke-width=".04"/>
+<rect x="3" y="15.8" width="5" height="0.4" fill="#45656b" stroke="#45656b" stroke-width=".04"/>
+<rect x="3" y="13" width="0.4" height="1.59" fill="#45656b" stroke="#45656b" stroke-width=".04"/>
+<rect x="4.65" y="14.62" width="0.3" height="1.18" fill="#45656b" stroke="#45656b" stroke-width=".04"/>
+<polyline points="6,2.5 1.5,2.5 1.5,9 6,9" fill="none" stroke="#a75124" stroke-width=".075" stroke-dasharray=".23 .16"/>
+<polyline points="6,2.5 6,9" fill="none" stroke="#a75124" stroke-width=".10"/>
+<rect x="5.7" y="4.85" width="0.6" height="1" fill="#a75124" fill-opacity=".17" stroke="#a75124" stroke-width=".05"/>
+<circle cx="6" cy="5.35" r=".5" fill="#707b7d" fill-opacity=".8" stroke="#fffaf1" stroke-width=".05"/>
+<circle cx="6" cy="9.5" r=".18" fill="#a75124"/>
+<text x="6.25" y="9.25" class="map-label">P_A</text>
+<polyline points="25.5,14.2 27.2,14.2 27.2,5 11.8,5 11.8,9.5 7,9.5" fill="none" stroke="#146f67" stroke-width=".075" stroke-dasharray=".23 .16"/>
+<polyline points="25.5,14.2 25.5,16.8 1.8,16.8 1.8,12.5 6.8,12.5 6.8,9.5" fill="none" stroke="#146f67" stroke-width=".075" stroke-dasharray=".23 .16"/>
+<polyline points="25.5,14.2 15.2,14.2 15.2,11.2 11.8,11.2 7,11.2" fill="none" stroke="#146f67" stroke-width=".10"/>
+<rect x="18.45" y="13.9" width="1" height="0.6" fill="#146f67" fill-opacity=".17" stroke="#146f67" stroke-width=".05"/>
+<rect x="12.9" y="10.9" width="1" height="0.6" fill="#146f67" fill-opacity=".17" stroke="#146f67" stroke-width=".05"/>
+<circle cx="18.63" cy="13.92" r=".5" fill="#707b7d" fill-opacity=".8" stroke="#fffaf1" stroke-width=".05"/>
+<circle cx="13.76" cy="11.43" r=".5" fill="#707b7d" fill-opacity=".8" stroke="#fffaf1" stroke-width=".05"/>
+<circle cx="15.2" cy="7.5" r=".18" fill="#146f67"/>
+<text x="15.45" y="7.25" class="map-label">P_B</text>
+<polyline points="25.5,5 27.2,5 27.2,14.2 15.2,14.2 15.2,7.5" fill="none" stroke="#7542a3" stroke-width=".075" stroke-dasharray=".23 .16"/>
+<polyline points="25.5,5 11.8,5 11.8,9.5 7,9.5" fill="none" stroke="#7542a3" stroke-width=".10"/>
+<rect x="18" y="4.7" width="1" height="0.6" fill="#7542a3" fill-opacity=".17" stroke="#7542a3" stroke-width=".05"/>
+<circle cx="18.5" cy="5" r=".5" fill="#707b7d" fill-opacity=".8" stroke="#fffaf1" stroke-width=".05"/>
+<circle cx="20.8" cy="5" r=".18" fill="#7542a3"/>
+<text x="21.05" y="4.75" class="map-label">P_C</text>
+<rect x="5" y="0.025000000000000022" width="2" height="1.25" fill="#a75124" fill-opacity=".18" stroke="#a75124" stroke-dasharray=".15 .10" stroke-width=".05"/>
+<text x="6" y="0.81" class="map-label" text-anchor="middle">A</text>
+<rect x="25.5" y="13.2" width="2" height="2" fill="#146f67" fill-opacity=".18" stroke="#146f67" stroke-dasharray=".15 .10" stroke-width=".05"/>
+<text x="26.5" y="14.36" class="map-label" text-anchor="middle">B</text>
+<rect x="25.5" y="4" width="2" height="2" fill="#7542a3" fill-opacity=".18" stroke="#7542a3" stroke-dasharray=".15 .10" stroke-width=".05"/>
+<text x="26.5" y="5.16" class="map-label" text-anchor="middle">C</text>
+<rect x="3.2" y="10.3" width="1.8" height="1.8" fill="#e8bf4e" stroke="#725b27" stroke-width=".07"/>
+<text x="4.1000000000000005" y="11.350000000000001" class="map-label" text-anchor="middle">БАЗА</text>
+<circle cx="6.85" cy="15.25" r=".25" fill="#fffaf1"/>
+<text x="6.85" y="15.38" class="map-label" text-anchor="middle">R</text>
+</g>
+<text x="28" y="636" font-size="13">Сплошная линия: короткий путь · Пунктир: обход · Серый круг: корпус</text>
+<text x="28" y="660" font-size="13">P: позиция измерения · R: возвращение · Противник выбирает обход или пролом по ситуации</text>
+</svg>

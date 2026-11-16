@@ -1,0 +1,113 @@
+{
+  "schemaVersion": 1,
+  "htmlSha256": "ffdd60f1155686d14cedc57c49157eef076a530d1e8f16f196c1967d9c33a83c",
+  "method": "Game.update at 1/60, ordinary movement/aim/fire and public preparation methods only; no simulation state assignment. Engine mode is the no-barrel run.",
+  "humanPlaytest": false,
+  "campaigns": [
+    {
+      "mapId": "magnetic",
+      "mode": "engine",
+      "diagnostic": false,
+      "outcome": "won",
+      "baseHp": 92,
+      "stats": {
+        "kills": 66,
+        "deaths": 0,
+        "shots": 209,
+        "wrecksCreated": 25,
+        "repairs": 1,
+        "baseRepaired": 24,
+        "time": 158.03333333335124
+      },
+      "ticks": 10178,
+      "maxStepMs": 565.122166000001,
+      "meanStepMs": 1.686043806936505,
+      "artifacts": {
+        "commands.ndjson": "496fc607a281ac1422130981b968316fb07f3109cb2cff69abe38f8939c23af6",
+        "attempt.json": "ee1d1d102689a3da4c8c877b2ed062d49bb549c658fad9784c510fbfa2c9e606",
+        "result.json": "520773341af03a28ef35fc91b66a5f93820bf40ddddd2eb29e18858bff337567",
+        "prep-7.json": "cd4090224f0a2aa2e748db9486d360d8c767936b5e19f5a3d4fa2671dec1c6e2",
+        "prep-8.json": "cb333950f79ec4316ee242df5f44a668caeb50830d8b67b281e09af0aebbb5c5"
+      }
+    },
+    {
+      "mapId": "magnetic",
+      "mode": "barrel",
+      "diagnostic": false,
+      "outcome": "won",
+      "baseHp": 20,
+      "stats": {
+        "kills": 66,
+        "deaths": 0,
+        "shots": 246,
+        "wrecksCreated": 25,
+        "repairs": 5,
+        "baseRepaired": 132,
+        "time": 167.2833333333586
+      },
+      "ticks": 10833,
+      "maxStepMs": 617.4749270000029,
+      "meanStepMs": 1.9763971896058345,
+      "artifacts": {
+        "commands.ndjson": "25676da6d0b3d40581799622856465645cc075734eeb17d78ce515d904325d10",
+        "attempt.json": "32c189bdf321dd414362ef0a0269cdc02f1dc51b2e36019f2e80b840b9a30762",
+        "result.json": "406a838c6df0beb55bdb6e1e31b5a230d35eb08106a7e4358e058c5a8003c986",
+        "prep-7.json": "253f2748b019552d3c99af64df46bde34a8b7e7f02c5ba617e43889daab18f33",
+        "prep-8.json": "25d8bf8b9fb971b5a6aa03eb43c0968a2bb24bbdb20567e9fa40126d38571298"
+      }
+    },
+    {
+      "mapId": "city",
+      "mode": "engine",
+      "diagnostic": false,
+      "outcome": "won",
+      "baseHp": 199,
+      "stats": {
+        "kills": 66,
+        "deaths": 0,
+        "shots": 191,
+        "wrecksCreated": 25,
+        "repairs": 3,
+        "baseRepaired": 75,
+        "time": 165.76666666669072
+      },
+      "ticks": 11580,
+      "maxStepMs": 339.57589599999847,
+      "meanStepMs": 1.548556720811757,
+      "artifacts": {
+        "commands.ndjson": "d6e2c4027adeee7ef8a51db651f68a0daf9bf7756f37c26a39334fb5d116b11e",
+        "attempt.json": "22162563fbc08f46e8953d070b4bfce5b1b6cfc43e01fc5b605ed8ba161705f6",
+        "result.json": "966f59dee9faaf0fc4a8150237a9cacff23a40ff0a0ea870125e0518029cc944",
+        "prep-7.json": "ed78d1e862656ee510fc924c866c81b8fba444acc6154c4c5123c3423e1b94dc",
+        "prep-8.json": "613bc11a4c18218628cb79b589c9011ad4937f5d6ac750b3e93656797cf9e901"
+      }
+    },
+    {
+      "mapId": "city",
+      "mode": "barrel",
+      "diagnostic": false,
+      "outcome": "won",
+      "baseHp": 139,
+      "stats": {
+        "kills": 66,
+        "deaths": 0,
+        "shots": 210,
+        "wrecksCreated": 25,
+        "repairs": 8,
+        "baseRepaired": 179,
+        "time": 180.41666666670238
+      },
+      "ticks": 14193,
+      "maxStepMs": 426.6260669999974,
+      "meanStepMs": 1.684721551187197,
+      "artifacts": {
+        "commands.ndjson": "3f184abfaf4167aa75a06aad332b76586eba478560ba23a7d9f84c723bafbeef",
+        "attempt.json": "c5311a5906af5fd9302d765dd7eafe86b3f043bcc460fa5ec417934419e86431",
+        "result.json": "c8e5834770a033aa5ed809d3021fbd087a8df07e5f59967526e00948fbc55163",
+        "prep-7.json": "e0d20dc1cd44007ac379f3393cdd284283745bb2b654df01d8471e01962993cf",
+        "prep-8.json": "bc854ebe7d9d6c7ab4110c19dfd9ab8efadeb2f128aa9e68cb35378f10d3c17f"
+      }
+    }
+  ],
+  "reproduce": "node tools/verify-maps-campaign.cjs index.html <mapId> <engine|barrel> <new-output-directory>"
+}

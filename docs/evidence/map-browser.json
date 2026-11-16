@@ -1,0 +1,27 @@
+{
+  "htmlSha256": "ffdd60f1155686d14cedc57c49157eef076a530d1e8f16f196c1967d9c33a83c",
+  "checks": [
+    "two selectors and miniatures",
+    "eight-wave overview",
+    "real keyboard movement and Enter",
+    "real mouse fire",
+    "map-reset resources and log",
+    "help",
+    "exact HTTP download",
+    "both maps offline with stopped server",
+    "labelled placement and death comparison scenes",
+    "labelled countdown, blocked spawn, actual release",
+    "ordinary preparation replay: barrel selection and undo"
+  ],
+  "javascriptExceptions": 0,
+  "offlineHttpRequests": 0,
+  "method": "Real Chrome CDP keyboard/mouse; exact downloaded bytes reopened with HTTP server stopped. Separate artificial fixtures are explicitly labelled.",
+  "artifacts": {
+    "picker.png": "66d214014040a4201bd88190340a366a7f8abcebd20bf6ca7b7258758f8be71c",
+    "magnetic.png": "4b0e13f8357d497194581eed294841fb7ff9908431dd23d8927ad91610de0f2e",
+    "city.png": "2b42acf608a99709bac260cdbb05fe1920f43e7af43292e40d497d1ae695e3ea",
+    "tank-prototype.html": "ffdd60f1155686d14cedc57c49157eef076a530d1e8f16f196c1967d9c33a83c",
+    "diagnostic-magnetic-warning.json": "541f065c45bbf2799234d187f4b3a114c36b4d94b187f3631bf315547e7fc9e3",
+    "diagnostic-city-warning.json": "541f065c45bbf2799234d187f4b3a114c36b4d94b187f3631bf315547e7fc9e3"
+  }
+}
