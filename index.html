@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#152329">
-  <meta name="description" content="Защити базу на Магнитной доске или в Городе. Три направления атаки, клавиатура и мышь.">
+  <meta name="description" content="Защити базу на одной из трёх карт. Третья — экспериментальная карта с одним входом врагов и тремя подходами.">
   <title>Танчики — оборона базы</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect width='48' height='48' rx='10' fill='%23152329'/%3E%3Cpath fill='%23d4ed87' d='M11 15h6v25h-6zm20 0h6v25h-6zM18 19h12v17H18zM22 5h4v22h-4z'/%3E%3C/svg%3E">
   <style>
@@ -30,11 +30,11 @@
 #campaign-dialog{width:calc(100% - 32px);max-height:calc(100dvh - 32px);overflow:hidden}
 #campaign-dialog[open]{display:flex;flex-direction:column}
 #campaign-dialog::backdrop,#map-dialog::backdrop{background:#102024c9;backdrop-filter:blur(5px)}
-#map-dialog{width:calc(100% - 32px);max-width:620px;max-height:calc(100dvh - 32px);color:var(--ink)}
-.map-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+#map-dialog{width:calc(100% - 32px);max-width:840px;max-height:calc(100dvh - 32px);color:var(--ink)}
+.map-options{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
 .map-choice{display:grid;gap:9px;border:1px solid #617471;border-radius:9px;background:#17272d;color:var(--ink);padding:9px;text-align:left;font-weight:650}
 .map-choice:hover,.map-choice[aria-current=true]{border-color:var(--lime);background:#304239}
-.map-choice canvas{border-radius:5px;cursor:pointer}
+.map-choice canvas{display:block;width:100%;height:auto;border-radius:5px;cursor:pointer}
 .map-choice span{padding:0 2px 3px}
 #entry-status{margin:8px 0 0;color:#ffd4a0;font-size:11px;line-height:1.5}
 #campaign-content{min-height:0;overflow:auto;padding:4px 8px}
@@ -337,13 +337,39 @@
     },
     WAVES: campaignWaves([[0], [0], [0], [0,1137], [0,10], [964,0,1101], [0,463,511], [789,458,0]])
   };
+  // Experimental third map: exact rectangles from tanks-map-draft (1).json.
+  // Single-entry timing deliberately differs from the calibrated two-map campaigns.
+  const CROSSROADS = {
+    mapId:'crossroads', mapName:'Три подхода (тест)', mapVersion:1, AI_MODE:'roles', SPAWN_INTERVAL:2.5,
+    BASE_RECT:{ x:18, y:11, w:2, h:2 },
+    PLAYER_START:{ x:25.5, y:8 },
+    PLAYER_RETURN_AREA:{ x:25, y:7.5, w:1, h:1 },
+    WALLS:[
+      wall(4,7,8,3),
+      wall(4,11,8,3),
+      wall(14,6,2,4),
+      wall(4,2,8,3),
+      wall(13,2,4.25,2),
+      wall(22,6,2,4),
+      wall(14,14,2.25,2)
+    ],
+    SPAWNS:{ A:{ x:1.5, y:8.5, w:1.5, h:1.5, direction:'right' } },
+    // Retain the roster of 66 enemies, but enqueue all groups through entry A.
+    // Preserve intra-group order and sort groups by their original start times.
+    WAVES:MAGNETIC.WAVES.map(wave=>[{
+      lane:'A', start:0, types:wave
+        .map((group,index)=>({ ...group,index }))
+        .sort((a,b)=>a.start-b.start||a.index-b.index)
+        .flatMap(group=>group.types)
+    }])
+  };
   function freeze(value) {
     if(value && typeof value==='object' && !Object.isFrozen(value)) {
       Object.values(value).forEach(freeze); Object.freeze(value);
     }
     return value;
   }
-  const scenarios=freeze({BATTLEFIELD,CLASSIC,MAGNETIC,CITY});
+  const scenarios=freeze({BATTLEFIELD,CLASSIC,MAGNETIC,CITY,CROSSROADS});
   root.TankScenarios=scenarios;
   if(typeof module!=='undefined'&&module.exports) module.exports=scenarios;
 })(typeof globalThis!=='undefined'?globalThis:this);
@@ -390,7 +416,7 @@
   const approach = (from, to, limit) => from + clamp(to - from, -limit, limit);
   const DODGE_TURN_RATE = 1080 * Math.PI / 180;
   const ATTEMPT_LOG_VERSION = 1;
-  const BUILD_ID = 'prototype-06-two-maps-2';
+  const BUILD_ID = 'prototype-06-three-maps-test-1';
   const scenarios = typeof module !== 'undefined' && module.exports ? require('./scenarios.js') : root.TankScenarios;
   const ENEMY_TYPES = Object.freeze({
     light: Object.freeze({ hp: 20, speed: 2.6, damage: 8, range: 6, cooldown: 1.4 }),
@@ -408,7 +434,7 @@
   });
   const CONFIG = Object.freeze({ ...scenarios.BATTLEFIELD, W, H, ENEMY_TYPES, ENEMY_WINDUP: 0 });
   const CLASSIC_CONFIG = Object.freeze({ ...scenarios.CLASSIC, W, H, ENEMY_TYPES: CLASSIC_ENEMY_TYPES, ENEMY_WINDUP: 0.35 });
-  const MAP_CONFIGS = Object.freeze(Object.fromEntries([scenarios.MAGNETIC, scenarios.CITY].map(map =>
+  const MAP_CONFIGS = Object.freeze(Object.fromEntries([scenarios.MAGNETIC, scenarios.CITY, scenarios.CROSSROADS].map(map =>
     [map.mapId, Object.freeze({ ...map, W, H, ENEMY_TYPES, ENEMY_WINDUP: 0 })]
   )));
   const baseRect = config => config.BASE_RECT ?? CONFIG.BASE_RECT;
@@ -3179,7 +3205,7 @@
   function drawMapMiniature(surface,config) {
     const mapCtx=surface.getContext('2d'), { W,H,BASE_RECT }=config;
     mapCtx.scale(surface.width/W,surface.height/H);
-    const magnetic=config.mapId==='magnetic';
+    const magnetic=config.mapId!=='city';
     mapCtx.fillStyle=magnetic?'#9ecac1':'#c4ad91';
     mapCtx.fillRect(0,0,W,H);
     for(const wall of config.WALLS) {
