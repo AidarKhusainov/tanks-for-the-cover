@@ -53,7 +53,7 @@ function renderSceneHtml(html, scene, mapId = 'magnetic') {
   assert.ok(['placement', 'death'].includes(scene), 'Unknown control scene');
   assert.ok(['magnetic', 'city'].includes(mapId), 'Unknown map');
   const entry = 'let game = new Game(MAP_CONFIGS.magnetic);';
-  const startup = 'configureMapView();\n  showMapPicker();\n  requestAnimationFrame(frame);';
+  const startup = 'configureMapView();\n  initializeMap();\n  requestAnimationFrame(frame);';
   assert.equal(html.split(entry).length, 2, 'Expected a single UI game constructor');
   assert.equal(html.split(startup).length, 2, 'Expected the map-selection startup');
   const boot = `let game = (${createScene})(globalThis.TankCore, ${JSON.stringify(scene)}, ${JSON.stringify(mapId)});`;
