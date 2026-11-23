@@ -175,6 +175,13 @@ test('experimental third map imports the supplied geometry and uses a single spa
   assert(game._positionFree(game.player.x,game.player.y,game.player,true));
   const [route] = game.getPreviewPaths({ lane:'A', type:'medium' });
   assert(route?.points.length>1 && Number.isFinite(route.estimatedSeconds), 'base should be reachable from the only spawn');
+  // The test map has no bunker, but a wreck must not suppress respawn indefinitely.
+  game.wrecks.push({ id:'blocked-return', x:25.5, y:8, r:TANK_RADIUS, hp:60, type:'medium' });
+  game.player.alive=false;
+  game.player.respawn=0;
+  game._updateRespawn(0);
+  assert.equal(game.player.alive,true);
+  assert(Math.hypot(game.player.x-25.5,game.player.y-8)>=2*TANK_RADIUS);
   const log = JSON.parse(game.exportAttemptLog());
   assert.equal(log.configuration.game.mapId, 'crossroads');
   assert.equal(log.configuration.game.mapVersion, 1);
