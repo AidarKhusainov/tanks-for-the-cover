@@ -36,6 +36,9 @@
 .map-choice:hover,.map-choice[aria-current=true]{border-color:var(--lime);background:#304239}
 .map-choice canvas{display:block;width:100%;height:auto;border-radius:5px;cursor:pointer}
 .map-choice span{padding:0 2px 3px}
+.header-actions a,.map-tools a{text-decoration:none}
+.map-tools{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}
+#map-message{color:#ffbd9c;white-space:pre-line;font-size:12px;line-height:1.5}
 #entry-status{margin:8px 0 0;color:#ffd4a0;font-size:11px;line-height:1.5}
 #campaign-content{min-height:0;overflow:auto;padding:4px 8px}
 #campaign-content:focus-visible{outline:2px solid var(--lime);outline-offset:-2px}
@@ -65,7 +68,7 @@
   <div class="app">
     <header class="topbar">
       <div class="brand"><span class="brand-icon" aria-hidden="true"><i></i></span><div><p class="eyebrow">ТАНЧИКИ <span>/</span> ПРОТОТИП 06</p><h1 id="map-name"></h1></div></div>
-      <div class="header-actions"><button id="maps" class="icon-button" aria-haspopup="dialog">Карты</button><button id="sound" class="icon-button" aria-pressed="false" title="Включить звук">Звук выкл</button><button id="campaign" class="icon-button" aria-haspopup="dialog">Кампания</button><button id="help" class="icon-button" title="Правила и управление">Как играть <span>?</span></button><button id="pause" class="icon-button" title="Пауза (Esc)">Ⅱ <span class="desktop-label">Пауза</span></button></div>
+      <div class="header-actions"><a id="editor" class="icon-button" href="tools/map-editor.html">Редактор карт</a><button id="maps" class="icon-button" aria-haspopup="dialog">Карты</button><button id="sound" class="icon-button" aria-pressed="false" title="Включить звук">Звук выкл</button><button id="campaign" class="icon-button" aria-haspopup="dialog">Кампания</button><button id="help" class="icon-button" title="Правила и управление">Как играть <span>?</span></button><button id="pause" class="icon-button" title="Пауза (Esc)">Ⅱ <span class="desktop-label">Пауза</span></button></div>
     </header>
     <div class="mobile-notice">Для игры нужны клавиатура и мышь. Открой эту страницу на компьютере.</div>
     <main class="game-layout">
@@ -133,6 +136,9 @@
     <h2 id="map-title">Выбор карты</h2>
     <p>Выбор карты начинает новую попытку.</p>
     <div id="map-options" class="map-options"></div>
+    <div class="map-tools"><a id="map-editor" class="icon-button" href="tools/map-editor.html">Редактор карт</a><button id="import-map" class="icon-button" type="button">Загрузить карту JSON</button><input id="map-file" type="file" accept="application/json,.json" hidden></div>
+    <p id="map-message" role="status"></p>
+    <a id="map-fix" class="icon-button" href="tools/map-editor.html" hidden>Исправить карту в редакторе</a>
     <form method="dialog" class="modal-actions"><button class="secondary">Продолжить текущую попытку</button></form>
   </dialog>
   <script>
@@ -3127,7 +3133,90 @@
 
   }
 
-  const api = { Game, MAP_CONFIGS, CONFIG, CLASSIC_CONFIG, PLAYER_WEAPON, PLAYER_MODULES, TANK_RADIUS, isInSpawnZone };
+  // Editor rectangles use top-left coordinates; actors and spawn zones use centers.
+  // Keep this adapter outside Game so ordinary scenarios retain their exact rules.
+  function readEditorDraft(draft) {
+    if (!draft || draft.format !== 'tanks-map-editor' || draft.version !== 1 ||
+        draft.width !== W || draft.height !== H || !Array.isArray(draft.objects) || draft.objects.length > 300) {
+      throw new Error('Нужна карта редактора tanks-map-editor версии 1, размером 28 × 18, до 300 объектов.');
+    }
+    const ids = new Set();
+    const objects = draft.objects.map(object => {
+      if (!object || !['wall', 'spawn', 'base', 'player'].includes(object.type) ||
+          typeof object.id !== 'string' || !object.id || object.id.length > 100 || ids.has(object.id) ||
+          typeof object.name !== 'string' || object.name.length > 100 ||
+          !['x', 'y', 'w', 'h'].every(key => typeof object[key] === 'number' && Number.isFinite(object[key]) && object[key] >= 0) ||
+          object.w === 0 || object.h === 0) {
+        throw new Error('Повреждённые данные объекта или повторяющийся ID.');
+      }
+      ids.add(object.id);
+      const { id, type, name, x, y, w, h } = object;
+      return { id, type, name, x, y, w, h };
+    });
+    return { format: 'tanks-map-editor', version: 1, width: W, height: H, objects };
+  }
+
+  function createEditorMap(input) {
+    const draft = readEditorDraft(input), objects = draft.objects;
+    for (const { name, x, y, w, h } of objects) {
+      if (x + w > W + EPS || y + h > H + EPS) {
+        throw new Error(`${name}: объект выходит за границы поля.`);
+      }
+    }
+    const only = type => {
+      const found = objects.filter(object => object.type === type);
+      if (found.length !== 1) throw new Error('Нужны ровно один спавн, одна база и одна позиция игрока.');
+      return found[0];
+    };
+    const spawn = only('spawn'), base = only('base'), player = only('player');
+    if (player.w !== 1 || player.h !== 1) throw new Error('Размер позиции игрока должен быть 1 × 1.');
+    if (spawn.w < 1 || spawn.h < 1) throw new Error('Спавн должен вмещать танк диаметром 1.');
+    for (let i = 0; i < objects.length; i++) {
+      for (let j = i + 1; j < objects.length; j++) {
+        const a = objects[i], b = objects[j];
+        if (a.x < b.x + b.w - EPS && a.x + a.w > b.x + EPS &&
+            a.y < b.y + b.h - EPS && a.y + a.h > b.y + EPS) {
+          throw new Error(`${a.name} пересекается с «${b.name}».`);
+        }
+      }
+    }
+    const rect = ({ x, y, w, h }) => ({ x, y, w, h });
+    const start = { x: player.x + .5, y: player.y + .5 };
+    const sx = spawn.x + spawn.w / 2, sy = spawn.y + spawn.h / 2;
+    const dx = base.x + base.w / 2 - sx, dy = base.y + base.h / 2 - sy;
+    const returnX = Math.max(.5, start.x - 2), returnY = Math.max(.5, start.y - 2);
+    const config = {
+      ...MAP_CONFIGS.crossroads, mapId: 'editor', mapName: 'Моя карта (тест)', mapVersion: 1,
+      WALLS: objects.filter(object => object.type === 'wall').map(rect),
+      BASE_RECT: rect(base), PLAYER_START: start,
+      PLAYER_RETURN_AREA: {
+        x: returnX, y: returnY,
+        w: Math.min(W - .5, start.x + 2) - returnX,
+        h: Math.min(H - .5, start.y + 2) - returnY
+      },
+      SPAWNS: { A: { x: sx, y: sy, w: spawn.w, h: spawn.h,
+        direction: Math.abs(dx) > Math.abs(dy) ? dx >= 0 ? 'right' : 'left' : dy >= 0 ? 'down' : 'up' } },
+      editorDraft: draft
+    };
+    if (!staticPositionFree(config, sx, sy) || !staticPositionFree(config, start.x, start.y) ||
+        pointRectDistanceSq(start.x, start.y, centerRect(config.SPAWNS.A)) < square(TANK_RADIUS) - EPS) {
+      throw new Error('Спавн или позиция игрока заняты: нужен свободный круг диаметром 1.');
+    }
+    const freeze = value => {
+      if (value && typeof value === 'object' && !Object.isFrozen(value)) {
+        Object.values(value).forEach(freeze);
+        Object.freeze(value);
+      }
+      return value;
+    };
+    freeze(config);
+    if (new Game(config).getPreviewPaths({ type: 'medium' })[0].decision === 'unreachable') {
+      throw new Error('Нет пути от спавна к огневой позиции у базы.');
+    }
+    return config;
+  }
+
+  const api = { Game, MAP_CONFIGS, CONFIG, CLASSIC_CONFIG, PLAYER_WEAPON, PLAYER_MODULES, TANK_RADIUS, isInSpawnZone, readEditorDraft, createEditorMap };
   root.TankCore = api;
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
 })(typeof globalThis !== 'undefined' ? globalThis : this);
@@ -3136,8 +3225,10 @@
   <script>
 (() => {
   'use strict';
-  const { Game, MAP_CONFIGS, PLAYER_WEAPON, PLAYER_MODULES, TANK_RADIUS, isInSpawnZone } = globalThis.TankCore;
+  const { Game, MAP_CONFIGS, PLAYER_WEAPON, PLAYER_MODULES, TANK_RADIUS, isInSpawnZone, readEditorDraft, createEditorMap } = globalThis.TankCore;
   let game = new Game(MAP_CONFIGS.magnetic);
+  let editorConfig = null;
+  let resumeEditor = false;
   const el = (id) => document.getElementById(id);
   const canvas = el('board'), ctx = canvas.getContext('2d');
   const keys = new Set(), effects = [], unitLabels = [];
@@ -3222,7 +3313,8 @@
     mapCtx.fillRect(BASE_RECT.x,BASE_RECT.y,BASE_RECT.w,BASE_RECT.h);
   }
   function setupMapChoices(){
-    for(const config of Object.values(MAP_CONFIGS)) {
+    el('map-options').replaceChildren();
+    for(const config of [...Object.values(MAP_CONFIGS), ...(editorConfig ? [editorConfig] : [])]) {
       const button=document.createElement('button'), miniature=document.createElement('canvas'), name=document.createElement('span');
       button.className='map-choice';
       button.type='button';
@@ -3234,6 +3326,44 @@
       button.append(miniature,name);
       el('map-options').appendChild(button);
     }
+  }
+  function updateEditorLinks(){
+    const draft=game.config.editorDraft;
+    const fragment=draft?'#map='+encodeURIComponent(JSON.stringify(draft))+(resumeEditor?'&resume=1':''):'';
+    for(const id of ['editor','map-editor']) {
+      el(id).href='tools/map-editor.html'+fragment;
+      el(id).textContent=draft?'К редактированию':'Редактор карт';
+    }
+    if(location.hash!==fragment) {
+      try { history.replaceState(null,'',location.pathname+location.search+fragment); }
+      catch { location.hash=fragment; }
+    }
+  }
+  function loadEditorText(text, resume = false){
+    if(text.length>600000)throw new Error('Карта слишком большая.');
+    const config=createEditorMap(JSON.parse(text));
+    editorConfig=config;
+    resumeEditor=resume;
+    el('map-message').textContent='';
+    el('map-fix').hidden=true;
+    setupMapChoices();
+    selectMap(config);
+  }
+  function showEditorError(text,error,resume=false){
+    el('map-message').textContent='Карта не загружена: '+error.message;
+    const repair=el('map-fix');
+    repair.hidden=true;
+    if(text&&text.length<=600000) {
+      try { readEditorDraft(JSON.parse(text));repair.hidden=false; } catch { /* Only readable drafts can be repaired. */ }
+    }
+    repair.href=repair.hidden?'tools/map-editor.html':'tools/map-editor.html#map='+encodeURIComponent(text)+(resume?'&resume=1':'');
+  }
+  function initializeMap(){
+    const params=new URLSearchParams(location.hash.slice(1)),mapText=params.get('map');
+    if(mapText!==null) {
+      try { loadEditorText(mapText,params.get('resume')==='1'); }
+      catch(error) { showEditorError(mapText,error,params.get('resume')==='1');showMapPicker(); }
+    } else showMapPicker();
   }
   function toast(text, seconds = 3.5) {
     el('toast').textContent=text; el('toast').classList.add('show'); toastUntil=performance.now()+seconds*1000;
@@ -3267,6 +3397,7 @@
     el('toast').classList.remove('show');el('toast').textContent='';
     el('route-estimate').textContent='';
     configureMapView();
+    updateEditorLinks();
     mapDialog.close();closeModal();
     updateUi();
   }
@@ -3357,6 +3488,18 @@
     toast('Действие отменено. Позиция танка восстановлена.');
   }
   el('start').onclick=start;el('pause').onclick=pause;el('help').onclick=help;el('campaign').onclick=showCampaign;el('maps').onclick=showMapPicker;el('repair').onclick=repair;
+  el('import-map').onclick=()=>el('map-file').click();
+  el('map-file').addEventListener('change',async event=>{
+    const file=event.target.files[0];
+    if(!file)return;
+    let text='';
+    try {
+      if(file.size>600000)throw new Error('Карта слишком большая.');
+      text=await file.text();loadEditorText(text);
+    } catch(error) {
+      showEditorError(text,error);
+    } finally { event.target.value=''; }
+  });
   el('install-module').onclick=()=>installModule();
   el('install-barrel').onclick=()=>installModule('barrel');
   el('leave').onclick=leaveWreck;el('undo').onclick=undo;
@@ -4034,7 +4177,7 @@
   }
   setupMapChoices();
   configureMapView();
-  showMapPicker();
+  initializeMap();
   requestAnimationFrame(frame);
 })();
 

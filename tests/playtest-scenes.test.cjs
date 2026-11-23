@@ -57,7 +57,7 @@ test('scene builder patches the current UI and rejects unknown scenario/map', ()
   const html = fs.readFileSync(path.join(__dirname, '..', 'index.html'), 'utf8');
   const rendered = createScene.renderSceneHtml(html, 'death', 'city');
   assert.match(rendered, /game\.paused = false; pause\(\);/);
-  assert.doesNotMatch(rendered, /configureMapView\(\);\s+showMapPicker\(\);\s+requestAnimationFrame/);
+  assert.doesNotMatch(rendered, /configureMapView\(\);\s+initializeMap\(\);\s+requestAnimationFrame/);
   assert.throws(() => createScene(core, 'unknown', 'city'));
   assert.throws(() => createScene(core, 'placement', 'unknown'));
 });
