@@ -112,8 +112,8 @@ test('entry warning changes from plan to countdown to blocked and clears on firs
   assert.equal(game.enemies.filter(enemy => enemy.lane === 'C').length, 2);
 });
 
-test('the two selectable maps start independent shared-core attempts', () => {
-  assert.deepEqual(Object.keys(MAP_CONFIGS).sort(), ['city', 'magnetic']);
+test('selectable maps start independent shared-core attempts', () => {
+  assert.deepEqual(Object.keys(MAP_CONFIGS).sort(), ['city', 'crossroads', 'magnetic']);
   const first = new Game(MAP_CONFIGS.magnetic);
   const secondConfig = MAP_CONFIGS.city;
   first.base.hp = 120;
@@ -135,12 +135,13 @@ test('the two selectable maps start independent shared-core attempts', () => {
   assert.deepEqual(log.events.map(event => event.type), ['attempt_start']);
 });
 
-test('both maps use the v1 campaign roster and preserve the order inside each group', () => {
+test('the two calibrated maps retain their v1 campaigns', () => {
   const roster = [
     'A:lmll', 'A:mlmll', 'C:lmlmll', 'B:lmlm C:mhll',
     'B:mhll C:lmll', 'A:lml B:mll C:mlll', 'A:mhll B:lhml C:mll', 'A:hlmll B:mlll C:hlmll'
   ];
-  for (const [id, config] of Object.entries(MAP_CONFIGS ?? {})) {
+  for (const id of ['magnetic','city']) {
+    const config=MAP_CONFIGS[id];
     assert.equal(config.mapId, id);
     assert.equal(config.AI_MODE, 'roles');
     assert.equal(config.SPAWN_INTERVAL, 2.5);
@@ -152,7 +153,29 @@ test('both maps use the v1 campaign roster and preserve the order inside each gr
       assert(wave.every(group => Number.isFinite(group.start) && group.start >= 0));
     }
   }
-  assert.equal(Object.keys(MAP_CONFIGS ?? {}).length, 2);
+  assert.equal(Object.keys(MAP_CONFIGS ?? {}).length, 3);
+});
+
+test('experimental third map imports the supplied geometry and uses a single spawn', () => {
+  const config = MAP_CONFIGS.crossroads;
+  assert.equal(config.mapId, 'crossroads');
+  assert.deepEqual(config.BASE_RECT, { x:18, y:11, w:2, h:2 });
+  assert.deepEqual(config.PLAYER_START, { x:25.5, y:8 });
+  assert.deepEqual(config.SPAWNS, { A:{ x:1.5, y:8.5, w:1.5, h:1.5, direction:'right' } });
+  assert.deepEqual(config.WALLS.map(({x,y,w,h})=>[x,y,w,h]), [
+    [4,7,8,3], [4,11,8,3], [14,6,2,4], [4,2,8,3],
+    [13,2,4.25,2], [22,6,2,4], [14,14,2.25,2]
+  ]);
+  const counts = [4,5,6,8,8,10,11,14];
+  assert.deepEqual(config.WAVES.map(wave => wave.reduce((count,group)=>count+group.types.length,0)), counts);
+  assert(config.WAVES.every(wave => wave.length===1 && wave[0].lane==='A' && wave[0].start===0));
+  const game = new Game(config);
+  assert(game._positionFree(game.player.x,game.player.y,game.player,true));
+  const [route] = game.getPreviewPaths({ lane:'A', type:'medium' });
+  assert(route?.points.length>1 && Number.isFinite(route.estimatedSeconds), 'base should be reachable from the only spawn');
+  const log = JSON.parse(game.exportAttemptLog());
+  assert.equal(log.configuration.game.mapId, 'crossroads');
+  assert.equal(log.configuration.game.mapVersion, 1);
 });
 
 function follow(game, points) {
@@ -164,8 +187,9 @@ function follow(game, points) {
   }
 }
 
-test('both protected returns have an exit traversable with ordinary movement', () => {
-  for (const [id, config] of Object.entries(MAP_CONFIGS)) {
+test('the two existing protected returns retain their traversable exits', () => {
+  for (const id of ['magnetic','city']) {
+    const config=MAP_CONFIGS[id];
     const game = new Game(config);
     assert(game._positionFree(game.player.x, game.player.y, game.player, true));
     for (const spawn of Object.values(config.SPAWNS)) {
@@ -267,8 +291,9 @@ function placeHulls(hulls) {
   return hulls.map((point, index) => ({ ...point, id: `hull-${index}`, r: TANK_RADIUS, hp: 60, type: 'medium' }));
 }
 
-test('A and C choke points close across their useful areas while their bypasses stay free', () => {
-  for (const [id, config] of Object.entries(MAP_CONFIGS)) {
+test('A and C choke points of the calibrated maps still work', () => {
+  for (const id of ['magnetic','city']) {
+    const config=MAP_CONFIGS[id];
     for (const lane of ['A', 'C']) {
       const game = new Game(config);
       const { bypass, blockers: [center], usefulAreas: [area] } = config.TACTICS[lane];
