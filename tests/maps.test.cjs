@@ -158,16 +158,18 @@ test('the two calibrated maps retain their v1 campaigns', () => {
 
 test('experimental third map imports the supplied geometry and uses a single spawn', () => {
   const config = MAP_CONFIGS.crossroads;
+  // Scenario objects originate in a separate vm context; compare plain data, not prototypes.
+  const plain = value => JSON.parse(JSON.stringify(value));
   assert.equal(config.mapId, 'crossroads');
-  assert.deepEqual(config.BASE_RECT, { x:18, y:11, w:2, h:2 });
-  assert.deepEqual(config.PLAYER_START, { x:25.5, y:8 });
-  assert.deepEqual(config.SPAWNS, { A:{ x:1.5, y:8.5, w:1.5, h:1.5, direction:'right' } });
-  assert.deepEqual(config.WALLS.map(({x,y,w,h})=>[x,y,w,h]), [
+  assert.deepEqual(plain(config.BASE_RECT), { x:18, y:11, w:2, h:2 });
+  assert.deepEqual(plain(config.PLAYER_START), { x:25.5, y:8 });
+  assert.deepEqual(plain(config.SPAWNS), { A:{ x:1.5, y:8.5, w:1.5, h:1.5, direction:'right' } });
+  assert.deepEqual(plain(config.WALLS.map(({x,y,w,h})=>[x,y,w,h])), [
     [4,7,8,3], [4,11,8,3], [14,6,2,4], [4,2,8,3],
     [13,2,4.25,2], [22,6,2,4], [14,14,2.25,2]
   ]);
   const counts = [4,5,6,8,8,10,11,14];
-  assert.deepEqual(config.WAVES.map(wave => wave.reduce((count,group)=>count+group.types.length,0)), counts);
+  assert.deepEqual(plain(config.WAVES.map(wave => wave.reduce((count,group)=>count+group.types.length,0))), counts);
   assert(config.WAVES.every(wave => wave.length===1 && wave[0].lane==='A' && wave[0].start===0));
   const game = new Game(config);
   assert(game._positionFree(game.player.x,game.player.y,game.player,true));
