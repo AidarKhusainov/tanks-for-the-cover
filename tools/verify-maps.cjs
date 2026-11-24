@@ -140,7 +140,9 @@ function verifySerialCityB(config, scenes) {
 
 function verifyMaps(core) {
   const maps = {};
-  for (const [mapId,config] of Object.entries(core.MAP_CONFIGS)) {
+  // The calibrated fixtures below describe the A/C/B entrances of these two maps.
+  for (const mapId of ['magnetic','city']) {
+    const config = core.MAP_CONFIGS[mapId];
     const lanes = {};
     for (const lane of Object.keys(CONTROL_WAVES)) {
       const variants = lane === 'B' ? Object.keys(fixtures) :

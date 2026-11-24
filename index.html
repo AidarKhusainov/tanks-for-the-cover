@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#152329">
-  <meta name="description" content="Защити базу на одной из трёх карт. Третья — экспериментальная карта с одним входом врагов и тремя подходами.">
+  <meta name="description" content="Защити базу на одной из четырёх карт: «Магнитная доска», «Город», «Три подхода» и «Шлюз № 7».">
   <title>Танчики — оборона базы</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect width='48' height='48' rx='10' fill='%23152329'/%3E%3Cpath fill='%23d4ed87' d='M11 15h6v25h-6zm20 0h6v25h-6zM18 19h12v17H18zM22 5h4v22h-4z'/%3E%3C/svg%3E">
   <style>
@@ -231,7 +231,7 @@
   const wall = (x, y, w, h, kind = 'toy') => ({ x, y, w, h, kind });
   const points = (...pairs) => pairs.map(([x, y]) => ({ x, y }));
   const MAGNETIC = {
-    mapId:'magnetic', mapName:'Магнитная доска', mapVersion:1, AI_MODE:'roles', SPAWN_INTERVAL:2.5,
+    mapId:'magnetic', mapName:'Магнитная доска', mapVersion:2, AI_MODE:'roles', SPAWN_INTERVAL:2.5,
     BASE_RECT:{ x:13.1, y:12.8, w:1.8, h:1.8 },
     PLAYER_START:{ x:16.4, y:17.2 },
     PLAYER_RETURN_AREA:{ x:15.4, y:17.3, w:2.1, h:.1 },
@@ -284,8 +284,10 @@
     },
     WAVES: campaignWaves([[0], [0], [0], [0,948], [0,1216], [0,303,996], [0,322,455], [0,334,542]])
   };
+  const loadingYard = { x:16, y:5.8, w:2.25, h:2 };
   const CITY = {
-    mapId:'city', mapName:'Город', mapVersion:1, AI_MODE:'roles', SPAWN_INTERVAL:2.5,
+    mapId:'city', mapName:'Город', mapVersion:2, AI_MODE:'roles', SPAWN_INTERVAL:2.5,
+    LOADING_YARD:loadingYard,
     BASE_RECT:{ x:3.2, y:10.3, w:1.8, h:1.8 },
     PLAYER_START:{ x:6.85, y:15.25 },
     PLAYER_RETURN_AREA:{ x:5.53, y:15.23, w:1.52, h:.06 },
@@ -293,7 +295,10 @@
       wall(2, 3.5, 3.2, 4.5, 'city'),
       wall(6.8, 3.5, 2.8, 4.5, 'city'),
       wall(16, 0, 8, 4.2, 'city'),
-      wall(16, 5.8, 8, 5.4, 'city'),
+      wall(loadingYard.x + loadingYard.w, 5.8, 5.75, 5.4, 'city'),
+      wall(16, loadingYard.y + loadingYard.h, loadingYard.w, 3.4, 'city'),
+      // The corner post keeps through traffic on the street while the yard stays accessible.
+      wall(loadingYard.x, loadingYard.y, .45, .35, 'city'),
       wall(18.8, 11.2, 5.2, 2.2, 'city'),
       wall(24, 9.6, 2.4, .8, 'city'),
       wall(12.4, 8.4, 2, 2, 'city'),
@@ -343,16 +348,16 @@
     },
     WAVES: campaignWaves([[0], [0], [0], [0,1137], [0,10], [964,0,1101], [0,463,511], [789,458,0]])
   };
-  // Experimental third map: exact rectangles from tanks-map-draft (1).json.
+  // Experimental third map derived from tanks-map-draft (1).json.
   // Single-entry timing deliberately differs from the calibrated two-map campaigns.
   const CROSSROADS = {
-    mapId:'crossroads', mapName:'Три подхода (тест)', mapVersion:1, AI_MODE:'roles', SPAWN_INTERVAL:2.5,
+    mapId:'crossroads', mapName:'Три подхода (тест)', mapVersion:2, AI_MODE:'roles', SPAWN_INTERVAL:2.5,
     BASE_RECT:{ x:18, y:11, w:2, h:2 },
     PLAYER_START:{ x:25.5, y:8 },
     PLAYER_RETURN_AREA:{ x:24.5, y:6.5, w:2.5, h:3 },
     WALLS:[
       wall(4,7,8,3),
-      wall(4,11,8,3),
+      wall(4,11.5,8,2.5),
       wall(14,6,2,4),
       wall(4,2,8,3),
       wall(13,2,4.25,2),
@@ -369,13 +374,41 @@
         .flatMap(group=>group.types)
     }])
   };
+  // Playable offline geometry of maps/sluice-7.json, with the same single-entry campaign.
+  const SLUICE = {
+    mapId:'sluice-7', mapName:'Шлюз № 7', mapVersion:1, AI_MODE:'roles',
+    SPAWN_INTERVAL:CROSSROADS.SPAWN_INTERVAL, WAVES:CROSSROADS.WAVES,
+    BASE_RECT:{ x:24.25, y:7.75, w:2, h:2 },
+    PLAYER_START:{ x:23.75, y:12.75 },
+    PLAYER_RETURN_AREA:{ x:21.75, y:10.75, w:4, h:4 },
+    SPAWNS:{ A:{ x:2, y:8.75, w:2.5, h:2.5, direction:'right' } },
+    WALLS:[
+      wall(7,8,1.5,2),
+      wall(8.5,7,1.5,4),
+      wall(10,6,5.25,6),
+      wall(15.25,7,1.5,4),
+      wall(16.75,8,1.5,2),
+      wall(5,2.25,12,1.25),
+      wall(10.75,3.5,1.5,1),
+      wall(19.25,1,2,3.25),
+      wall(5,15.5,13,1.25),
+      wall(14.25,14.5,2.5,1),
+      wall(2,4.25,2.25,1.75),
+      wall(2.5,12.5,2.25,1.25),
+      wall(20.75,7.5,1.25,3),
+      wall(22.5,11.25,2.5,.75),
+      wall(25,11.25,.75,2.75),
+      wall(19.25,14.75,2.75,2),
+      wall(24.5,3.25,1.5,1.5)
+    ]
+  };
   function freeze(value) {
     if(value && typeof value==='object' && !Object.isFrozen(value)) {
       Object.values(value).forEach(freeze); Object.freeze(value);
     }
     return value;
   }
-  const scenarios=freeze({BATTLEFIELD,CLASSIC,MAGNETIC,CITY,CROSSROADS});
+  const scenarios=freeze({BATTLEFIELD,CLASSIC,MAGNETIC,CITY,CROSSROADS,SLUICE});
   root.TankScenarios=scenarios;
   if(typeof module!=='undefined'&&module.exports) module.exports=scenarios;
 })(typeof globalThis!=='undefined'?globalThis:this);
@@ -422,7 +455,7 @@
   const approach = (from, to, limit) => from + clamp(to - from, -limit, limit);
   const DODGE_TURN_RATE = 1080 * Math.PI / 180;
   const ATTEMPT_LOG_VERSION = 1;
-  const BUILD_ID = 'prototype-06-three-maps-test-1';
+  const BUILD_ID = 'prototype-06-four-maps-2';
   const scenarios = typeof module !== 'undefined' && module.exports ? require('./scenarios.js') : root.TankScenarios;
   const ENEMY_TYPES = Object.freeze({
     light: Object.freeze({ hp: 20, speed: 2.6, damage: 8, range: 6, cooldown: 1.4 }),
@@ -440,7 +473,7 @@
   });
   const CONFIG = Object.freeze({ ...scenarios.BATTLEFIELD, W, H, ENEMY_TYPES, ENEMY_WINDUP: 0 });
   const CLASSIC_CONFIG = Object.freeze({ ...scenarios.CLASSIC, W, H, ENEMY_TYPES: CLASSIC_ENEMY_TYPES, ENEMY_WINDUP: 0.35 });
-  const MAP_CONFIGS = Object.freeze(Object.fromEntries([scenarios.MAGNETIC, scenarios.CITY, scenarios.CROSSROADS].map(map =>
+  const MAP_CONFIGS = Object.freeze(Object.fromEntries([scenarios.MAGNETIC, scenarios.CITY, scenarios.CROSSROADS, scenarios.SLUICE].map(map =>
     [map.mapId, Object.freeze({ ...map, W, H, ENEMY_TYPES, ENEMY_WINDUP: 0 })]
   )));
   const baseRect = config => config.BASE_RECT ?? CONFIG.BASE_RECT;
@@ -3779,6 +3812,14 @@
         for(const street of streets){tracePath(street);ctx.stroke();}
       }
       ctx.restore();
+      const yard=game.config.LOADING_YARD;
+      ctx.fillStyle='#ad9d83';ctx.fillRect(yard.x,yard.y,yard.w,yard.h);
+      ctx.strokeStyle='#e8d3a0';ctx.lineWidth=.065;ctx.beginPath();
+      for(let i=1;i<=3;i++){
+        const x=yard.x+yard.w*i/4, y=yard.y+yard.h-.12;
+        ctx.moveTo(x-.15,y-.28);ctx.lineTo(x+.08,y);
+      }
+      ctx.stroke();
       return;
     }
     const enamel=ctx.createLinearGradient(0,0,W,H);
@@ -3789,6 +3830,18 @@
     for(let y=1;y<H;y++){ctx.moveTo(0,y);ctx.lineTo(W,y);}
     ctx.stroke();
     ctx.strokeStyle='#346c655c';ctx.lineWidth=.07;ctx.strokeRect(.12,.12,W-.24,H-.24);
+    if(mapId==='magnetic'){
+      for(const lane of ['A','B']){
+        for(const {x,y} of TACTICS[lane].blockers){
+          // Inlaid brass strips span one hull diameter. The floor stays traversable.
+          ctx.fillStyle='#71512e';ctx.fillRect(x-.5,y-.16,1,.32);
+          ctx.fillStyle='#cea34e';ctx.fillRect(x-.48,y-.13,.96,.24);
+          ctx.fillStyle='#ffe4a0';ctx.fillRect(x-.48,y-.13,.96,.045);
+          ctx.fillStyle='#815d31';
+          ctx.fillRect(x-.41,y-.045,.06,.09);ctx.fillRect(x+.35,y-.045,.06,.09);
+        }
+      }
+    }
   }
   function entryLabel(signal){
     if(signal.status==='waiting')return 'ожидает освобождения';

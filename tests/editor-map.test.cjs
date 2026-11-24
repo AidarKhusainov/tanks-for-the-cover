@@ -16,6 +16,7 @@ const draft = () => ({
 const plain = value => JSON.parse(JSON.stringify(value));
 
 test('editor rectangles become the actual game geometry, with centered player and spawn', () => {
+  const selectableMaps = Object.keys(MAP_CONFIGS);
   const input = draft();
   const config = createEditorMap(input);
   const game = new Game(config);
@@ -32,7 +33,7 @@ test('editor rectangles become the actual game geometry, with centered player an
   assert.equal(config.SPAWNS.A.x, 2.25);
   assert.equal(config.WALLS[0].x, 10);
   assert.equal(config.editorDraft.objects[0].x, 1.5);
-  assert.deepEqual(Object.keys(MAP_CONFIGS).sort(), ['city', 'crossroads', 'magnetic']);
+  assert.deepEqual(Object.keys(MAP_CONFIGS), selectableMaps, 'import leaves the built-in list intact');
 });
 
 test('a custom map runs the existing eight-wave campaign through its one spawn', () => {

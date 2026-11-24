@@ -2,7 +2,7 @@
 
 const test = require('node:test');
 const assert = require('node:assert/strict');
-const { Game, CONFIG, MAP_CONFIGS, TANK_RADIUS } = require('./load-core.cjs');
+const { Game, CONFIG, MAP_CONFIGS, TANK_RADIUS, createEditorMap } = require('./load-core.cjs');
 
 const relocated = {
   ...CONFIG,
@@ -113,7 +113,7 @@ test('entry warning changes from plan to countdown to blocked and clears on firs
 });
 
 test('selectable maps start independent shared-core attempts', () => {
-  assert.deepEqual(Object.keys(MAP_CONFIGS).sort(), ['city', 'crossroads', 'magnetic']);
+  assert.deepEqual(Object.keys(MAP_CONFIGS), ['magnetic', 'city', 'crossroads', 'sluice-7']);
   const first = new Game(MAP_CONFIGS.magnetic);
   const secondConfig = MAP_CONFIGS.city;
   first.base.hp = 120;
@@ -153,10 +153,9 @@ test('the two calibrated maps retain their v1 campaigns', () => {
       assert(wave.every(group => Number.isFinite(group.start) && group.start >= 0));
     }
   }
-  assert.equal(Object.keys(MAP_CONFIGS ?? {}).length, 3);
 });
 
-test('experimental third map imports the supplied geometry and uses a single spawn', () => {
+test('Crossroads retains its three approaches and single-spawn campaign', () => {
   const config = MAP_CONFIGS.crossroads;
   // Scenario objects originate in a separate vm context; compare plain data, not prototypes.
   const plain = value => JSON.parse(JSON.stringify(value));
@@ -165,7 +164,7 @@ test('experimental third map imports the supplied geometry and uses a single spa
   assert.deepEqual(plain(config.PLAYER_START), { x:25.5, y:8 });
   assert.deepEqual(plain(config.SPAWNS), { A:{ x:1.5, y:8.5, w:1.5, h:1.5, direction:'right' } });
   assert.deepEqual(plain(config.WALLS.map(({x,y,w,h})=>[x,y,w,h])), [
-    [4,7,8,3], [4,11,8,3], [14,6,2,4], [4,2,8,3],
+    [4,7,8,3], [4,11.5,8,2.5], [14,6,2,4], [4,2,8,3],
     [13,2,4.25,2], [22,6,2,4], [14,14,2.25,2]
   ]);
   const counts = [4,5,6,8,8,10,11,14];
@@ -184,7 +183,52 @@ test('experimental third map imports the supplied geometry and uses a single spa
   assert(Math.hypot(game.player.x-25.5,game.player.y-8)>=2*TANK_RADIUS);
   const log = JSON.parse(game.exportAttemptLog());
   assert.equal(log.configuration.game.mapId, 'crossroads');
-  assert.equal(log.configuration.game.mapVersion, 1);
+  assert.equal(log.configuration.game.mapVersion, 2);
+});
+
+test('Crossroads reroutes through the middle, north, then south as wrecks close each passage', () => {
+  const middle = {x:8, y:10.75}, north = {x:8, y:6};
+  for (const type of ['medium','heavy']) {
+    for (const [hulls, minY, maxY] of [[[],10,11.5], [[middle],5,7], [[middle,north],14,18]]) {
+      const game = new Game(MAP_CONFIGS.crossroads);
+      game.wrecks = placeHulls(hulls);
+      const [route] = game.getPreviewPaths({lane:'A', type});
+      assert.equal(route.decision, 'detour');
+      // The three passages are separated by walls at x=8. Classify the actual crossing.
+      const end = route.points.findIndex(p => p.x >= 8);
+      assert.ok(end > 0, 'the route crosses the passages');
+      const a = route.points[end - 1], b = route.points[end];
+      const y = a.y + (b.y - a.y) * (8 - a.x) / (b.x - a.x);
+      assert.ok(y > minY && y < maxY, `${type}, ${hulls.length} wrecks: crossed at y=${y}`);
+    }
+  }
+});
+
+test('the city loading yard has west and north exits and a clear shot at the C choke', () => {
+  const game = new Game(MAP_CONFIGS.city);
+  const yard = {x:17.25, y:6.75};
+  assert.ok(clearSegment(game, {x:15.25, y:6.75}, yard), 'enter from the west');
+  assert.ok(clearSegment(game, yard, {x:17.25, y:5}), 'exit onto street C');
+  const gate = game.config.TACTICS.C.blockers[0];
+  assert.ok(Math.hypot(gate.x-yard.x, gate.y-yard.y) < game.playerWeaponRange);
+  assert.equal(game._firstCollision(yard.x, yard.y, gate.x, gate.y, 'player'), null);
+  assert.equal(game._positionFree(18.9,6.75,game.player,true), false, 'the back wall stays solid');
+});
+
+test('the fourth built-in map plays the exported Sluice No. 7 layout and campaign', () => {
+  const imported = createEditorMap(require('../maps/sluice-7.json'));
+  const builtIn = MAP_CONFIGS['sluice-7'];
+  assert.ok(builtIn, 'Sluice No. 7 is available without importing a draft');
+  assert.equal(builtIn.mapName, 'Шлюз № 7');
+  for (const key of ['BASE_RECT', 'PLAYER_START', 'PLAYER_RETURN_AREA', 'SPAWNS', 'WAVES', 'SPAWN_INTERVAL', 'AI_MODE']) {
+    assert.deepEqual(builtIn[key], imported[key], key);
+  }
+  const rectangles = config => Array.from(config.WALLS, ({x, y, w, h}) => [x, y, w, h]);
+  assert.deepEqual(rectangles(builtIn), rectangles(imported));
+  const game = new Game(builtIn);
+  assert.equal(game.startWave(), true);
+  assert.equal(game.enemies[0].lane, 'A');
+  assert.equal(JSON.parse(game.exportAttemptLog()).configuration.game.mapId, 'sluice-7');
 });
 
 function follow(game, points) {
