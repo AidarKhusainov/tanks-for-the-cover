@@ -102,20 +102,32 @@ async function screenshot(name){
 }
 async function exportLog(label, mapId, selector = '#export-attempt') {
   await click(selector);
-  const filename=path.join(output,`tanks-${mapId}-v1-attempt.json`);
+  const version=await evaluate(`TankCore.MAP_CONFIGS[${JSON.stringify(mapId)}].mapVersion`);
+  const filename=path.join(output,`tanks-${mapId}-v${version}-attempt.json`);
   await eventually(()=>fs.existsSync(filename));
   const log=JSON.parse(fs.readFileSync(filename,'utf8'));
   fs.renameSync(filename,path.join(output,label+'.json'));
   return log;
 }
-async function key(code, key, milliseconds) {
+async function key(code, key, frames) {
   await page('Input.dispatchKeyEvent',{type:'keyDown',code,key,windowsVirtualKeyCode:code==='KeyW'?87:13});
-  await wait(milliseconds);
+  // Hold the key across game frames even when Chrome is busy drawing the board.
+  await page('Runtime.evaluate', {
+    expression:`new Promise(resolve => {
+      let remaining = ${frames};
+      function next() {
+        if (--remaining === 0) resolve();
+        else requestAnimationFrame(next);
+      }
+      requestAnimationFrame(next);
+    })`,
+    awaitPromise:true
+  });
   await page('Input.dispatchKeyEvent',{type:'keyUp',code,key,windowsVirtualKeyCode:code==='KeyW'?87:13});
 }
 function fixtureHtml(factory, argument) {
   const entry='let game = new Game(MAP_CONFIGS.magnetic);';
-  const startup='configureMapView();\n  showMapPicker();\n  requestAnimationFrame(frame);';
+  const startup='configureMapView();\n  initializeMap();\n  requestAnimationFrame(frame);';
   assert.equal(buildBytes.toString().split(entry).length,2);
   assert.equal(buildBytes.toString().split(startup).length,2);
   return buildBytes.toString().replace(entry,`let game = (${factory})(globalThis.TankCore,${JSON.stringify(argument)});`)
@@ -161,7 +173,8 @@ async function checkFixtures() {
     }
     const warningName=`diagnostic-${mapId}-warning`;
     await navigateFixture(warningName,fixtureHtml(warningFixture,mapId));
-    assert.match(await read('#wave-plan'),/C/);assert.match(await read('#wave-plan'),/B/);
+    const plan = await eventually(() => read('#wave-plan'));
+    assert.match(plan,/C/);assert.match(plan,/B/);
     await click('#start');
     await eventually(async()=>/Вход B/.test(await read('#entry-status')));
     const countdown=await read('#entry-status');assert.doesNotMatch(countdown,/ожидает/);
@@ -200,7 +213,8 @@ async function checkFixtures() {
   for(const domain of ['Page','Runtime','Network','Log'])await page(domain+'.enable');
   await cdp('Browser.setDownloadBehavior',{behavior:'allow',downloadPath:output,eventsEnabled:true});
   await page('Page.navigate',{url:`http://127.0.0.1:${server.address().port}/index.html`});
-  await eventually(()=>evaluate('!!document.querySelector("#map-dialog")?.open && document.querySelectorAll(".map-choice canvas").length===2'));
+  await eventually(()=>evaluate(`document.querySelector('#map-dialog')?.open &&
+    ['magnetic','city'].every(id => document.querySelector('button[data-map-id="'+id+'"] canvas'))`));
   await screenshot('picker');
   for (const mapId of ['magnetic','city']) {
     if(mapId==='city')await click('#maps');
@@ -221,11 +235,12 @@ async function checkFixtures() {
     assert.equal(await evaluate('document.querySelectorAll(".campaign-wave").length'),8);
     await screenshot(mapId+'-campaign');
     await click('#campaign-dialog button');
-    await key('KeyW','w',350);
+    await eventually(()=>evaluate('!document.querySelector("#campaign-dialog").open'));
+    await key('KeyW','w',12);
     const moved=await exportLog(mapId+'-movement',mapId);
     assert.ok(moved.current.player.y < before.current.player.y-.1,'Real keyboard input moves the tank');
     await click('#board'); // Enter on the focused export button activates that button instead.
-    await key('Enter','Enter',40);
+    await key('Enter','Enter',2);
     await eventually(()=>evaluate('document.querySelector("#phase-badge").textContent==="БОЙ"'));
     const point=await evaluate('(()=>{const r=document.querySelector("#board").getBoundingClientRect();return {x:r.x+r.width*.5,y:r.y+r.height*.5};})()');
     await page('Input.dispatchMouseEvent',{...point,type:'mousePressed',button:'left',buttons:1,clickCount:1});

@@ -128,15 +128,44 @@ test('a failed autosave returns the test snapshot instead of an older readable s
   assert.equal(new URLSearchParams(api.fragment(draft(6), goodSave).slice(1)).get('resume'), '1');
 });
 
+function validateEditorGeometry(model) {
+  const ui = scripts.at(-1)[1];
+  const geometry = ui.slice(ui.indexOf('function walkable'), ui.indexOf('function render'));
+  return vm.runInNewContext(
+    'const WIDTH=28,HEIGHT=18,RADIUS=.5,clamp=(x,a,b)=>Math.max(a,Math.min(b,x));' + geometry + ';validate()', {model});
+}
+
+for (const [axis, edge] of [['x', 28], ['y', 18]]) {
+  test(`editor and game agree on the ${axis} field boundary for fractional wall positions`, () => {
+    const { createEditorMap } = require('./load-core.cjs');
+    const model = draft(4);
+    model.objects.push(
+      { id:'s', type:'spawn', name:'Спавн', x:1, y:1, w:1, h:1 },
+      { id:'b', type:'base', name:'База', x:20, y:12, w:2, h:2 },
+      { id:'p', type:'player', name:'Игрок', x:18, y:11, w:1, h:1 }
+    );
+    const wall = model.objects[0];
+    const size = axis === 'x' ? wall.w : wall.h;
+    for (const [excess, allowed] of [[0, true], [5e-8, true], [2e-7, false], [0.0005, false]]) {
+      wall[axis] = edge - size + excess;
+      const { problems } = validateEditorGeometry(model);
+      if (allowed) {
+        assert.doesNotThrow(() => createEditorMap(model));
+        assert.equal(problems.length, 0, `editor blocks an accepted edge at +${excess}`);
+      } else {
+        assert.throws(() => createEditorMap(model), /границ/);
+        assert.ok(problems.some(message => message.includes('границ')), `editor allows an overrun of ${excess}`);
+      }
+    }
+  });
+}
+
 test('a narrow firing slit is a route warning and does not prohibit testing a playable map', () => {
   const model = { format:'tanks-map-editor', version:1, width:28, height:18, objects:[
     ['s','spawn',6.5,8.5,1,1], ['b','base',12,8.5,1,1], ['p','player',18,8,1,1],
     ['t','wall',10,0,1,8.75], ['d','wall',10,9.25,1,8.75]
   ].map(([id,type,x,y,w,h]) => ({id,name:id,type,x,y,w,h})) };
-  const ui = scripts.at(-1)[1];
-  const geometry = ui.slice(ui.indexOf('function walkable'), ui.indexOf('function render'));
-  const result = vm.runInNewContext(
-    'const WIDTH=28,HEIGHT=18,RADIUS=.5,clamp=(x,a,b)=>Math.max(a,Math.min(b,x));' + geometry + ';validate()', {model});
+  const result = validateEditorGeometry(model);
   assert.equal(result.problems.length, 0);
   assert.ok(result.route.error);
   const { Game, createEditorMap } = require('./load-core.cjs');
